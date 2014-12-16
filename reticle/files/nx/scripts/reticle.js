@@ -22,13 +22,11 @@ nx.reticle = function(surface) {
       this.crossTop, this.crossBottom, this.crossLeft, this.crossRight);
 
   this.center = {x: 0, y: 0};
-
   this.currentSpeed_ = 0;
-  // Initialize
-  this.updateCenter();
 };
 /**
  * Updates the stored coordinates for the center of the surface.
+ * @return {boolean} True if the center changed, false otherwise.
  */
 nx.reticle.prototype.updateCenter = function() {
   // NOTE: SVG elements don't have a CSS layout box, so using them to get the
@@ -36,7 +34,12 @@ nx.reticle.prototype.updateCenter = function() {
   // instead.  Needed this to make firefox happy.
   // see: https://bugzilla.mozilla.org/show_bug.cgi?id=874811
   var size = nx.elementSize(this.surface.node.parentNode);
-  this.center = {x: size.width / 2, y: size.height / 2};
+  var center = {x: size.width / 2, y: size.height / 2};
+  if (center.x != this.center.x || center.y != this.center.y) {
+    this.center = center;
+    return true;
+  }
+  return false;
 };
 /**
  * Helper function to convert booleans to visibilty states.
@@ -71,7 +74,7 @@ nx.reticle.prototype.animationEnded = function() {
  * @param {Object} data An object whose properties define the reticle settings.
  */
 nx.reticle.prototype.render = function (data) {
-  this.updateCenter();
+  var isNewCenter = this.updateCenter();
   this.outerCircle.attr({
       cx: this.center.x,
       cy: this.center.y,
@@ -127,8 +130,7 @@ nx.reticle.prototype.render = function (data) {
       transform: 't' + [data.crossSpread, halfThickness]});
 
   var speed = parseInt(data.crossSpinSpeed);
-
-  if (this.currentSpeed_ != speed) {
+  if (isNewCenter || this.currentSpeed_ != speed) {
     if (speed > 0) {
       this.currentSpeed_ = speed;
       this.startSpin();
