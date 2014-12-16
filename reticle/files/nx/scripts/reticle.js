@@ -23,7 +23,7 @@ nx.reticle = function(surface) {
 
   this.center = {x: 0, y: 0};
 
-  this.lastSpinSpeed_ = 0;
+  this.currentSpeed_ = 0;
   // Initialize
   this.updateCenter();
 };
@@ -57,14 +57,13 @@ nx.reticle.prototype.stopSpin = function() {
 nx.reticle.prototype.startSpin = function() {
   this.stopSpin();
   this.cross.animate({transform: 'r360,'+this.center.x+','+this.center.y},
-      this.lastSpinSpeed_, nx.bind(this,'animationEnded'));
+      this.currentSpeed_, nx.bind(this,'animationEnded'));
 };
 /**
  * Callback triggered when the reticle cross animation ends; simply restarts
  * the animation to give it an infinite looping.
  */
 nx.reticle.prototype.animationEnded = function() {
-  this.stopSpin();
   this.startSpin();
 };
 /**
@@ -128,10 +127,14 @@ nx.reticle.prototype.render = function (data) {
       transform: 't' + [data.crossSpread, halfThickness]});
 
   var speed = parseInt(data.crossSpinSpeed);
-  if (speed > 0) {
-    this.lastSpinSpeed_ = speed;
-    this.startSpin();
-  } else {
-    this.stopSpin();
+
+  if (this.currentSpeed_ != speed) {
+    if (speed > 0) {
+      this.currentSpeed_ = speed;
+      this.startSpin();
+    } else {
+      this.currentSpeed_ = 0;
+      this.stopSpin();
+    }
   }
 };

@@ -172,9 +172,11 @@
         reticleAccessors.forEach(function (accessor) {
             if (accessor.field) {
               element = accessor.element()
-              accessor.element().onchange = onDataChanged;
+              element.onchange = onDataChanged;
               // Setup jscolor control
               if (element.color) {
+                // We want it to update immediately
+                element.color.onImmediateChange = onDataChanged;
                 element.color.hash = true;
                 element.color.pickerClosable = true;
                 // Force reprocessing
