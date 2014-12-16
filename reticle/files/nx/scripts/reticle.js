@@ -31,7 +31,11 @@ nx.reticle = function(surface) {
  * Updates the stored coordinates for the center of the surface.
  */
 nx.reticle.prototype.updateCenter = function() {
-  var size = nx.elementSize(this.surface.node);
+  // NOTE: SVG elements don't have a CSS layout box, so using them to get the
+  // size of the canvas does not work correctly.  We use the parentNode
+  // instead.  Needed this to make firefox happy.
+  // see: https://bugzilla.mozilla.org/show_bug.cgi?id=874811
+  var size = nx.elementSize(this.surface.node.parentNode);
   this.center = {x: size.width / 2, y: size.height / 2};
 };
 /**
