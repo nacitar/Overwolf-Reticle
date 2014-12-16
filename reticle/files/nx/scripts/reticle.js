@@ -22,7 +22,7 @@ nx.reticle = function(surface) {
       this.crossTop, this.crossBottom, this.crossLeft, this.crossRight);
 
   this.center = {x: 0, y: 0};
-  this.currentSpeed_ = 0;
+  this.currentPeriod_ = 0;
 };
 /**
  * Updates the stored coordinates for the center of the surface.
@@ -55,12 +55,12 @@ nx.reticle.prototype.stopSpin = function() {
   this.cross.stop().attr({transform: 'r0,'+this.center.x+','+this.center.y});
 };
 /**
- * Starts spinning the reticle cross at the speed last used by render()
+ * Starts spinning the reticle cross with the period last used by render()
  */
 nx.reticle.prototype.startSpin = function() {
   this.stopSpin();
   this.cross.animate({transform: 'r360,'+this.center.x+','+this.center.y},
-      this.currentSpeed_, nx.bind(this,'animationEnded'));
+      this.currentPeriod_, nx.bind(this,'animationEnded'));
 };
 /**
  * Callback triggered when the reticle cross animation ends; simply restarts
@@ -129,13 +129,13 @@ nx.reticle.prototype.render = function (data) {
       height: data.crossThickness,
       transform: 't' + [data.crossSpread, halfThickness]});
 
-  var speed = parseInt(data.crossSpinSpeed);
-  if (isNewCenter || this.currentSpeed_ != speed) {
-    if (speed > 0) {
-      this.currentSpeed_ = speed;
+  var period = parseInt(data.crossSpinPeriod);
+  if (isNewCenter || this.currentPeriod_ != period) {
+    if (period > 0) {
+      this.currentPeriod_ = period;
       this.startSpin();
     } else {
-      this.currentSpeed_ = 0;
+      this.currentPeriod_ = 0;
       this.stopSpin();
     }
   }

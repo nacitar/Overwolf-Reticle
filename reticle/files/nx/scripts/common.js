@@ -130,7 +130,7 @@ nx.getFieldData = function(elementAccessors) {
  */
 nx.setFieldData = function(elementAccessors, data) {
   elementAccessors.forEach(function(accessor) {
-    if (accessor.field) {
+    if (accessor.field && data.hasOwnProperty(accessor.id)) {
       accessor.set(data[accessor.id]);
     }
   });
