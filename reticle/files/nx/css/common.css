@@ -11,10 +11,6 @@ html.fullscreen body {
 div.floating {
   position: absolute;
 }
-.dialog {
-  background: #4b4d4e;
-  border-radius: 10px;
-  border: 0px;
-  padding: 5px;
-  box-shadow: 0px 2px 8px 1px rgba(0,0,0,0.75);
+.invisible {
+  display: none;
 }

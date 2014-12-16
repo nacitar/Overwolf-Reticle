@@ -34,7 +34,7 @@
         color: rgb(0, 0, 0);
         width: 60px;
         border: none;
-        cursor:pointer;
+        cursor: pointer;
       }
       .csetting form {
         margin: 0;
@@ -43,6 +43,13 @@
       .csetting label {
         color: white;
         vertical-align: middle;
+      }
+      .dialog {
+        background: #4b4d4e;
+        border-radius: 10px;
+        border: 0px;
+        padding: 5px;
+        box-shadow: 0px 2px 8px 1px rgba(0,0,0,0.75);
       }
     </style>
     <script type="text/javascript">
@@ -151,28 +158,37 @@
 
         // Resize handler
         window.addEventListener('resize',onResize);
-        // Install onChange handlers for settings
-        reticleAccessors.forEach(function (accessor) {
-            if (accessor.field) {
-              accessor.element().onchange = onDataChanged;
-            }
-        })
+        // GameState handler
         nx.ow.setGameStateChangedCallback(onGameStateChanged);
         onGameStateChanged();
         if (nx.ow.inOverwolf()) {
           overwolf.settings.registerHotKey('reticle_menu', function (result) {
-              console.log('Hotkey registered.');
               if (result.status =='success') {
-                settingsVisible(true);
+                onHotkeyPressed('reticle_menu');
               }
           })
         }
+        // Install onChange handlers for settings
+        reticleAccessors.forEach(function (accessor) {
+            if (accessor.field) {
+              element = accessor.element()
+              accessor.element().onchange = onDataChanged;
+              // Setup jscolor control
+              if (element.color) {
+                element.color.hash = true;
+                element.color.pickerClosable = true;
+                // Force reprocessing
+                accessor.set(accessor.get());
+              }
+            }
+        })
+        // Load stored settings
         load();
       }
     </script>
   </head>
   <body onload="init()" bgcolor="black">
-    <div id="settingsWindow" class="floating">
+    <div id="settingsWindow" class="floating invisible">
     <table class="dialog">
       <tbody><tr><td>
         <div class="header">Reticle Settings</div>

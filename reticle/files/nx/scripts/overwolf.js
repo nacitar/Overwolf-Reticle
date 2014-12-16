@@ -33,10 +33,18 @@ nx.ow.setGameStateChangedCallback = function(callback) {
  * @private {Function}
  */
 nx.ow.onGameInfoUpdated_ = function(info) {
-  if ((info && info.isInFocus) != nx.ow.isInGame) {
+  if (Boolean(info && info.isInFocus) != nx.ow.isInGame) {
     nx.ow.isInGame = !nx.ow.isInGame;
-    nx.ow.gameStateChangedCallback_ && nx.ow.gameStateChangedCallback();
+    nx.ow.gameStateChangedCallback_ && nx.ow.gameStateChangedCallback_();
   }
+};
+/**
+ * For testing, allows you to simulate overwolf having changed the game state.
+ * @param {boolean} isInGame True if indicating being in a game.
+ */
+nx.ow.setGameState = function (isInGame) {
+  info={isInFocus: Boolean(isInGame)}
+  nx.ow.onGameInfoUpdated_(info);
 };
 /**
  * Attempts to set the window to be at (0,0) and to match the screen size.
