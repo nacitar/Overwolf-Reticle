@@ -3,8 +3,6 @@ var nx = nx || {};
 
 // DEPENDS: common.js
 
-// TODO: document this
-
 /**
  * Constructor for a reticle.
  * @param element The DOM element of the SVG surface on which to render.
