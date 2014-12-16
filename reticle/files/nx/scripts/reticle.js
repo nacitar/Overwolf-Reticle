@@ -68,7 +68,7 @@ nx.reticle.prototype.animationEnded = function() {
   this.startSpin();
 };
 /**
- * Renders the crosshair using the provided settings.
+ * Renders the reticle using the provided settings.
  * @param {Object} data An object whose properties define the reticle settings.
  */
 nx.reticle.prototype.render = function (data) {
