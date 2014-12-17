@@ -158,16 +158,20 @@
 
         // Resize handler
         window.addEventListener('resize',onResize);
-        // GameState handler
-        nx.ow.setGameStateChangedCallback(onGameStateChanged);
-        onGameStateChanged();
+
+        // Register hotkey
         if (nx.ow.inOverwolf()) {
           overwolf.settings.registerHotKey('reticle_menu', function (result) {
               if (result.status =='success') {
                 onHotkeyPressed('reticle_menu');
               }
-          })
+          });
+        } else {
+          // TODO: black background
         }
+        // GameState handler
+        nx.ow.setGameStateChangedCallback(onGameStateChanged);
+        onGameStateChanged();
         // Install onChange handlers for settings
         reticleAccessors.forEach(function (accessor) {
             if (accessor.field) {
@@ -189,7 +193,7 @@
       }
     </script>
   </head>
-  <body onload="init()" bgcolor="black">
+  <body onload="init()">
     <div id="settingsWindow" class="floating invisible">
     <table class="dialog">
       <tbody><tr><td>
