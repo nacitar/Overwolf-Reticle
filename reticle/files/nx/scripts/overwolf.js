@@ -61,7 +61,7 @@ nx.ow.updateGameInfo = function(gameInfo) {
  * @param {boolean} isInGame True if indicating being in a game.
  */
 nx.ow.setGameState = function(isInGame) {
-  info = {isInFocus: Boolean(isInGame)};
+  info = {gameInfo: {isInFocus: Boolean(isInGame)}};
   nx.ow.onGameInfoUpdated_(info);
 };
 /**

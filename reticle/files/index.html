@@ -1,14 +1,10 @@
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
-    class="fullscreen">
+<!DOCTYPE html>
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="UTF-8">
     <title>Reticle Settings</title>
 
-    <link rel="stylesheet" href="nx/css/common.css"/>
+    <link rel="stylesheet" href="nx/css/fullscreen.css">
 
     <script type="text/javascript" src="3rdparty/snap.svg-min.js"></script>
     <script type="text/javascript" src="3rdparty/jscolor/jscolor.js"></script>
@@ -18,45 +14,47 @@
     <script type="text/javascript" src="nx/scripts/reticle.js"></script>
 
     <style type="text/css">
-      .settings {
+      div.settings {
+        position: fixed;
+        left: 10px;
+        top: 10px;
         display: inline-block;
         background: #4b4d4e;
         border-radius: 10px;
         border: 0px;
         padding: 5px;
         box-shadow: 0px 2px 8px 1px rgba(0,0,0,0.75);
+        display: none; /* start invisible */
       }
-      .settings .header {
+      div.settings .header {
         text-align: center;
         font-size: 16px;
         color: #FFFF00;
         font-weight: bold;
       }
       /* For text fields (with and without type specified) */
-      .settings input:not([type]), .settings input[type='text'] {
+      div.settings input:not([type]), .settings input[type='text'] {
         width: 30px;
         border: none;
       }
       /* For jscolor fields */
-      .settings input.color {
+      div.settings input.color {
         color: rgb(0, 0, 0);
         width: 60px;
         border: none;
         cursor: pointer;
       }
-      .settings form {
-        margin: 0;
-        padding: 0;
-      }
-      .settings label {
+      div.settings label {
         color: white;
         vertical-align: middle;
       }
     </style>
     <script type="text/javascript">
+      var STORAGE_KEY = 'reticleSettings';
+      var SETTINGS_ID = 'settingsWindow';
+      var SURFACE_ID = 'reticleSurface';
+
       var reticleAccessors = [];
-      var reticleFormId = 'reticleSettings';
-      var reticleSurfaceId = 'reticleSurface'
       var reticleData = {};
       var reticle = null;
       /**
@@ -87,14 +85,14 @@
        * Saves the reticle state so upon reload it will be restored.
        */
       function saveSettings() {
-        nx.setStorage(reticleFormId, reticleData);
+        nx.setStorage(STORAGE_KEY, reticleData);
         console.log('Saved.');
       }
       /**
        * Restores the reticle state to the one you most recently saved.
        */
       function restoreSettings() {
-        var data = nx.getStorage(reticleFormId);
+        var data = nx.getStorage(STORAGE_KEY);
         if (data) {
           console.log('Loaded.');
           nx.setFieldData(reticleAccessors, data);
@@ -154,30 +152,30 @@
       function init() {
         nx.ow.setFullScreen();
         reticleAccessors = nx.getFieldAccessors(
-            document.getElementById(reticleFormId));
+            document.getElementById(SETTINGS_ID));
 
-        reticle = new nx.Reticle(reticleSurfaceId);
+        reticle = new nx.Reticle(SURFACE_ID);
 
         // Resize handler
-        window.addEventListener('resize',onResize);
+        window.addEventListener('resize', onResize);
 
         // Register hotkey
         if (nx.ow.inOverwolf()) {
-          overwolf.settings.registerHotKey('reticle_menu', function (result) {
-              if (result.status =='success') {
+          overwolf.settings.registerHotKey('reticle_menu', function(result) {
+              if (result.status == 'success') {
                 onHotkeyPressed('reticle_menu');
               }
           });
         } else {
           // If we're not in-game, set a background color.  Setting one in game
           // makes the background non-transparent.
-          document.body.bgColor="black";
+          document.body.bgColor = 'black';
         }
         // GameState handler
         nx.ow.setGameStateChangedCallback(onGameStateChanged);
         onGameStateChanged();
         // Install onChange handlers for settings
-        reticleAccessors.forEach(function (accessor) {
+        reticleAccessors.forEach(function(accessor) {
             var fieldType = accessor.fieldType();
             if (fieldType != null) {
               var element = accessor.element();
@@ -192,59 +190,57 @@
                 accessor.set(accessor.get());
               }
             }
-        })
+        });
         // Load stored settings
         load();
       }
     </script>
   </head>
   <body onload="init()">
-    <div id="settingsWindow" class="floating invisible settings">
+    <div id="settingsWindow" class="settings">
       <div class="header">Reticle Settings</div>
-      <hr/>
-      <form id="reticleSettings">
-        <input id="crossColor" class="color" value="FFFF00"/>
-        <input id="crossEnabled" type="checkbox" checked="checked"/>
-        <label for="crossEnabled">cross</label>
-        <br/>
-        <input id="crossLength" value="6"/>
-        <label for="crossLength">length</label>
-        <br/>
-        <input id="crossSpread" value="4"/>
-        <label for="crossSpread">spread</label>
-        <br/>
-        <input id="crossThickness" value="2"/>
-        <label for="crossThickness">thickness</label>
-        <br/>
-        <input id="crossSpinPeriod" value="1000"/>
-        <label for="crossSpinPeriod">spin period (ms)</label>
-        <br/>
-        <input id="crossRotation" value="0"/>
-        <label for="crossRotation">degrees rotated</label>
-        <br/>
-        <input id="dotColor" class="color" value="FFFF00"/>
-        <input id="dotEnabled" type="checkbox" checked="checked"/>
-        <label for="dotEnabled">dot</label>
-        <br/>
-        <input id="dotRadius" value="2"/>
-        <label for="dotRadius">radius</label>
-        <br/>
-        <input id="circleColor" class="color" value="FFFF00"/>
-        <input id="circleEnabled" type="checkbox" checked="checked"/>
-        <label for="circleEnabled">circle</label>
-        <br/>
-        <input id="circleRadius" value="13"/>
-        <label for="circleRadius">radius</label>
-        <br/>
-        <input id="circleThickness" value="2"/>
-        <label for="circleThickness">thickness</label>
-        <hr/>
-        <input type="button" value="Save" onclick="save()"/>
-        <input type="button" value="Load" onclick="load()"/>
-        <input type="button" value="Hide" onclick="hide()"/>
-      </form>
+      <hr>
+      <input id="crossColor" class="color" value="FFFF00">
+      <input id="crossEnabled" type="checkbox" checked="checked">
+      <label for="crossEnabled">cross</label>
+      <br>
+      <input id="crossLength" value="6">
+      <label for="crossLength">length</label>
+      <br>
+      <input id="crossSpread" value="4">
+      <label for="crossSpread">spread</label>
+      <br>
+      <input id="crossThickness" value="2">
+      <label for="crossThickness">thickness</label>
+      <br>
+      <input id="crossSpinPeriod" value="1000">
+      <label for="crossSpinPeriod">spin period (ms)</label>
+      <br>
+      <input id="crossRotation" value="0">
+      <label for="crossRotation">degrees rotated</label>
+      <br>
+      <input id="dotColor" class="color" value="FFFF00">
+      <input id="dotEnabled" type="checkbox" checked="checked">
+      <label for="dotEnabled">dot</label>
+      <br>
+      <input id="dotRadius" value="2">
+      <label for="dotRadius">radius</label>
+      <br>
+      <input id="circleColor" class="color" value="FFFF00">
+      <input id="circleEnabled" type="checkbox" checked="checked">
+      <label for="circleEnabled">circle</label>
+      <br>
+      <input id="circleRadius" value="13">
+      <label for="circleRadius">radius</label>
+      <br>
+      <input id="circleThickness" value="2">
+      <label for="circleThickness">thickness</label>
+      <hr>
+      <input type="button" value="Save" onclick="save()">
+      <input type="button" value="Load" onclick="load()">
+      <input type="button" value="Hide" onclick="hide()">
     </div>
     <svg id="reticleSurface" version="1.1" height="100%" width="100%"
-        xmlns="http://www.w3.org/2000/svg"/>
+        xmlns="http://www.w3.org/2000/svg"></svg>
   </body>
 </html>

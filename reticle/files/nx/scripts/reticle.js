@@ -69,15 +69,16 @@ nx.Reticle.prototype.setRotation = function(degree) {
   this.cross.stop().attr({transform: this.toTransform(degree, this.center)});
 };
 /**
- * Starts spinning the reticle cross with the period last used by render()
+ * Starts spinning the reticle cross, updating the center and speed as
+ * needed.
  */
-nx.Reticle.prototype.startSpin = function() {
+nx.Reticle.prototype.spin = function() {
   this.setRotation(this.rotation());
   // Animate the remainder of the rotation at the current period's speed.
   this.cross.animate(
       {transform: this.toTransform(360, this.center)},
       this.currentPeriod_ * (1 - this.rotation() / 360),
-      nx.bind(this, 'startSpin'));
+      nx.bind(this, 'spin'));
 };
 /**
  * Returns the current degree of rotation for the cross.
@@ -157,7 +158,7 @@ nx.Reticle.prototype.render = function(data) {
   this.setRotation(this.rotation());
 
   if (this.currentPeriod_ > 0) {
-    this.startSpin();
+    this.spin();
   } else {
     this.currentPeriod_ = 0;
     this.setRotation(data.crossRotation);
