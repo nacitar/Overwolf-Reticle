@@ -5,6 +5,7 @@
     <title>Reticle Settings</title>
 
     <link rel="stylesheet" href="nx/css/fullscreen.css">
+    <link rel="stylesheet" href="css/overlay.css">
 
     <script type="text/javascript" src="3rdparty/snap.svg-min.js"></script>
     <script type="text/javascript" src="3rdparty/jscolor/jscolor.js"></script>
@@ -13,191 +14,11 @@
     <script type="text/javascript" src="nx/scripts/overwolf.js"></script>
     <script type="text/javascript" src="nx/scripts/reticle.js"></script>
 
-    <style type="text/css">
-      div.settings {
-        position: fixed;
-        left: 10px;
-        top: 10px;
-        display: inline-block;
-        background: #4b4d4e;
-        border-radius: 10px;
-        border: 0px;
-        padding: 5px;
-        box-shadow: 0px 2px 8px 1px rgba(0,0,0,0.75);
-        display: none; /* start invisible */
-      }
-      div.settings .header {
-        text-align: center;
-        font-size: 16px;
-        color: #FFFF00;
-        font-weight: bold;
-      }
-      /* For text fields (with and without type specified) */
-      div.settings input:not([type]), .settings input[type='text'] {
-        width: 30px;
-        border: none;
-      }
-      /* For jscolor fields */
-      div.settings input.color {
-        color: rgb(0, 0, 0);
-        width: 60px;
-        border: none;
-        cursor: pointer;
-      }
-      div.settings label {
-        color: white;
-        vertical-align: middle;
-      }
-    </style>
-    <script type="text/javascript">
-      var STORAGE_KEY = 'reticleSettings';
-      var SETTINGS_ID = 'settingsWindow';
-      var SURFACE_ID = 'reticleSurface';
-
-      var reticleAccessors = [];
-      var reticleData = {};
-      var reticle = null;
-      /**
-       * Sets the visibility of the settings window.
-       * @param {boolean} state True to be visible, False otherwise.
-       */
-      function settingsVisible(state) {
-        element = document.getElementById('settingsWindow');
-        element.style.display = state ? 'block' : 'none';
-      }
-      /**
-       * Redraws the reticle.
-       */
-      function redrawReticle() {
-        reticle.render(reticleData);
-      }
-      /**
-       * Triggered then a hotkey is pressed.
-       * @param {string} name The name of the hotkey that was triggered.
-       */
-      function onHotkeyPressed(name) {
-        if (name == 'reticle_menu') {
-          console.log('Reticle menu hotkey triggered.');
-          settingsVisible(true);
-        }
-      }
-      /**
-       * Saves the reticle state so upon reload it will be restored.
-       */
-      function saveSettings() {
-        nx.setStorage(STORAGE_KEY, reticleData);
-        console.log('Saved.');
-      }
-      /**
-       * Restores the reticle state to the one you most recently saved.
-       */
-      function restoreSettings() {
-        var data = nx.getStorage(STORAGE_KEY);
-        if (data) {
-          console.log('Loaded.');
-          nx.setFieldData(reticleAccessors, data);
-        }
-      }
-      /**
-       * Invoked when the window is resized.
-       */
-      function onResize() {
-        console.log('Window resized.');
-        redrawReticle();
-      }
-      /**
-       * Invoked when the reticle settings have changed.
-       */
-      function onDataChanged() {
-        console.log('Data changed.');
-        reticleData = nx.getFieldData(reticleAccessors);
-        redrawReticle();
-      }
-      /**
-       * Invoked when you enter/exit a game.
-       */
-      function onGameStateChanged() {
-        console.log('Game state: ' + nx.ow.isInGame);
-        // If it was visible outside the game, we would want to see settings.
-        if (nx.ow.isInGame) {
-          settingsVisible(false);
-        } else {
-          settingsVisible(true);
-        }
-      }
-      /**
-       * Saves the current reticle settings.
-       */
-      function save() {
-        saveSettings();
-      }
-      /**
-       * Loads stored reticle data and redraws the reticle using the settings.
-       */
-      function load() {
-        restoreSettings();
-        onDataChanged();
-      }
-      /**
-       * Hides the settings window if you're in a game.
-       */
-      function hide() {
-        if (nx.ow.isInGame) {
-          settingsVisible(false);
-        }
-      }
-      /**
-       * Initializes the reticle overlay.
-       */
-      function init() {
-        nx.ow.setFullScreen();
-        reticleAccessors = nx.getFieldAccessors(
-            document.getElementById(SETTINGS_ID));
-
-        reticle = new nx.Reticle(SURFACE_ID);
-
-        // Resize handler
-        window.addEventListener('resize', onResize);
-
-        // Register hotkey
-        if (nx.ow.inOverwolf()) {
-          overwolf.settings.registerHotKey('reticle_menu', function(result) {
-              if (result.status == 'success') {
-                onHotkeyPressed('reticle_menu');
-              }
-          });
-        } else {
-          // If we're not in-game, set a background color.  Setting one in game
-          // makes the background non-transparent.
-          document.body.bgColor = 'black';
-        }
-        // GameState handler
-        nx.ow.setGameStateChangedCallback(onGameStateChanged);
-        onGameStateChanged();
-        // Install onChange handlers for settings
-        reticleAccessors.forEach(function(accessor) {
-            var fieldType = accessor.fieldType();
-            if (fieldType != null) {
-              var element = accessor.element();
-              element.onchange = onDataChanged;
-              // Setup jscolor control
-              if (fieldType == nx.FieldType.COLOR) {
-                // We want it to update immediately
-                element.color.onImmediateChange = onDataChanged;
-                element.color.hash = true;
-                element.color.pickerClosable = true;
-                // Force reprocessing
-                accessor.set(accessor.get());
-              }
-            }
-        });
-        // Load stored settings
-        load();
-      }
-    </script>
+    <script type="text/javascript" src="scripts/overlay.js"></script>
   </head>
-  <body onload="init()">
-    <div id="settingsWindow" class="settings">
+  <body onload="overlay.init(
+      'reticleSurface', 'reticleSettings','settingsDialog')">
+    <div id="settingsDialog" class="settings">
       <div class="header">Reticle Settings</div>
       <hr>
       <input id="crossColor" class="color" value="FFFF00">
@@ -236,9 +57,9 @@
       <input id="circleThickness" value="2">
       <label for="circleThickness">thickness</label>
       <hr>
-      <input type="button" value="Save" onclick="save()">
-      <input type="button" value="Load" onclick="load()">
-      <input type="button" value="Hide" onclick="hide()">
+      <input type="button" value="Save" onclick="overlay.settings.save();">
+      <input type="button" value="Load" onclick="overlay.settings.load();">
+      <input type="button" value="Hide" onclick="overlay.hideSettings();">
     </div>
     <svg id="reticleSurface" version="1.1" height="100%" width="100%"
         xmlns="http://www.w3.org/2000/svg"></svg>

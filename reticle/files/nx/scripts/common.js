@@ -203,3 +203,85 @@ nx.setStorage = function(key, value) {
 nx.clearStorage = function() {
   window.localStorage.clear();
 };
+/**
+ * Creates a simple wrapper for a collection of fields that allows simple
+ * saving and loading of their values to/from storage.  Allows the user to set
+ * an OnChangeListener as well.
+ * @param {string} storageKey The key under which to place the data in storage.
+ * @param {string} nodeId The id of a parent node of the fields to wrap.
+ * @constructor
+ */
+nx.StorageNode = function(storageKey, nodeId) {
+  this.STORAGE_KEY = storageKey;
+  this.NODE_ID = nodeId;
+  this.ACCESSORS = nx.getFieldAccessors(this.element());
+  // Install onChange handlers for settings
+  this.ACCESSORS.forEach(function(accessor) {
+      var fieldType = accessor.fieldType();
+      if (fieldType != null) {
+        var element = accessor.element();
+        element.onchange = nx.bind(this, 'onDataChanged_');
+        // Setup jscolor control
+        if (fieldType == nx.FieldType.COLOR) {
+          // We want it to update immediately
+          element.color.onImmediateChange = nx.bind(this, 'onDataChanged_');
+          element.color.hash = true;
+          element.color.pickerClosable = true;
+          // Force reprocessing
+          accessor.set(accessor.get());
+        }
+      }
+  }, this);
+  this.onDataChanged_();
+};
+
+/**
+ * Sets an onChangeListener which will be invoked whenever the data changes.
+ * @param {Function} onChangeListener The onChangeListener callback.
+ */
+nx.StorageNode.prototype.setOnChangeListener = function(onChangeListener) {
+  this.onChangeListener = onChangeListener;
+};
+/**
+ * Invoked whenever the underlying data has changed.
+ * @private
+ */
+nx.StorageNode.prototype.onDataChanged_ = function() {
+  this.data = nx.getFieldData(this.ACCESSORS);
+  this.onChangeListener && this.onChangeListener();
+};
+/**
+ * Returns the element of the passed parent node of the fields being wrapped.
+ * @return {?Element} The parent element.
+ */
+nx.StorageNode.prototype.element = function() {
+  return document.getElementById(this.NODE_ID);
+};
+/**
+ * Sets the visibility of the settings window.
+ * @param {boolean} state True to be visible, False otherwise.
+ */
+nx.StorageNode.prototype.setVisible = function(state) {
+  this.element().style.display = state ? 'block' : 'none';
+};
+/**
+ * Saves the reticle state so upon reload it will be restored.
+ */
+nx.StorageNode.prototype.save = function() {
+  nx.setStorage(this.STORAGE_KEY, this.data);
+  console.log('Settings saved.');
+};
+/**
+ * Restores the reticle state to the one you most recently saved.
+ * @return {boolean} True if data was loaded, false otherwise.
+ */
+nx.StorageNode.prototype.load = function() {
+  var data = nx.getStorage(this.STORAGE_KEY);
+  if (data) {
+    console.log('Settings loaded.');
+    nx.setFieldData(this.ACCESSORS, data);
+    this.onDataChanged_();
+    return true;
+  }
+  return false;
+};
