@@ -4,11 +4,17 @@ var nx = nx || {};
 // DEPENDS: common.js
 
 /**
- * Constructor for a reticle.
- * @param element The DOM element of the SVG surface on which to render.
+ * Constructor for a nx.Reticle.
+ * @param {number} surfaceElementId The id of the svg DOM element on which to
+ *    render.
+ * @constructor
  */
-nx.reticle = function(surface) {
-  this.surface = surface;
+nx.Reticle = function(surfaceElementId) {
+  var element = document.getElementById(surfaceElementId);
+  if (!element) {
+    throw 'Could not find a SVG DOM Element with id of ' + surfaceElementId;
+  }
+  this.surface = Snap(element);
 
   this.outerCircle = this.surface.circle();
   this.centerDot = this.surface.circle();
@@ -26,55 +32,70 @@ nx.reticle = function(surface) {
 };
 /**
  * Updates the stored coordinates for the center of the surface.
- * @return {boolean} True if the center changed, false otherwise.
  */
-nx.reticle.prototype.updateCenter = function() {
+nx.Reticle.prototype.updateCenter = function() {
   // NOTE: SVG elements don't have a CSS layout box, so using them to get the
   // size of the canvas does not work correctly.  We use the parentNode
   // instead.  Needed this to make firefox happy.
   // see: https://bugzilla.mozilla.org/show_bug.cgi?id=874811
   var size = nx.elementSize(this.surface.node.parentNode);
-  var center = {x: size.width / 2, y: size.height / 2};
-  if (center.x != this.center.x || center.y != this.center.y) {
-    this.center = center;
-    return true;
-  }
-  return false;
+  this.center = new nx.Point(size.width / 2, size.height / 2);
 };
 /**
  * Helper function to convert booleans to visibilty states.
  * @param {boolean} isVisible True if visible, false otherwise.
+ * @return {string} The css visibility string 'visible' or 'hidden'.
  */
-nx.reticle.prototype.toVisibility = function (isVisible) {
-  return isVisible ? 'visible' : 'hidden'
+nx.Reticle.prototype.toVisibility = function(isVisible) {
+  return isVisible ? 'visible' : 'hidden';
 };
 /**
- * Stops any current spinning animation applied to the reticle cross.
+ * Helper function to convert a degree of rotation and a midpoint into an SVG
+ * transform string.
+ * @param {number} degree How many degrees of rotation.
+ * @param {nx.Point} center The point around which to rotate.
+ * @return {string} The transform string.
  */
-nx.reticle.prototype.stopSpin = function() {
-  this.cross.stop().attr({transform: 'r0,'+this.center.x+','+this.center.y});
+nx.Reticle.prototype.toTransform = function(degree, center) {
+  return 'r' + degree + ',' + center.x + ',' + center.y;
+};
+/**
+ * Stops any current spinning animation applied to the reticle cross, setting
+ * the degree of rotation to the one specified.
+ * @param {number} degree How many degrees of rotation relative to 0.
+ */
+nx.Reticle.prototype.setRotation = function(degree) {
+  degree = degree % 360;
+  this.cross.stop().attr({transform: this.toTransform(degree, this.center)});
 };
 /**
  * Starts spinning the reticle cross with the period last used by render()
  */
-nx.reticle.prototype.startSpin = function() {
-  this.stopSpin();
-  this.cross.animate({transform: 'r360,'+this.center.x+','+this.center.y},
-      this.currentPeriod_, nx.bind(this,'animationEnded'));
+nx.Reticle.prototype.startSpin = function() {
+  this.setRotation(this.rotation());
+  // Animate the remainder of the rotation at the current period's speed.
+  this.cross.animate(
+      {transform: this.toTransform(360, this.center)},
+      this.currentPeriod_ * (1 - this.rotation() / 360),
+      nx.bind(this, 'startSpin'));
 };
 /**
- * Callback triggered when the reticle cross animation ends; simply restarts
- * the animation to give it an infinite looping.
+ * Returns the current degree of rotation for the cross.
+ * @return {number} The degree of rotation [0, 360).
  */
-nx.reticle.prototype.animationEnded = function() {
-  this.startSpin();
+nx.Reticle.prototype.rotation = function() {
+  if (this.cross.matrix) {
+    return this.cross.matrix.split().rotate % 360;
+  }
+  return 0;
 };
 /**
  * Renders the reticle using the provided settings.
  * @param {Object} data An object whose properties define the reticle settings.
  */
-nx.reticle.prototype.render = function (data) {
-  var isNewCenter = this.updateCenter();
+nx.Reticle.prototype.render = function(data) {
+  this.updateCenter();
+
   this.outerCircle.attr({
       cx: this.center.x,
       cy: this.center.y,
@@ -95,7 +116,7 @@ nx.reticle.prototype.render = function (data) {
 
   // Offset for left/top offsets to gap from the center
   var negativeOffset = -data.crossLength - data.crossSpread;
-  var halfThickness = -(data.crossThickness/2);
+  var halfThickness = -(data.crossThickness / 2);
   var cross = {
       x: this.center.x,
       y: this.center.y,
@@ -129,14 +150,16 @@ nx.reticle.prototype.render = function (data) {
       height: data.crossThickness,
       transform: 't' + [data.crossSpread, halfThickness]});
 
-  var period = parseInt(data.crossSpinPeriod);
-  if (isNewCenter || this.currentPeriod_ != period) {
-    if (period > 0) {
-      this.currentPeriod_ = period;
-      this.startSpin();
-    } else {
-      this.currentPeriod_ = 0;
-      this.stopSpin();
-    }
+
+  this.currentPeriod_ = parseInt(data.crossSpinPeriod);
+
+  // also fixes the rotational center.
+  this.setRotation(this.rotation());
+
+  if (this.currentPeriod_ > 0) {
+    this.startSpin();
+  } else {
+    this.currentPeriod_ = 0;
+    this.setRotation(data.crossRotation);
   }
 };
