@@ -32,11 +32,23 @@ nx.ow.setGameStateChangedCallback = function(callback) {
  * Callback for overwolf's onGameInfoUpdated.
  * @private {Function}
  */
-nx.ow.onGameInfoUpdated_ = function(info) {
-  if (Boolean(info && info.isInFocus) != nx.ow.isInGame) {
+nx.ow.onGameInfoUpdated_ = function(gameInfoChangeData) {
+  var gameInfo = gameInfoChangeData.gameInfo;
+  if (Boolean(gameInfo && gameInfo.isInFocus) != nx.ow.isInGame) {
     nx.ow.isInGame = !nx.ow.isInGame;
     nx.ow.gameStateChangedCallback_ && nx.ow.gameStateChangedCallback_();
   }
+};
+/**
+ * Triggers the onGameInfoUpdated handler.
+ */
+nx.ow.updateGameInfo = function(gameInfo) {
+  nx.ow.onGameInfoUpdated_( {
+      gameInfo: gameInfo,
+      resolutionChanged: true,
+      focusChanged: true,
+      runningChanged: true,
+      gameChanged: true });
 };
 /**
  * For testing, allows you to simulate overwolf having changed the game state.
@@ -60,11 +72,12 @@ nx.ow.setFullScreen = function() {
     }
   });
 };
+
 // INITIALIZATION
 (function () {
   // Add a listener and initialize the game state information.
   if (nx.ow.inOverwolf()) {
-    overwolf.games.onGameInfoUpdated.addListener(nx.ow.onGameInfoUpdated);
-    overwolf.games.getRunningGameInfo(nx.ow.onGameInfoUpdated)
+    overwolf.games.onGameInfoUpdated.addListener(nx.ow.onGameInfoUpdated_);
+    overwolf.games.getRunningGameInfo(nx.ow.updateGameInfo);
   };
 })();
