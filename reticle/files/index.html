@@ -16,36 +16,46 @@
 
     <script type="text/javascript" src="scripts/overlay.js"></script>
     <script type="text/javascript">
-      var frontend = frontend || {};
       /**
        * Initialization once DOM is ready.
        */
-      frontend.init = function() {
+      nx.ready(function() {
         if (!nx.ow.inOverwolf()) {
           // If we're not in-game, set a background color.  Setting one in game
           // makes the background non-transparent.
           document.body.bgColor = 'black';
         }
-        overlay.init('reticleSurface', 'reticleSettings','settingsDialog');
-      };
+        overlay.init('reticleSurface', 'reticleSettings', 'settingsDialog');
+      });
     </script>
   </head>
-  <body onload="frontend.init()">
+  <body>
     <div id="settingsDialog" class="settings">
       <div class="header">Reticle Settings</div>
       <hr>
-      <input id="crossColor" class="color" value="FFFF00">
-      <input id="crossEnabled" type="checkbox" checked="checked">
-      <label for="crossEnabled">cross</label>
+      <input id="opacity" value="1.0">
+      <label for="opacity">opacity [0-1]</label>
       <br>
-      <input id="crossLength" value="6">
+      <input id="crossEnabled" type="checkbox" checked="checked">
+      <label for="crossEnabled">cross enabled</label>
+      <br>
+      <input id="crossColor" class="color" value="#0000FF">
+      <label for="crossColor">fill color</label>
+      <br>
+      <input id="crossStrokeColor" class="color" value="#FFFFFF">
+      <label for="crossStrokeColor">stroke color</label>
+      <br>
+      <input id="crossLength" value="8">
       <label for="crossLength">length</label>
       <br>
-      <input id="crossSpread" value="4">
+      <input id="crossSpread" value="7">
       <label for="crossSpread">spread</label>
       <br>
       <input id="crossThickness" value="2">
       <label for="crossThickness">thickness</label>
+      <br>
+      <input id="crossStrokeSize" value="1">
+      <label for="crossStrokeSize">stroke size</label>
       <br>
       <input id="crossSpinPeriod" value="1000">
       <label for="crossSpinPeriod">spin period (ms)</label>
@@ -53,28 +63,46 @@
       <input id="crossRotation" value="0">
       <label for="crossRotation">degrees rotated</label>
       <br>
-      <input id="dotColor" class="color" value="FFFF00">
       <input id="dotEnabled" type="checkbox" checked="checked">
-      <label for="dotEnabled">dot</label>
+      <label for="dotEnabled">dot enabled</label>
+      <br>
+      <input id="dotColor" class="color" value="#0000FF">
+      <label for="dotColor">fill color</label>
+      <br>
+      <input id="dotStrokeColor" class="color" value="#FFFFFF">
+      <label for="dotStrokeColor">stroke color</label>
       <br>
       <input id="dotRadius" value="2">
       <label for="dotRadius">radius</label>
       <br>
-      <input id="circleColor" class="color" value="FFFF00">
-      <input id="circleEnabled" type="checkbox" checked="checked">
-      <label for="circleEnabled">circle</label>
+      <input id="dotStrokeSize" value="1">
+      <label for="dotStrokeSize">stroke size</label>
       <br>
-      <input id="circleRadius" value="13">
+      <input id="circleEnabled" type="checkbox" checked="checked">
+      <label for="circleEnabled">circle enabled</label>
+      <br>
+      <input id="circleColor" class="color" value="#0000FF">
+      <label for="circleColor">fill color</label>
+      <br>
+      <input id="circleStrokeColor" class="color" value="#FFFFFF">
+      <label for="circleStrokeColor">stroke color</label>
+      <br>
+      <input id="circleRadius" value="19">
       <label for="circleRadius">radius</label>
       <br>
-      <input id="circleThickness" value="2">
+      <input id="circleThickness" value="1">
       <label for="circleThickness">thickness</label>
+      <br>
+      <input id="circleStrokeSize" value="1">
+      <label for="circleStrokeSize">stroke size</label>
       <hr>
       <input type="button" value="Save" onclick="overlay.settings.save();">
       <input type="button" value="Load" onclick="overlay.settings.load();">
       <input type="button" value="Hide" onclick="overlay.hideSettings();">
     </div>
     <svg id="reticleSurface" version="1.1" height="100%" width="100%"
-        xmlns="http://www.w3.org/2000/svg"></svg>
+        shape-rendering="geometricPrecision"
+        xmlns="http://www.w3.org/2000/svg">
+    </svg>
   </body>
 </html>

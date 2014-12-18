@@ -74,6 +74,23 @@ overlay.init = function(surfaceId, storageKey, nodeId) {
   nx.ow.setFullScreen();
   overlay.reticle = new nx.Reticle(surfaceId);
   overlay.settings = new nx.StorageNode(storageKey, nodeId);
+  overlay.settings.accessors().forEach(function(accessor) {
+    if (accessor.fieldType() == nx.FieldType.COLOR) {
+      var element = accessor.element();
+      // If doing this before auto-binding, manual bind.
+      if (!element.color) {
+        element.color = new jscolor.color(element);
+      }
+      // Use our settings
+      nx.copyProperties(element.color, {
+        hash: true,
+        pickerClosable: true,
+        onImmediateChange: nx.bind(overlay.settings, 'onDataChanged')
+      });
+      // Force reprocessing.
+      accessor.set(accessor.get());
+    }
+  });
   overlay.settings.load();
   overlay.settings.setOnChangeListener(overlay.onDataChanged);
 

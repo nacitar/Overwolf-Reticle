@@ -28,7 +28,7 @@ nx.Size = function(width, height) {
   this.height = height;
 };
 /**
- * Creates an wrapper object for DOM elements, known as an "accessor".  The
+ * Creates an wrapper object for DOM elements, known as an accessor.  The
  * accessor provides useful functions form fields which have an id attribute.
  * @param {number} id The id for a DOM element.
  * @constructor
@@ -61,7 +61,10 @@ nx.Accessor.prototype.fieldType = function() {
           case 'radio':
             return nx.FieldType.RADIO;
           case 'text':
-            if (element.color) { return nx.FieldType.COLOR; }
+            var classList = element.classList;
+            if (element.color || classList.contains('color')) {
+              return nx.FieldType.COLOR;
+            }
             return nx.FieldType.TEXT;
         }
         break;
@@ -162,6 +165,18 @@ nx.bind = function(toObject, methodName) {
   return function() { toObject[methodName](); };
 };
 /**
+ * Copies all propeties from srcObject into destObject
+ * @param {Object} destObject The destination object.
+ * @param {Object} srcObject The source object.
+ */
+nx.copyProperties = function(destObject, srcObject) {
+  for (var property in srcObject) {
+    if (srcObject.hasOwnProperty(property)) {
+      destObject[property] = srcObject[property];
+    }
+  }
+};
+/**
  * @return {Object} An object containing width/height members indicating
  *     the screen size.
  */
@@ -177,6 +192,50 @@ nx.elementSize = function(element) {
   return new nx.Size(element.offsetWidth, element.offsetHeight);
 };
 /**
+ * A wrapper for localStorage because IE doesn't implement localStorage for
+ * local files, as it must store it based on a hostname.
+ * @constructor
+ */
+nx.LocalStorageWrapper = function() {
+  this.data = { };
+};
+/**
+ * Retrieves a key's associated value from localStorage.
+ * @param {string} key The key to retrieve.
+ * @return {?string} The value associated with the key.
+ */
+nx.LocalStorageWrapper.prototype.getItem = function(key) {
+  if (window.localStorage) return window.localStorage.getItem(key);
+  return this.data[key];
+};
+/**
+ * Sets a key's associated value in localStorage.
+ * @param {string} key The key to store.
+ * @param {*} value The value to store.
+ */
+nx.LocalStorageWrapper.prototype.setItem = function(key, value) {
+  if (window.localStorage) {
+    window.localStorage.setItem(key, value);
+  } else {
+    this.data[key] = value;
+  }
+};
+/**
+ * Clears all localStorage values.
+ */
+nx.LocalStorageWrapper.prototype.clear = function() {
+  if (window.localStorage) {
+    window.localStorage.clear();
+  } else {
+    this.data = {};
+  }
+};
+/**
+ * An object used to access localStorage.
+ * @public {nx.LocalStorageWrapper}
+ */
+nx.storage = new nx.LocalStorageWrapper();
+/**
  * Retrieves the requested value from localStorage, parsing it as JSON.
  * @param {string} key The key to be retrieved.
  * @return {*} The value from storage for the specified key, interpreted as
@@ -184,7 +243,7 @@ nx.elementSize = function(element) {
  */
 nx.getStorage = function(key) {
   if (key) {
-    var value = window.localStorage.getItem(key);
+    var value = nx.storage.getItem(key);
     if (value != null) return JSON.parse(value);
   }
   return null;
@@ -195,13 +254,13 @@ nx.getStorage = function(key) {
  * @param {*} value The value to be stored.
  */
 nx.setStorage = function(key, value) {
-  if (key) window.localStorage.setItem(key, JSON.stringify(value));
+  if (key) nx.storage.setItem(key, JSON.stringify(value));
 };
 /**
  * Clears localStorage.
  */
 nx.clearStorage = function() {
-  window.localStorage.clear();
+  nx.storage.clear();
 };
 /**
  * Creates a simple wrapper for a collection of fields that allows simple
@@ -211,6 +270,7 @@ nx.clearStorage = function() {
  * @param {string} nodeId The id of a parent node of the fields to wrap.
  * @constructor
  */
+// TODO: move jscolor initialization elsewhere?
 nx.StorageNode = function(storageKey, nodeId) {
   this.STORAGE_KEY = storageKey;
   this.NODE_ID = nodeId;
@@ -219,22 +279,18 @@ nx.StorageNode = function(storageKey, nodeId) {
   this.ACCESSORS.forEach(function(accessor) {
       var fieldType = accessor.fieldType();
       if (fieldType != null) {
-        var element = accessor.element();
-        element.onchange = nx.bind(this, 'onDataChanged_');
-        // Setup jscolor control
-        if (fieldType == nx.FieldType.COLOR) {
-          // We want it to update immediately
-          element.color.onImmediateChange = nx.bind(this, 'onDataChanged_');
-          element.color.hash = true;
-          element.color.pickerClosable = true;
-          // Force reprocessing
-          accessor.set(accessor.get());
-        }
+        accessor.element().onchange = nx.bind(this, 'onDataChanged');
       }
   }, this);
-  this.onDataChanged_();
+  this.onDataChanged();
 };
-
+/**
+ * Returns the field accessors used by this storage node.
+ * @return {Array<nx.Accessor>} The accessors.
+ */
+nx.StorageNode.prototype.accessors = function() {
+  return this.ACCESSORS;
+};
 /**
  * Sets an onChangeListener which will be invoked whenever the data changes.
  * @param {Function} onChangeListener The onChangeListener callback.
@@ -244,9 +300,8 @@ nx.StorageNode.prototype.setOnChangeListener = function(onChangeListener) {
 };
 /**
  * Invoked whenever the underlying data has changed.
- * @private
  */
-nx.StorageNode.prototype.onDataChanged_ = function() {
+nx.StorageNode.prototype.onDataChanged = function() {
   this.data = nx.getFieldData(this.ACCESSORS);
   this.onChangeListener && this.onChangeListener();
 };
@@ -280,8 +335,80 @@ nx.StorageNode.prototype.load = function() {
   if (data) {
     console.log('Settings loaded.');
     nx.setFieldData(this.ACCESSORS, data);
-    this.onDataChanged_();
+    this.onDataChanged();
     return true;
   }
   return false;
+};
+/**
+ * The list of functions to invoke when the DOM is ready.
+ * @private {Array}
+ */
+nx.readyList_ = [];
+/**
+ * Whether or not ready handlers have fired already.
+ * @private {boolean}
+ */
+nx.readyFired_ = false;
+/**
+ * Whether or not we have installed event handlers to detect ready status.
+ * @private {boolean}
+ */
+nx.readyEventHandlersInstalled_ = false;
+/**
+ * Invoked when the DOM is ready, and invokes any registered ready handlers.
+ * @private
+ */
+nx.onDocumentReady_ = function() {
+  if (!nx.readyFired_) {
+    nx.readyFired_ = true;
+    for (var i = 0; i < nx.readyList_.length; i++) {
+      // if a callback here happens to add new ready handlers, the function
+      // will see that it already fired and will schedule the callback to run
+      // right after this event loop finishes so all handlers will still
+      // execute in order and no new ones will be added to the readyList while
+      // we are processing the list.
+      nx.readyList_[i].fn.call(window, nx.readyList_[i].ctx);
+    }
+    // allow any closures held by these functions to free
+    nx.readyList_ = [];
+  }
+};
+/**
+ * Provide a callback and an optional context to be passed to that callback,
+ * and the callback will be invoked when the DOM is ready.
+ * @param {Function} callback The callback to invoke.
+ * @param {?*} opt_context A context to pass to the callback when invoked.
+ */
+nx.ready = function(callback, opt_context) {
+  // if ready has already fired, then just schedule the callback
+  // to fire asynchronously, but right away
+  if (nx.readyFired_) {
+    setTimeout(function() {callback(opt_context);}, 1);
+    return;
+  } else {
+    // add the function and opt_context to the list
+    nx.readyList_.push({fn: callback, ctx: opt_context});
+  }
+  // if document is ready to go, schedule the ready function to run
+  if (document.readyState === 'complete') {
+    setTimeout(nx.onDocumentReady_, 1);
+  } else if (!nx.readyEventHandlersInstalled_) {
+    // otherwise if we don't have event handlers installed, install them
+    if (document.addEventListener) {
+      // first choice is DOMContentLoaded event
+      document.addEventListener('DOMContentLoaded', nx.onDocumentReady_, false);
+      // backup is window load event
+      window.addEventListener('load', nx.onDocumentReady_, false);
+    } else {
+      // must be IE
+      document.attachEvent('onreadystatechange', function() {
+        if (document.readyState === 'complete') {
+            nx.onDocumentReady_();
+        }
+      });
+      window.attachEvent('onload', nx.onDocumentReady_);
+    }
+    nx.readyEventHandlersInstalled_ = true;
+  }
 };
