@@ -87,10 +87,6 @@ overlay.init = function(surfaceId, storageKey, nodeId) {
           overlay.onHotkeyPressed('reticle_menu');
         }
     });
-  } else {
-    // If we're not in-game, set a background color.  Setting one in game
-    // makes the background non-transparent.
-    document.body.bgColor = 'black';
   }
   // GameState handler
   nx.ow.setGameStateChangedCallback(overlay.onGameStateChanged);

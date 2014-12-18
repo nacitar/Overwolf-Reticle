@@ -15,9 +15,19 @@
     <script type="text/javascript" src="nx/scripts/reticle.js"></script>
 
     <script type="text/javascript" src="scripts/overlay.js"></script>
+    <script type="text/javascript">
+      var frontend = frontend || {};
+      frontend.init = function() {
+        if (!nx.ow.inOverwolf()) {
+          // If we're not in-game, set a background color.  Setting one in game
+          // makes the background non-transparent.
+          document.body.bgColor = 'black';
+        }
+        overlay.init('reticleSurface', 'reticleSettings','settingsDialog');
+      };
+    </script>
   </head>
-  <body onload="overlay.init(
-      'reticleSurface', 'reticleSettings','settingsDialog')">
+  <body onload="frontend.init()">
     <div id="settingsDialog" class="settings">
       <div class="header">Reticle Settings</div>
       <hr>
