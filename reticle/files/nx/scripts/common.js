@@ -2,6 +2,23 @@
 var nx = nx || {};
 
 /**
+ * Checks if the provided value is a number.  This does not necessarily mean
+ * that the type of the object is "number", though.
+ * @param {*} value The value to check.
+ * @return {boolean} True if a number, false otherwise.
+ */
+nx.isNumber = function(value) {
+  return !isNaN(value);
+};
+/**
+ * Checks if the provided value is undefined.
+ * @param {*} value The value to check.
+ * @return {boolean} True if undefined, false otherwise.
+ */
+nx.isUndefined = function(value) {
+  return typeof(value) == 'undefined';
+};
+/**
  * An enum to identify types of fields.
  * @enum {number}
  */
