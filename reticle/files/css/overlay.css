@@ -17,15 +17,16 @@ div.settings .header {
   font-weight: bold;
 }
 /* For text fields (with and without type specified) */
-div.settings input:not([type]), .settings input[type='text'] {
+div.settings input:not([type]), div.settings input[type='text'] {
   width: 30px;
   border: none;
 }
-/* For jscolor fields */
-div.settings input.color {
+div.settings input.color, div.settings select {
   color: rgb(0, 0, 0);
   width: 60px;
   border: none;
+}
+div.settings input.color {
   cursor: pointer;
 }
 div.settings label {

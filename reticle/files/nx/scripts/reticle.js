@@ -26,6 +26,9 @@ nx.Reticle = function(surfaceElementId) {
   this.centerDot = new nx.svg.Shape(this.surface, nx.svg.ShapeType.CIRCLE);
   this.centerDot.addToGroup(this.reticleGroup);
   this.centerDot.addToGroup(this.reticleGroup);
+  this.centerBox = new nx.svg.Shape(this.surface, nx.svg.ShapeType.RECTANGLE);
+  this.centerBox.addToGroup(this.reticleGroup);
+  this.centerBox.addToGroup(this.reticleGroup);
   // Cross group goes into the main group
   this.reticleGroup.add(this.cross);
   // Fill the cross group
@@ -88,18 +91,29 @@ nx.Reticle.prototype.render = function(data) {
     transform: 't' + [size.width / 2, size.height / 2]});
 
   this.outerCircle.attr({
-      r: data.circleRadius,
+      r: data.circleDiameter / 2.0,
       fill: 'none',
       stroke: data.circleColor,
       visibility: this.toVisibility(data.circleEnabled),
       strokeWidth: data.circleThickness});
   this.outerCircle.setOutline(data.circleStrokeColor, data.circleStrokeSize);
 
+
+  var halfCenterDiameter = data.centerDiameter / 2.0;
   this.centerDot.attr({
-      r: data.dotRadius,
-      fill: data.dotColor,
-      visibility: this.toVisibility(data.dotEnabled)});
-  this.centerDot.setOutline(data.dotStrokeColor, data.dotStrokeSize);
+      r: halfCenterDiameter,
+      fill: data.centerColor,
+      visibility: this.toVisibility(data.centerEnabled &&
+          data.centerShape == 'circle')});
+  this.centerDot.setOutline(data.centerStrokeColor, data.centerStrokeSize);
+  this.centerBox.attr({
+      width: data.centerDiameter,
+      height: data.centerDiameter,
+      fill: data.centerColor,
+      visibility: this.toVisibility(data.centerEnabled &&
+          data.centerShape == 'square'),
+      transform: 't' + [-halfCenterDiameter, -halfCenterDiameter]});
+  this.centerBox.setOutline(data.centerStrokeColor, data.centerStrokeSize);
 
   // Offset for left/top offsets to gap from the center
   var negativeOffset = -data.crossLength - data.crossSpread;

@@ -52,12 +52,12 @@ nx.svg.Shape.prototype.getAttr = function(key, opt_default) {
     }
   } else if (/px$/.test(value)) {
     // remove "px" from pixel values
-    var parsed = parseInt(value);
+    var parsed = parseFloat(value);
     if (value == parsed + 'px') {
       return parsed;
     }
   } else if (nx.isNumber(value)) {
-    value = parseInt(value);
+    value = parseFloat(value);
   }
   return value;
 };
@@ -110,7 +110,7 @@ nx.svg.Shape.prototype.attr = function(data) {
  */
 nx.svg.Shape.prototype.setOutline = function(color, thickness) {
   this.outlineColor = color;
-  this.outlineThickness = parseInt(thickness);
+  this.outlineThickness = parseFloat(thickness);
   this.adjustOutline_();
   return this;
 };
