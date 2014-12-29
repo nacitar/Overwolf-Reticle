@@ -47,8 +47,6 @@ overlay.onResize = function() {
  * Invoked when game state changes.  Used when in overwolf.
  */
 overlay.onGameStateChanged = function() {
-  // If it was visible outside the game, we would want to see settings.
-  overlay.settings.setVisible(!nx.ow.isGameFocused());
   var width, height;
   if (nx.ow.gameInfo()) {
     width = nx.ow.gameInfo().width;
@@ -64,7 +62,7 @@ overlay.onGameStateChanged = function() {
  * Hides the settings window if you're in a game.
  */
 overlay.hideSettings = function() {
-  if (nx.ow.isGameFocused()) {
+  if (nx.ow.isInOverwolf()) {
     overlay.settings.setVisible(false);
   }
 };
