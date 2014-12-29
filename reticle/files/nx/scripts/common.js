@@ -280,7 +280,6 @@ nx.clearStorage = function() {
  * @param {string} nodeId The id of a parent node of the fields to wrap.
  * @constructor
  */
-// TODO: move jscolor initialization elsewhere?
 nx.StorageNode = function(storageKey, nodeId) {
   this.STORAGE_KEY = storageKey;
   this.NODE_ID = nodeId;
