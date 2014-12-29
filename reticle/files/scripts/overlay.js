@@ -127,5 +127,5 @@ overlay.init = function(surfaceId, storageKey, nodeId) {
     overlay.settings.setVisible(true);
   }
   // Initial render
-  overlay.onDataChanged();
+  overlay.renderReticle();
 };

@@ -422,3 +422,11 @@ nx.ready = function(callback, opt_context) {
     nx.readyEventHandlersInstalled_ = true;
   }
 };
+/**
+ * Escapes a string to be used in a RegExp
+ * @param {string} value The value to escape.
+ * @return {string} The escaped string.
+ */
+nx.escapeRegExp = function(value) {
+  return value.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};

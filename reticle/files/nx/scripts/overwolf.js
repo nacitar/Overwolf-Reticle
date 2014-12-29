@@ -88,7 +88,19 @@ nx.ow.getWindowId = function(name, callback) {
   if (nx.ow.isInOverwolf()) {
     overwolf.windows.obtainDeclaredWindow(name, function(result) {
       if (result.status === 'success') {
-        callback(name, result.window.id);
+        // Overwolf puts an extra suffix _<name> on the id returned here, even
+        // though it is not present when retrieving the current window and also
+        // even though using it with the suffix breaks every window-id
+        // accepting function.  Remove this suffix.
+        var id = result.window.id;
+        var suffix = '_' + name;
+        var re = new RegExp(nx.escapeRegExp(suffix) + '$');
+        // Check if the extra suffix is present
+        if (re.test(id)) {
+          // Remove the extra suffix
+          id = id.slice(0, -suffix.length);
+        }
+        callback(name, id);
       } else {
         callback(name, null);
       }
