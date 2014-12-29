@@ -182,7 +182,7 @@ nx.bind = function(toObject, methodName) {
   return function() { toObject[methodName](); };
 };
 /**
- * Copies all propeties from srcObject into destObject
+ * Copies all properties from srcObject into destObject
  * @param {Object} destObject The destination object.
  * @param {Object} srcObject The source object.
  */
@@ -192,13 +192,6 @@ nx.copyProperties = function(destObject, srcObject) {
       destObject[property] = srcObject[property];
     }
   }
-};
-/**
- * @return {Object} An object containing width/height members indicating
- *     the screen size.
- */
-nx.screenSize = function() {
-  return new nx.Size(window.screen.width, window.screen.height);
 };
 /**
  * @param {Element} element A DOM element.

@@ -8,23 +8,30 @@ nx.ow = nx.ow || {};
 // DEPENDS: common.js
 
 /**
- * Indicates if we are running in overwolfoor not.
+ * Indicates if we are running in overwolf or not.
  * @return {boolean} True if we are running in overwolf, false otherwise.
  */
-nx.ow.inOverwolf = function() {
+nx.ow.isInOverwolf = function() {
   return (typeof(overwolf) != 'undefined');
 };
 /**
- * Indicates whether a game is focused or not.
- * @public {boolean}
+ * The current GameInfoChangeData from overwolf.
+ * @public {GameInfoChangeData}
  */
-nx.ow.isInGame = false;
+nx.ow.gameInfoChangeData = null;
 /**
  * Stores the user's callback for game state changes.  Should really be an
  * event, though.
  * @private {Function}
  */
 nx.ow.gameStateChangedCallback_ = null;
+/**
+ * Provides current GameInfo from overwolf.
+ * @return {GameInfo} The game info.
+ */
+nx.ow.gameInfo = function() {
+  return (nx.ow.gameInfoChangeData && nx.ow.gameInfoChangeData.gameInfo);
+};
 /**
  * Sets the callback to be invokes when the game state changes.
  * @param {Function} callback The function to be invoked.
@@ -38,17 +45,22 @@ nx.ow.setGameStateChangedCallback = function(callback) {
  * @private {Function}
  */
 nx.ow.onGameInfoUpdated_ = function(gameInfoChangeData) {
-  var gameInfo = gameInfoChangeData.gameInfo;
-  if (Boolean(gameInfo && gameInfo.isInFocus) != nx.ow.isInGame) {
-    nx.ow.isInGame = !nx.ow.isInGame;
-    nx.ow.gameStateChangedCallback_ && nx.ow.gameStateChangedCallback_();
-  }
+  nx.ow.gameInfoChangeData = gameInfoChangeData;
+  nx.ow.gameStateChangedCallback_ && nx.ow.gameStateChangedCallback_();
+};
+/**
+ * Indicates if we are in a game or not.
+ * @return {boolean} True if a game is focused, false otherwise.
+ */
+nx.ow.isGameFocused = function() {
+  return Boolean(nx.ow.gameInfo() && nx.ow.gameInfo().isInFocus);
 };
 /**
  * Triggers the onGameInfoUpdated handler.
  * @param {?Object} gameInfo A GameInfo object from overwolf, or null.
+ * @private
  */
-nx.ow.updateGameInfo = function(gameInfo) {
+nx.ow.onGameInfoRetrieved_ = function(gameInfo) {
   nx.ow.onGameInfoUpdated_({
       gameInfo: gameInfo,
       resolutionChanged: true,
@@ -57,33 +69,51 @@ nx.ow.updateGameInfo = function(gameInfo) {
       gameChanged: true });
 };
 /**
- * For testing, allows you to simulate overwolf having changed the game state.
- * @param {boolean} isInGame True if indicating being in a game.
+ * Retrieves fresh game information, causing a change event that indicates
+ * everything has changed.
  */
-nx.ow.setGameState = function(isInGame) {
-  info = {gameInfo: {isInFocus: Boolean(isInGame)}};
-  nx.ow.onGameInfoUpdated_(info);
+nx.ow.updateGameInfo = function() {
+  if (nx.ow.isInOverwolf()) {
+    overwolf.games.getRunningGameInfo(nx.ow.onGameInfoRetrieved_);
+  }
+};
+
+/**
+ * Retrieves the id for a window from its name, invoking a callback with the
+ * name and id.
+ * @param {string} name The name of the window.
+ * @param {Function} callback The callback to invoke, taking a name and id.
+ */
+nx.ow.getWindowId = function(name, callback) {
+  if (nx.ow.isInOverwolf()) {
+    overwolf.windows.obtainDeclaredWindow(name, function(result) {
+      if (result.status === 'success') {
+        callback(name, result.window.id);
+      } else {
+        callback(name, null);
+      }
+    });
+  }
 };
 /**
- * Attempts to set the window to be at (0,0) and to match the screen size.
+ * Attempts to move the specified window the the requested position and to
+ * resize it to the requested size.
+ * @param {string} id The window id.
+ * @param {number} x The x coordinate.
+ * @param {number} y The y coordinate.
+ * @param {number} width The width.
+ * @param {number} height The height.
  */
-nx.ow.setFullScreen = function() {
-  if (!nx.ow.inOverwolf()) return;
-
-  overwolf.windows.getCurrentWindow(function(result) {
-    if (result.status === 'success') {
-      var size = nx.screenSize();
-      overwolf.windows.changePosition(result.window.id, 0, 0);
-      overwolf.windows.changeSize(result.window.id, size.width, size.height);
-    }
-  });
+nx.ow.setWindowRect = function(id, x, y, width, height) {
+  if (!nx.ow.isInOverwolf()) return;
+  overwolf.windows.changePosition(id, x, y);
+  overwolf.windows.changeSize(id, width, height);
 };
 
 // INITIALIZATION
 (function() {
   // Add a listener and initialize the game state information.
-  if (nx.ow.inOverwolf()) {
+  if (nx.ow.isInOverwolf()) {
     overwolf.games.onGameInfoUpdated.addListener(nx.ow.onGameInfoUpdated_);
-    overwolf.games.getRunningGameInfo(nx.ow.updateGameInfo);
   }
 })();

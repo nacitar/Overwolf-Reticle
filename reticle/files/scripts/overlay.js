@@ -12,7 +12,6 @@ overlay.reticle = null;
  * @public {nx.StorageNode}
  */
 overlay.settings = null;
-
 /**
  * Renders the reticle.
  */
@@ -31,13 +30,6 @@ overlay.onHotkeyPressed = function(name) {
   }
 };
 /**
- * Invoked when the window is resized.
- */
-overlay.onResize = function() {
-  console.log('Window resized.');
-  overlay.renderReticle();
-};
-/**
  * Invoked when the reticle settings have changed.
  */
 overlay.onDataChanged = function() {
@@ -45,24 +37,50 @@ overlay.onDataChanged = function() {
   overlay.renderReticle();
 };
 /**
- * Invoked when you enter/exit a game.
+ * Invoked when the window is resized.
+ */
+overlay.onResize = function() {
+  console.log('Window resized.');
+  overlay.renderReticle();
+};
+/**
+ * Invoked when game state changes.  Used when in overwolf.
  */
 overlay.onGameStateChanged = function() {
-  console.log('Game state: ' + nx.ow.isInGame);
   // If it was visible outside the game, we would want to see settings.
-  if (nx.ow.isInGame) {
-    overlay.settings.setVisible(false);
+  overlay.settings.setVisible(!nx.ow.isGameFocused());
+  var width, height;
+  if (nx.ow.gameInfo()) {
+    width = nx.ow.gameInfo().width;
+    height = nx.ow.gameInfo().height;
   } else {
-    overlay.settings.setVisible(true);
+    width = window.screen.width;
+    height = window.screen.height;
   }
+  // Resize the window, triggering onResize()
+  nx.ow.setWindowRect(overlay.windowId, 0, 0, width, height);
 };
 /**
  * Hides the settings window if you're in a game.
  */
 overlay.hideSettings = function() {
-  if (nx.ow.isInGame) {
+  if (nx.ow.isGameFocused()) {
     overlay.settings.setVisible(false);
   }
+};
+/**
+ * Invoked when a window is retrieved; used to retrieve initial game
+ * information and to use it to resize the overlay window.
+ * @param {string} name The name of the window that was retrieved.
+ * @param {string} id The id of the window that was retrieved.
+ */
+overlay.onWindowRetrieved = function(name, id) {
+  if (name != 'MainWindow' || overlay.windowId) return;
+  overlay.windowId = id;
+  // GameState handler
+  nx.ow.setGameStateChangedCallback(overlay.onGameStateChanged);
+  // Get initial state, which also triggers the change event.
+  nx.ow.updateGameInfo();
 };
 /**
  * Initializes the reticle overlay.
@@ -71,7 +89,6 @@ overlay.hideSettings = function() {
  * @param {string} nodeId The id of a parent node of the settings fields.
  */
 overlay.init = function(surfaceId, storageKey, nodeId) {
-  nx.ow.setFullScreen();
   overlay.reticle = new nx.Reticle(surfaceId);
   overlay.settings = new nx.StorageNode(storageKey, nodeId);
   overlay.settings.accessors().forEach(function(accessor) {
@@ -91,24 +108,24 @@ overlay.init = function(surfaceId, storageKey, nodeId) {
       accessor.set(accessor.get());
     }
   });
-  overlay.settings.load();
-  overlay.settings.setOnChangeListener(overlay.onDataChanged);
-
   // Resize handler
   window.addEventListener('resize', overlay.onResize);
 
-  // Register hotkey
-  if (nx.ow.inOverwolf()) {
+  overlay.settings.load();
+  overlay.settings.setOnChangeListener(overlay.onDataChanged);
+
+  if (nx.ow.isInOverwolf()) {
+    // Register hotkey
     overwolf.settings.registerHotKey('reticle_menu', function(result) {
         if (result.status == 'success') {
           overlay.onHotkeyPressed('reticle_menu');
         }
     });
+    nx.ow.getWindowId('MainWindow', overlay.onWindowRetrieved);
+  } else {
+    // Initial view status
+    overlay.settings.setVisible(true);
   }
-  // GameState handler
-  nx.ow.setGameStateChangedCallback(overlay.onGameStateChanged);
-  overlay.onGameStateChanged();
-
   // Initial render
-  overlay.renderReticle();
+  overlay.onDataChanged();
 };

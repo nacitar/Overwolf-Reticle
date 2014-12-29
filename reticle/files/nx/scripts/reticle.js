@@ -6,7 +6,7 @@ var nx = nx || {};
 /**
  * Constructor for a nx.Reticle.
  * @param {number} surfaceElementId The id of the svg DOM element on which to
- *    render.
+ *     render.
  * @constructor
  */
 nx.Reticle = function(surfaceElementId) {
