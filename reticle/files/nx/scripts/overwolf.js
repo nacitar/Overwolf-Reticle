@@ -77,7 +77,6 @@ nx.ow.updateGameInfo = function() {
     overwolf.games.getRunningGameInfo(nx.ow.onGameInfoRetrieved_);
   }
 };
-
 /**
  * Retrieves the id for a window from its name, invoking a callback with the
  * name and id.
