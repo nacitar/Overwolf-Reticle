@@ -10,11 +10,8 @@ var nx = nx || {};
  * @constructor
  */
 nx.Reticle = function(surfaceElementId) {
-  var element = document.getElementById(surfaceElementId);
-  if (!element) {
-    throw 'Could not find a SVG DOM Element with id of ' + surfaceElementId;
-  }
-  this.surface = Snap(element);
+  this.elementId = surfaceElementId;
+  this.surface = Snap(this.element());
 
   // Make a group for everything
   this.reticleGroup = this.surface.g();
@@ -42,6 +39,17 @@ nx.Reticle = function(surfaceElementId) {
   this.crossRight.addToGroup(this.cross);
 
   this.currentPeriod_ = 0;
+};
+/**
+ * Returns the svg DOM element to which we are rendering.
+ * @return {Element} The DOM element.
+ */
+nx.Reticle.prototype.element = function() {
+  var element = document.getElementById(this.elementId);
+  if (!element) {
+    throw 'Could not find a SVG DOM Element with id of ' + this.elementId;
+  }
+  return element;
 };
 /**
  * Helper function to convert booleans to visibilty states.
@@ -82,6 +90,9 @@ nx.Reticle.prototype.render = function(data) {
   // instead.  Needed this to make firefox happy.
   // see: https://bugzilla.mozilla.org/show_bug.cgi?id=874811
   var size = nx.elementSize(this.surface.node.parentNode);
+
+  // Set the rendering mode.
+  this.element().setAttribute('shape-rendering', data.shapeRendering);
 
   // Set opacity reticle-wide; avoids blend issues with overlapping shapes.
   // Set position here as well; avoids rotational animation bug when resizing,
