@@ -1,6 +1,6 @@
-goog.provide('nx.ow')
+goog.provide('nx.ow');
 
-goog.require('nx')
+goog.require('nx');
 
 /**
  * Indicates if we are running in overwolf or not.

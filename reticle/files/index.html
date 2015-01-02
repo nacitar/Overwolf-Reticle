@@ -13,7 +13,7 @@
 <script>
   // Allow developing in-browser with source files if compiled script missing.
   if (!window.main && !window.overwolf) {
-    console.log("Compiled script failed; falling back to source content.");
+    console.log('Compiled script failed; falling back to source content.');
     document.write('<script src="3rdparty/closure/base.js"><\/script>');
     document.write('<script src="../../src/all.js"><\/script>');
   }
@@ -97,9 +97,9 @@
   <input id="circleStrokeSize" value="1">
   <label for="circleStrokeSize">stroke size</label>
   <hr>
-  <input type="button" value="Save" onclick="overlay.settings.save();">
-  <input type="button" value="Load" onclick="overlay.settings.load();">
-  <input type="button" value="Hide" onclick="overlay.hideSettings();">
+  <input type="button" value="Save" onclick="main.save();">
+  <input type="button" value="Load" onclick="main.load();">
+  <input type="button" value="Hide" onclick="main.hide();">
 </div>
 <svg id="reticleSurface" version="1.1" height="100%" width="100%"
     shape-rendering="geometricPrecision"

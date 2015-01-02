@@ -1,9 +1,9 @@
 
-goog.provide('overlay')
+goog.provide('overlay');
 
-goog.require('nx')
-goog.require('nx.ow')
-goog.require('nx.svg')
+goog.require('nx');
+goog.require('nx.ow');
+goog.require('nx.svg');
 
 /**
  * Constructor for a overlay.Reticle.
@@ -236,14 +236,6 @@ overlay.onGameStateChanged = function() {
   nx.ow.setWindowRect(overlay.windowId, 0, 0, width, height);
 };
 /**
- * Hides the settings window if you're in a game.
- */
-overlay.hideSettings = function() {
-  if (nx.ow.isInOverwolf()) {
-    overlay.settings.setVisible(false);
-  }
-};
-/**
  * Invoked when a window is retrieved; used to retrieve initial game
  * information and to use it to resize the overlay window.
  * @param {string} name The name of the window that was retrieved.
@@ -313,9 +305,32 @@ overlay.init = function(surfaceId, storageKey, nodeId) {
   // Initial render
   overlay.renderReticle();
 };
+/**
+ * Saves the current settings.
+ */
+overlay.saveSettings = function() {
+  overlay.settings.save();
+};
+/**
+ * Loads any saved settings.
+ */
+overlay.loadSettings = function() {
+  overlay.settings.load();
+}
+/**
+ * Hides the settings window if you're in a game.
+ */
+overlay.hideSettings = function() {
+  if (nx.ow.isInOverwolf()) {
+    overlay.settings.setVisible(false);
+  }
+};
 
 // Exports
 window['main'] = {
   'init': overlay.init,
-  'onDataChanged': overlay.onDataChanged
+  'onDataChanged': overlay.onDataChanged,
+  'save': overlay.saveSettings,
+  'load': overlay.loadSettings,
+  'hide': overlay.hideSettings
 };

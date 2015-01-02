@@ -14,7 +14,7 @@
       ['nx', 'nx.ow', 'nx.svg'], false);
 })();
 
-goog.require('nx')
-goog.require('nx.ow')
-goog.require('nx.svg')
-goog.require('overlay')
+goog.require('nx');
+goog.require('nx.ow');
+goog.require('nx.svg');
+goog.require('overlay');
