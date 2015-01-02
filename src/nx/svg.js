@@ -1,31 +1,25 @@
-// TODO: google closure?  dojo?
-var nx = nx || {};
-
-/**
- * SVG operation namespace
- */
-nx.svg = nx.svg || {};
+goog.provide('nx.svg');
 
 /**
  * An enum to identify types of shapes.
  * @enum {number}
  */
-nx.svg.ShapeType = Object.freeze({CIRCLE: 0, RECTANGLE: 1});
+nx.svg.ShapeType = {CIRCLE: 0, RECTANGLE: 1};
 /**
  * Wrapper for SVG circle/rect shapes, allowing an outline.
- * @param {Surface} surface a Snap.svg drawing surface.
+ * @param {Paper} paper a Snap.svg drawing paper.
  * @param {nx.svg.ShapeType} shapeType The type of shape to create.
  * @constructor
  */
-nx.svg.Shape = function(surface, shapeType) {
+nx.svg.Shape = function(paper, shapeType) {
   switch (shapeType) {
     case nx.svg.ShapeType.CIRCLE:
-      this.outline = surface.circle();
-      this.shape = surface.circle();
+      this.outline = paper.circle();
+      this.shape = paper.circle();
       break;
     case nx.svg.ShapeType.RECTANGLE:
-      this.outline = surface.rect();
-      this.shape = surface.rect();
+      this.outline = paper.rect();
+      this.shape = paper.rect();
       break;
     default:
       throw 'Invalid shape specified to nx.svg.Shape constructor.';
@@ -82,10 +76,10 @@ nx.svg.Shape.prototype.adjustOutline_ = function() {
           (!this.getAttr('width', 0) || !this.getAttr('height', 0))) ||
       (this.type == nx.svg.ShapeType.CIRCLE && !this.getAttr('r', 0)));
   if (isZeroSize) {
-    this.outline.attr({stroke: 'none'});
+    this.outline.attr({'stroke': 'none'});
   } else {
-    this.outline.attr({stroke: this.outlineColor});
-    this.outline.attr({strokeWidth: strokeWidth + this.outlineThickness * 2});
+    this.outline.attr({'stroke': this.outlineColor});
+    this.outline.attr({'strokeWidth': strokeWidth + this.outlineThickness * 2});
   }
 };
 /**
@@ -114,3 +108,29 @@ nx.svg.Shape.prototype.setOutline = function(color, thickness) {
   this.adjustOutline_();
   return this;
 };
+
+
+/////////////////////////////////////
+
+/*
+nx.svg.Group = function(snapGroup) {
+  this.group = snapGroup;
+};
+
+nx.svg.Group.prototype.add = function(element
+
+nx.svg.Canvas = function(elementId) {
+  this.id = elementId;
+  this.paper = Snap(this.element());
+};
+
+nx.svg.Canvas.prototype.element = function() {
+  return document.getElementById(this.id);
+};
+
+nx.svg.Canvas.prototype.group = function() {
+  // instanceof shape
+  return new nx.svg.Group(this.paper.g());
+};
+*/
+

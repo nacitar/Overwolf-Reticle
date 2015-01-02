@@ -1,121 +1,110 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Reticle Settings</title>
+<meta charset="UTF-8">
+<title>Reticle Settings</title>
 
-    <link rel="stylesheet" href="nx/css/fullscreen.css">
-    <link rel="stylesheet" href="css/overlay.css">
+<link rel="stylesheet" href="css/overlay.css">
 
-    <script type="text/javascript" src="3rdparty/snap.svg-min.js"></script>
-    <script type="text/javascript" src="3rdparty/jscolor/jscolor.js"></script>
+<script src="3rdparty/snap.svg-min.js"></script>
+<script src="3rdparty/jscolor/jscolor.js"></script>
 
-    <script type="text/javascript" src="nx/scripts/common.js"></script>
-    <script type="text/javascript" src="nx/scripts/overwolf.js"></script>
-    <script type="text/javascript" src="nx/scripts/svg.js"></script>
-    <script type="text/javascript" src="nx/scripts/reticle.js"></script>
+<!-- The compiled script -->
+<script src="overwolf-reticle.js"></script>
 
-    <script type="text/javascript" src="scripts/overlay.js"></script>
-    <script type="text/javascript">
-      /**
-       * Initialization once DOM is ready.
-       */
-      nx.ready(function() {
-        if (!nx.ow.isInOverwolf()) {
-          // If we're not in-game, set a background color.  Setting one in game
-          // makes the background non-transparent.
-          document.body.bgColor = 'black';
-        }
-        overlay.init('reticleSurface', 'reticleSettings', 'settingsDialog');
-      });
-    </script>
-  </head>
-  <body>
-    <div id="settingsDialog" class="settings">
-      <div class="header">Reticle Settings</div>
-      <hr>
-      <select id="shapeRendering" style="width: auto">
-        <option value="geometricPrecision" selected="selected">Geometric
-        Precision</option>
-        <option value="crispEdges">Crisp Edges</option>
-      </select>
-      <hr>
-      <input id="opacity" value="1.0">
-      <label for="opacity">opacity [0-1]</label>
-      <br>
-      <input id="crossEnabled" type="checkbox" checked="checked">
-      <label for="crossEnabled">cross enabled</label>
-      <br>
-      <input id="crossColor" class="color" value="#0000FF">
-      <label for="crossColor">fill color</label>
-      <br>
-      <input id="crossStrokeColor" class="color" value="#FFFFFF">
-      <label for="crossStrokeColor">stroke color</label>
-      <br>
-      <input id="crossLength" value="8">
-      <label for="crossLength">length</label>
-      <br>
-      <input id="crossSpread" value="7">
-      <label for="crossSpread">spread</label>
-      <br>
-      <input id="crossThickness" value="2">
-      <label for="crossThickness">thickness</label>
-      <br>
-      <input id="crossStrokeSize" value="1">
-      <label for="crossStrokeSize">stroke size</label>
-      <br>
-      <input id="crossSpinPeriod" value="1000">
-      <label for="crossSpinPeriod">spin period (ms)</label>
-      <br>
-      <input id="crossRotation" value="0">
-      <label for="crossRotation">degrees rotated</label>
-      <br>
-      <input id="centerEnabled" type="checkbox" checked="checked">
-      <label for="centerEnabled">center enabled</label>
-      <br/>
-      <select id="centerShape">
-        <option value="circle" selected="selected">Circle</option>
-        <option value="square">Square</option>
-      </select>
-      <label for="centerShape">shape</label>
-      <br>
-      <input id="centerColor" class="color" value="#0000FF">
-      <label for="centerColor">fill color</label>
-      <br>
-      <input id="centerStrokeColor" class="color" value="#FFFFFF">
-      <label for="centerStrokeColor">stroke color</label>
-      <br>
-      <input id="centerDiameter" value="4">
-      <label for="centerDiameter">diameter/width</label>
-      <br>
-      <input id="centerStrokeSize" value="1">
-      <label for="centerStrokeSize">stroke size</label>
-      <br>
-      <input id="circleEnabled" type="checkbox" checked="checked">
-      <label for="circleEnabled">circle enabled</label>
-      <br>
-      <input id="circleColor" class="color" value="#0000FF">
-      <label for="circleColor">fill color</label>
-      <br>
-      <input id="circleStrokeColor" class="color" value="#FFFFFF">
-      <label for="circleStrokeColor">stroke color</label>
-      <br>
-      <input id="circleDiameter" value="38">
-      <label for="circleDiameter">diameter</label>
-      <br>
-      <input id="circleThickness" value="1">
-      <label for="circleThickness">thickness</label>
-      <br>
-      <input id="circleStrokeSize" value="1">
-      <label for="circleStrokeSize">stroke size</label>
-      <hr>
-      <input type="button" value="Save" onclick="overlay.settings.save();">
-      <input type="button" value="Load" onclick="overlay.settings.load();">
-      <input type="button" value="Hide" onclick="overlay.hideSettings();">
-    </div>
-    <svg id="reticleSurface" version="1.1" height="100%" width="100%"
-        shape-rendering="geometricPrecision"
-        xmlns="http://www.w3.org/2000/svg">
-    </svg>
-  </body>
-</html>
+<script>
+  // Allow developing in-browser with source files if compiled script missing.
+  if (!window.main && !window.overwolf) {
+    console.log("Compiled script failed; falling back to source content.");
+    document.write('<script src="3rdparty/closure/base.js"><\/script>');
+    document.write('<script src="../../src/all.js"><\/script>');
+  }
+</script>
+
+<div id="settingsDialog" class="settings">
+  <div class="header">Reticle Settings</div>
+  <hr>
+  <select id="shapeRendering" style="width: auto">
+    <option value="geometricPrecision" selected="selected">Geometric
+    Precision</option>
+    <option value="crispEdges">Crisp Edges</option>
+  </select>
+  <hr>
+  <input id="opacity" value="1.0">
+  <label for="opacity">opacity [0-1]</label>
+  <br>
+  <input id="crossEnabled" type="checkbox" checked="checked">
+  <label for="crossEnabled">cross enabled</label>
+  <br>
+  <input id="crossColor" class="color" value="#0000FF">
+  <label for="crossColor">fill color</label>
+  <br>
+  <input id="crossStrokeColor" class="color" value="#FFFFFF">
+  <label for="crossStrokeColor">stroke color</label>
+  <br>
+  <input id="crossLength" value="8">
+  <label for="crossLength">length</label>
+  <br>
+  <input id="crossSpread" value="7">
+  <label for="crossSpread">spread</label>
+  <br>
+  <input id="crossThickness" value="2">
+  <label for="crossThickness">thickness</label>
+  <br>
+  <input id="crossStrokeSize" value="1">
+  <label for="crossStrokeSize">stroke size</label>
+  <br>
+  <input id="crossSpinPeriod" value="1000">
+  <label for="crossSpinPeriod">spin period (ms)</label>
+  <br>
+  <input id="crossRotation" value="0">
+  <label for="crossRotation">degrees rotated</label>
+  <br>
+  <input id="centerEnabled" type="checkbox" checked="checked">
+  <label for="centerEnabled">center enabled</label>
+  <br/>
+  <select id="centerShape">
+    <option value="circle" selected="selected">Circle</option>
+    <option value="square">Square</option>
+  </select>
+  <label for="centerShape">shape</label>
+  <br>
+  <input id="centerColor" class="color" value="#0000FF">
+  <label for="centerColor">fill color</label>
+  <br>
+  <input id="centerStrokeColor" class="color" value="#FFFFFF">
+  <label for="centerStrokeColor">stroke color</label>
+  <br>
+  <input id="centerDiameter" value="4">
+  <label for="centerDiameter">diameter/width</label>
+  <br>
+  <input id="centerStrokeSize" value="1">
+  <label for="centerStrokeSize">stroke size</label>
+  <br>
+  <input id="circleEnabled" type="checkbox" checked="checked">
+  <label for="circleEnabled">circle enabled</label>
+  <br>
+  <input id="circleColor" class="color" value="#0000FF">
+  <label for="circleColor">fill color</label>
+  <br>
+  <input id="circleStrokeColor" class="color" value="#FFFFFF">
+  <label for="circleStrokeColor">stroke color</label>
+  <br>
+  <input id="circleDiameter" value="38">
+  <label for="circleDiameter">diameter</label>
+  <br>
+  <input id="circleThickness" value="1">
+  <label for="circleThickness">thickness</label>
+  <br>
+  <input id="circleStrokeSize" value="1">
+  <label for="circleStrokeSize">stroke size</label>
+  <hr>
+  <input type="button" value="Save" onclick="overlay.settings.save();">
+  <input type="button" value="Load" onclick="overlay.settings.load();">
+  <input type="button" value="Hide" onclick="overlay.hideSettings();">
+</div>
+<svg id="reticleSurface" version="1.1" height="100%" width="100%"
+    shape-rendering="geometricPrecision"
+    xmlns="http://www.w3.org/2000/svg">
+</svg>
+<script>
+  main.init('reticleSurface', 'reticleSettings', 'settingsDialog');
+</script>

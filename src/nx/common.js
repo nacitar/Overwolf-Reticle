@@ -1,5 +1,4 @@
-// TODO: google closure?  dojo?
-var nx = nx || {};
+goog.provide('nx');
 
 /**
  * Checks if the provided value is a number.  This does not necessarily mean
@@ -22,8 +21,8 @@ nx.isUndefined = function(value) {
  * An enum to identify types of fields.
  * @enum {number}
  */
-nx.FieldType = Object.freeze({
-    TEXT: 0, CHECKBOX: 1, RADIO: 2, COLOR: 3, SELECT: 4});
+nx.FieldType = {
+    TEXT: 0, CHECKBOX: 1, RADIO: 2, COLOR: 3, SELECT: 4};
 /**
  * Creates a nx.Point object, providing 'x' and 'y' properties.
  * @param {number} x A x coordinate.
@@ -47,7 +46,7 @@ nx.Size = function(width, height) {
 /**
  * Creates an wrapper object for DOM elements, known as an accessor.  The
  * accessor provides useful functions form fields which have an id attribute.
- * @param {number} id The id for a DOM element.
+ * @param {string} id The id for a DOM element.
  * @constructor
  */
 nx.Accessor = function(id) {
@@ -174,12 +173,12 @@ nx.setFieldData = function(accessorArray, data) {
 };
 /**
  * A generic closure maker.
- * @param {Object} toObject The object to bind.
- * @param {string} methodName The name of the method to bind to the object.
+ * @param {Object} object The object to bind.
+ * @param {Function} method The name of the method to bind to the object.
  * @return {Function} The bound closure.
  */
-nx.bind = function(toObject, methodName) {
-  return function() { toObject[methodName](); };
+nx.bind = function(object, method) {
+  return function() { return method.apply(object, arguments); };
 };
 /**
  * Copies all properties from srcObject into destObject
@@ -194,11 +193,11 @@ nx.copyProperties = function(destObject, srcObject) {
   }
 };
 /**
- * @param {Element} element A DOM element.
+ * @param {Node} element A DOM node.
  * @return {nx.Size} An object containing width/height members indicating
  *     the size of the element.
  */
-nx.elementSize = function(element) {
+nx.nodeSize = function(element) {
   return new nx.Size(element.offsetWidth, element.offsetHeight);
 };
 /**
@@ -221,7 +220,7 @@ nx.LocalStorageWrapper.prototype.getItem = function(key) {
 /**
  * Sets a key's associated value in localStorage.
  * @param {string} key The key to store.
- * @param {*} value The value to store.
+ * @param {string} value The value to store.
  */
 nx.LocalStorageWrapper.prototype.setItem = function(key, value) {
   if (window.localStorage) {
@@ -248,7 +247,7 @@ nx.storage = new nx.LocalStorageWrapper();
 /**
  * Retrieves the requested value from localStorage, parsing it as JSON.
  * @param {string} key The key to be retrieved.
- * @return {*} The value from storage for the specified key, interpreted as
+ * @return {?} The value from storage for the specified key, interpreted as
  *     JSON.  If no value is present, null.
  */
 nx.getStorage = function(key) {
@@ -261,7 +260,7 @@ nx.getStorage = function(key) {
 /**
  * Sets a key's value in localStorage, stringifying the value as JSON.
  * @param {string} key The key to be set.
- * @param {*} value The value to be stored.
+ * @param {?} value The value to be stored.
  */
 nx.setStorage = function(key, value) {
   if (key) nx.storage.setItem(key, JSON.stringify(value));
@@ -288,7 +287,7 @@ nx.StorageNode = function(storageKey, nodeId) {
   this.ACCESSORS.forEach(function(accessor) {
       var fieldType = accessor.fieldType();
       if (fieldType != null) {
-        accessor.element().onchange = nx.bind(this, 'onDataChanged');
+        accessor.element().onchange = nx.bind(this, this.onDataChanged);
       }
   }, this);
   this.onDataChanged();

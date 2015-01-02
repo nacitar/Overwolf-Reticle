@@ -1,0 +1,4 @@
+25472bf87c572bcf6791715161ce095af37408b8
+
+Compiled with normal optimization level, then edited to have COMPILED=0.
+Also created a dummy deps.js to silence error output.

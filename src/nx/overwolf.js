@@ -1,18 +1,13 @@
-// TODO: google closure?  dojo?
-var nx = nx || {};
-/**
- * Namespace for overwolf stuff
- */
-nx.ow = nx.ow || {};
+goog.provide('nx.ow')
 
-// DEPENDS: common.js
+goog.require('nx')
 
 /**
  * Indicates if we are running in overwolf or not.
  * @return {boolean} True if we are running in overwolf, false otherwise.
  */
 nx.ow.isInOverwolf = function() {
-  return (typeof(overwolf) != 'undefined');
+  return Boolean(window.overwolf);
 };
 /**
  * The current GameInfoChangeData from overwolf.
@@ -41,11 +36,11 @@ nx.ow.setGameStateChangedCallback = function(callback) {
 };
 /**
  * Callback for overwolf's onGameInfoUpdated.
- * @param {Object} gameInfoChangeData The GameInfoChangeData from overwolf.
- * @private {Function}
+ * @param {GameInfoChangeData} data The GameInfoChangeData from overwolf.
+ * @private
  */
-nx.ow.onGameInfoUpdated_ = function(gameInfoChangeData) {
-  nx.ow.gameInfoChangeData = gameInfoChangeData;
+nx.ow.onGameInfoUpdated_ = function(data) {
+  nx.ow.gameInfoChangeData = data;
   nx.ow.gameStateChangedCallback_ && nx.ow.gameStateChangedCallback_();
 };
 /**
@@ -61,12 +56,12 @@ nx.ow.isGameFocused = function() {
  * @private
  */
 nx.ow.onGameInfoRetrieved_ = function(gameInfo) {
-  nx.ow.onGameInfoUpdated_({
+  nx.ow.onGameInfoUpdated_( /** @type {GameInfoChangeData} */ ({
       gameInfo: gameInfo,
       resolutionChanged: true,
       focusChanged: true,
       runningChanged: true,
-      gameChanged: true });
+      gameChanged: true }));
 };
 /**
  * Retrieves fresh game information, causing a change event that indicates
