@@ -316,7 +316,7 @@ overlay.saveSettings = function() {
  */
 overlay.loadSettings = function() {
   overlay.settings.load();
-}
+};
 /**
  * Hides the settings window if you're in a game.
  */
