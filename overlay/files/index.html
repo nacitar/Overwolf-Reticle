@@ -14,8 +14,15 @@
   // Allow developing in-browser with source files if compiled script missing.
   if (!window.main && !window.overwolf) {
     console.log('Compiled script failed; falling back to source content.');
-    document.write('<script src="3rdparty/closure/base.js"><\/script>');
-    document.write('<script src="../../src/all.js"><\/script>');
+    (function() {
+      var sources = [
+          '../../3rdparty/closure-library/closure/goog/base.js',
+          '../../src/all.js'
+      ];
+      sources.forEach(function(filepath) {
+          document.write('<script src="' + filepath + '"><\/script>');
+      });
+    })();
   }
 </script>
 
