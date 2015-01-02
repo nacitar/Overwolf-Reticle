@@ -40,7 +40,41 @@ overlay.Reticle = function(surfaceElementId) {
   this.crossRight = new nx.svg.Shape(this.surface, nx.svg.ShapeType.RECTANGLE);
   this.crossRight.addToGroup(this.cross);
 
+  this.image = this.surface.image();
+  this.reticleGroup.add(this.image);
+
+  this.rawImage = new Image();
+  this.rawImage.onload = nx.bind(this, this.updateImage);
+  this.rawImage.onerror = nx.bind(this, this.clearImage);
+
   this.currentPeriod_ = 0;
+  this.imageScale_ = 1;
+  this.imageURL_ = '';
+};
+
+/**
+ * Called when the image loads or needs updating.
+ */
+overlay.Reticle.prototype.updateImage = function() {
+  console.log('Loaded: ' + [this.rawImage.width, this.rawImage.height]);
+  var width = this.rawImage.width;
+  var height = this.rawImage.height;
+  this.image.attr({
+    'width': width,
+    'height': height,
+    'xlink:href': this.imageURL_,
+    'transform': 't' + [-width / 2, -height / 2] + ' s' + this.imageScale_});
+};
+/**
+ * Called when the image needs to be cleared.
+ */
+overlay.Reticle.prototype.clearImage = function() {
+  this.rawImage.removeAttribute('src');
+  this.image.attr({
+    'width': 0,
+    'height': 0});
+  // snap won't let you clear href... do it at the DOM level.
+  this.image.node.removeAttribute('href');
 };
 /**
  * Returns the svg DOM element to which we are rendering.
@@ -169,16 +203,15 @@ overlay.Reticle.prototype.render = function(data) {
       this.setRotation(data['crossRotation']);
     }
   }
+  this.imageScale_ = data['imageScale'];
+  this.imageURL_ = data['imageURL'];
+  if (this.rawImage.src != this.imageURL_) {
+    this.clearImage();
+  }
+  this.image.attr({'visibility' : this.toVisibility(data['imageEnabled'])});
+  this.rawImage.src = this.imageURL_;
+  this.updateImage();
 };
-
-
-
-
-
-
-
-
-
 /**
  * The overlay's reticle object.
  * @public {overlay.Reticle}

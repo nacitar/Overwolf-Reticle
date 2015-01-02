@@ -16,6 +16,10 @@ Element.prototype.animate = function(from, to, setter, ms, easing, callback) {};
 /** @param {*=} value */
 Element.prototype.attr = function(params, value) {};
 Element.prototype.stop = function() {};
+/**
+ * @public {Node}
+ */
+Element.prototype.node = null;
 
 /**
  * @constructor
@@ -34,6 +38,10 @@ Paper.prototype.circle = function() {};
  * @return {Element} the rect
  */
 Paper.prototype.rect = function() {};
+/**
+ * @return {Element} the image
+ */
+Paper.prototype.image = function() {};
 /**
  * @public {Node}
  */

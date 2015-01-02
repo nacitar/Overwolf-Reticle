@@ -102,6 +102,14 @@
   <br>
   <input id="circleStrokeSize" value="1">
   <label for="circleStrokeSize">stroke size</label>
+  <br>
+  <input id="imageEnabled" type="checkbox" checked="checked">
+  <label for="imageEnabled">image url enabled</label>
+  <br>
+  <input id="imageURL" value="" style="width: 100%">
+  <br>
+  <input id="imageScale" value="1">
+  <label for="imageScale">image scale</label>
   <hr>
   <input type="button" value="Save" onclick="main.save();">
   <input type="button" value="Load" onclick="main.load();">
@@ -109,10 +117,9 @@
 </div>
 <svg id="reticleSurface" version="1.1" height="100%" width="100%"
     shape-rendering="geometricPrecision"
-    xmlns="http://www.w3.org/2000/svg">
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
 </svg>
-<!-- img id="reticleImage" class="floatingCenter"
-    src="https://www.gamersfirst.com/apb/img/page_loading.gif" -->
 <script>
   main.init('reticleSurface', 'reticleSettings', 'settingsDialog');
 </script>
