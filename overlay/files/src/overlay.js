@@ -358,6 +358,22 @@ overlay.hideSettings = function() {
     overlay.settings.setVisible(false);
   }
 };
+/**
+ * A small debug function used to help diagnose problems.
+ */
+overlay.debug = function() {
+  overlay.debugData = {};
+  if (nx.ow.isInOverwolf()) {
+    overwolf.windows.getCurrentWindow(function(result) {
+      if (result.status === 'success') {
+        overlay.debugData['window'] = result.window;
+      }
+    });
+    overwolf.games.getRunningGameInfo(function(gameInfo) {
+      overlay.debugData['gameInfo'] = gameInfo;
+    });
+  }
+};
 
 // Exports
 window['main'] = {
