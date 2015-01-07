@@ -4,27 +4,11 @@
 
 <link rel="stylesheet" href="css/overlay.css">
 
-<script src="3rdparty/snap.svg-min.js"></script>
+<script src="3rdparty/closure/goog/base.js"></script>
 <script src="3rdparty/jscolor/jscolor.js"></script>
+<script src="3rdparty/snap.svg.js"></script>
+<script src="src/all.js"></script>
 
-<!-- The compiled script -->
-<script src="overwolf-reticle.js"></script>
-
-<script>
-  // Allow developing in-browser with source files if compiled script missing.
-  if (!window.main && !window.overwolf) {
-    console.log('Compiled script failed; falling back to source content.');
-    (function() {
-      var sources = [
-          '../../3rdparty/closure-library/closure/goog/base.js',
-          '../../src/all.js'
-      ];
-      sources.forEach(function(filepath) {
-          document.write('<script src="' + filepath + '"><\/script>');
-      });
-    })();
-  }
-</script>
 <div id="settingsDialog" class="settings">
   <div class="header">Reticle Settings</div>
   <hr>

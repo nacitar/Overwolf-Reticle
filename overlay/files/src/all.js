@@ -1,12 +1,12 @@
 
 // If generating deps:
 //   python 3rdparty/closure-library/closure/bin/build/depswriter.py \
-//       --root_with_prefix="src ../../../../src" \
-//       --output_file=src/deps.js
+//       --root_with_prefix="overlay/files/src ../../../src" \
+//       --output_file="overlay/files/src/deps.js"
 
 (function() {
   // relative to closure's base.js
-  var here = '../../../../src/';
+  var here = '../../../src/';
   goog.addDependency(here + 'nx/common.js', ['nx'], [], false);
   goog.addDependency(here + 'nx/overwolf.js', ['nx.ow'], ['nx'], false);
   goog.addDependency(here + 'nx/svg.js', ['nx.svg'], [], false);

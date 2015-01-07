@@ -1,35 +1,1010 @@
-var jscolor={dir:"",bindClass:"color",binding:!0,preloading:!0,install:function(){jscolor.addEvent(window,"load",jscolor.init)},init:function(){jscolor.binding&&jscolor.bind();jscolor.preloading&&jscolor.preload()},getDir:function(){if(!jscolor.dir){var a=jscolor.detectDir();jscolor.dir=!1!==a?a:"jscolor/"}return jscolor.dir},detectDir:function(){for(var a=location.href,f=document.getElementsByTagName("base"),c=0;c<f.length;c+=1)f[c].href&&(a=f[c].href);f=document.getElementsByTagName("script");for(c=
-0;c<f.length;c+=1)if(f[c].src&&/(^|\/)jscolor\.js([?#].*)?$/i.test(f[c].src))return a=(new jscolor.URI(f[c].src)).toAbsolute(a),a.path=a.path.replace(/[^\/]+$/,""),a.query=null,a.fragment=null,a.toString();return!1},bind:function(){for(var a=new RegExp("(^|\\s)("+jscolor.bindClass+")(\\s*(\\{[^}]*\\})|\\s|$)","i"),f=document.getElementsByTagName("input"),c=0;c<f.length;c+=1)if(!jscolor.isColorAttrSupported||"color"!=f[c].type.toLowerCase()){var n;if(!f[c].color&&f[c].className&&(n=f[c].className.match(a))){var v=
-{};if(n[4])try{v=(new Function("return ("+n[4]+")"))()}catch(A){}f[c].color=new jscolor.color(f[c],v)}}},preload:function(){for(var a in jscolor.imgRequire)jscolor.imgRequire.hasOwnProperty(a)&&jscolor.loadImage(a)},images:{pad:[181,101],sld:[16,101],cross:[15,15],arrow:[7,11]},imgRequire:{},imgLoaded:{},requireImage:function(a){jscolor.imgRequire[a]=!0},loadImage:function(a){jscolor.imgLoaded[a]||(jscolor.imgLoaded[a]=new Image,jscolor.imgLoaded[a].src=jscolor.getDir()+a)},fetchElement:function(a){return"string"===
-typeof a?document.getElementById(a):a},addEvent:function(a,f,c){a.addEventListener?a.addEventListener(f,c,!1):a.attachEvent&&a.attachEvent("on"+f,c)},fireEvent:function(a,f){if(a)if(document.createEvent){var c=document.createEvent("HTMLEvents");c.initEvent(f,!0,!0);a.dispatchEvent(c)}else if(document.createEventObject)c=document.createEventObject(),a.fireEvent("on"+f,c);else if(a["on"+f])a["on"+f]()},getElementPos:function(a){var f=a,c=0,n=0;if(f.offsetParent){do c+=f.offsetLeft,n+=f.offsetTop;while(f=
-f.offsetParent)}for(;(a=a.parentNode)&&"BODY"!==a.nodeName.toUpperCase();)c-=a.scrollLeft,n-=a.scrollTop;return[c,n]},getElementSize:function(a){return[a.offsetWidth,a.offsetHeight]},getRelMousePos:function(a){var f=0,c=0;a||(a=window.event);"number"===typeof a.offsetX?(f=a.offsetX,c=a.offsetY):"number"===typeof a.layerX&&(f=a.layerX,c=a.layerY);return{x:f,y:c}},getViewPos:function(){return"number"===typeof window.pageYOffset?[window.pageXOffset,window.pageYOffset]:document.body&&(document.body.scrollLeft||
-document.body.scrollTop)?[document.body.scrollLeft,document.body.scrollTop]:document.documentElement&&(document.documentElement.scrollLeft||document.documentElement.scrollTop)?[document.documentElement.scrollLeft,document.documentElement.scrollTop]:[0,0]},getViewSize:function(){return"number"===typeof window.innerWidth?[window.innerWidth,window.innerHeight]:document.body&&(document.body.clientWidth||document.body.clientHeight)?[document.body.clientWidth,document.body.clientHeight]:document.documentElement&&
-(document.documentElement.clientWidth||document.documentElement.clientHeight)?[document.documentElement.clientWidth,document.documentElement.clientHeight]:[0,0]},URI:function(a){function f(c){for(var a="";c;)if("../"===c.substr(0,3)||"./"===c.substr(0,2))c=c.replace(/^\.+/,"").substr(1);else if("/./"===c.substr(0,3)||"/."===c)c="/"+c.substr(3);else if("/../"===c.substr(0,4)||"/.."===c)c="/"+c.substr(4),a=a.replace(/\/?[^\/]*$/,"");else if("."===c||".."===c)c="";else{var f=c.match(/^\/?[^\/]*/)[0];
-c=c.substr(f.length);a+=f}return a}this.authority=this.scheme=null;this.path="";this.fragment=this.query=null;this.parse=function(c){c=c.match(/^(([A-Za-z][0-9A-Za-z+.-]*)(:))?((\/\/)([^\/?#]*))?([^?#]*)((\?)([^#]*))?((#)(.*))?/);this.scheme=c[3]?c[2]:null;this.authority=c[5]?c[6]:null;this.path=c[7];this.query=c[9]?c[10]:null;this.fragment=c[12]?c[13]:null;return this};this.toString=function(){var c="";null!==this.scheme&&(c=c+this.scheme+":");null!==this.authority&&(c=c+"//"+this.authority);null!==
-this.path&&(c+=this.path);null!==this.query&&(c=c+"?"+this.query);null!==this.fragment&&(c=c+"#"+this.fragment);return c};this.toAbsolute=function(c){c=new jscolor.URI(c);var a=new jscolor.URI;if(null===c.scheme)return!1;null!==this.scheme&&this.scheme.toLowerCase()===c.scheme.toLowerCase()&&(this.scheme=null);null!==this.scheme?(a.scheme=this.scheme,a.authority=this.authority,a.path=f(this.path),a.query=this.query):(null!==this.authority?(a.authority=this.authority,a.path=f(this.path),a.query=this.query):
-(""===this.path?(a.path=c.path,a.query=null!==this.query?this.query:c.query):("/"===this.path.substr(0,1)?a.path=f(this.path):(a.path=null!==c.authority&&""===c.path?"/"+this.path:c.path.replace(/[^\/]+$/,"")+this.path,a.path=f(a.path)),a.query=this.query),a.authority=c.authority),a.scheme=c.scheme);a.fragment=this.fragment;return a};a&&this.parse(a)},color:function(a,f){function c(b,c,a){if(null===b)return[a,a,a];var e=Math.floor(b),d=a*(1-c);b=a*(1-c*(e%2?b-e:1-(b-e)));switch(e){case 6:case 0:return[a,
-b,d];case 1:return[b,a,d];case 2:return[d,a,b];case 3:return[d,b,a];case 4:return[b,d,a];case 5:return[a,d,b]}}function n(b,c){if(!jscolor.picker){jscolor.picker={box:document.createElement("div"),boxB:document.createElement("div"),pad:document.createElement("div"),padB:document.createElement("div"),padM:document.createElement("div"),sld:document.createElement("div"),sldB:document.createElement("div"),sldM:document.createElement("div"),btn:document.createElement("div"),btnS:document.createElement("span"),
-btnT:document.createTextNode(e.pickerCloseText)};for(var m=0;m<jscolor.images.sld[1];m+=4){var f=document.createElement("div");f.style.height="4px";f.style.fontSize="1px";f.style.lineHeight="0";jscolor.picker.sld.appendChild(f)}jscolor.picker.sldB.appendChild(jscolor.picker.sld);jscolor.picker.box.appendChild(jscolor.picker.sldB);jscolor.picker.box.appendChild(jscolor.picker.sldM);jscolor.picker.padB.appendChild(jscolor.picker.pad);jscolor.picker.box.appendChild(jscolor.picker.padB);jscolor.picker.box.appendChild(jscolor.picker.padM);
-jscolor.picker.btnS.appendChild(jscolor.picker.btnT);jscolor.picker.btn.appendChild(jscolor.picker.btnS);jscolor.picker.box.appendChild(jscolor.picker.btn);jscolor.picker.boxB.appendChild(jscolor.picker.box)}var d=jscolor.picker;d.box.onmouseup=d.box.onmouseout=function(){a.focus()};d.box.onmousedown=function(){w=!0};d.box.onmousemove=function(b){if(q||r)q&&B(b),r&&C(b),document.selection?document.selection.empty():window.getSelection&&window.getSelection().removeAllRanges(),x()};"ontouchstart"in
-window&&(m=function(b){var a={offsetX:b.touches[0].pageX-t.X,offsetY:b.touches[0].pageY-t.Y};if(q||r)q&&B(a),r&&C(a),x();b.stopPropagation();b.preventDefault()},d.box.removeEventListener("touchmove",m,!1),d.box.addEventListener("touchmove",m,!1));d.padM.onmouseup=d.padM.onmouseout=function(){q&&(q=!1,jscolor.fireEvent(k,"change"))};d.padM.onmousedown=function(b){switch(u){case 0:0===e.hsv[2]&&e.fromHSV(null,null,1);break;case 1:0===e.hsv[1]&&e.fromHSV(null,1,null)}r=!1;q=!0;B(b);x()};"ontouchstart"in
-window&&d.padM.addEventListener("touchstart",function(b){t={X:b.target.offsetParent.offsetLeft,Y:b.target.offsetParent.offsetTop};this.onmousedown({offsetX:b.touches[0].pageX-t.X,offsetY:b.touches[0].pageY-t.Y})});d.sldM.onmouseup=d.sldM.onmouseout=function(){r&&(r=!1,jscolor.fireEvent(k,"change"))};d.sldM.onmousedown=function(b){q=!1;r=!0;C(b);x()};"ontouchstart"in window&&d.sldM.addEventListener("touchstart",function(b){t={X:b.target.offsetParent.offsetLeft,Y:b.target.offsetParent.offsetTop};this.onmousedown({offsetX:b.touches[0].pageX-
-t.X,offsetY:b.touches[0].pageY-t.Y})});m=v(e);d.box.style.width=m[0]+"px";d.box.style.height=m[1]+"px";d.boxB.style.position="absolute";d.boxB.style.clear="both";d.boxB.style.left=b+"px";d.boxB.style.top=c+"px";d.boxB.style.zIndex=e.pickerZIndex;d.boxB.style.border=e.pickerBorder+"px solid";d.boxB.style.borderColor=e.pickerBorderColor;d.boxB.style.background=e.pickerFaceColor;d.pad.style.width=jscolor.images.pad[0]+"px";d.pad.style.height=jscolor.images.pad[1]+"px";d.padB.style.position="absolute";
-d.padB.style.left=e.pickerFace+"px";d.padB.style.top=e.pickerFace+"px";d.padB.style.border=e.pickerInset+"px solid";d.padB.style.borderColor=e.pickerInsetColor;d.padM.style.position="absolute";d.padM.style.left="0";d.padM.style.top="0";d.padM.style.width=e.pickerFace+2*e.pickerInset+jscolor.images.pad[0]+jscolor.images.arrow[0]+"px";d.padM.style.height=d.box.style.height;d.padM.style.cursor="crosshair";d.sld.style.overflow="hidden";d.sld.style.width=jscolor.images.sld[0]+"px";d.sld.style.height=jscolor.images.sld[1]+
-"px";d.sldB.style.display=e.slider?"block":"none";d.sldB.style.position="absolute";d.sldB.style.right=e.pickerFace+"px";d.sldB.style.top=e.pickerFace+"px";d.sldB.style.border=e.pickerInset+"px solid";d.sldB.style.borderColor=e.pickerInsetColor;d.sldM.style.display=e.slider?"block":"none";d.sldM.style.position="absolute";d.sldM.style.right="0";d.sldM.style.top="0";d.sldM.style.width=jscolor.images.sld[0]+jscolor.images.arrow[0]+e.pickerFace+2*e.pickerInset+"px";d.sldM.style.height=d.box.style.height;
-try{d.sldM.style.cursor="pointer"}catch(l){d.sldM.style.cursor="hand"}d.btn.style.display=e.pickerClosable?"block":"none";d.btn.style.position="absolute";d.btn.style.left=e.pickerFace+"px";d.btn.style.bottom=e.pickerFace+"px";d.btn.style.padding="0 15px";d.btn.style.height="18px";d.btn.style.border=e.pickerInset+"px solid";(function(){var b=e.pickerInsetColor.split(/\s+/);d.btn.style.borderColor=2>b.length?b[0]:b[1]+" "+b[0]+" "+b[0]+" "+b[1]})();d.btn.style.color=e.pickerButtonColor;d.btn.style.font=
-"12px sans-serif";d.btn.style.textAlign="center";try{d.btn.style.cursor="pointer"}catch(h){d.btn.style.cursor="hand"}d.btn.onmousedown=function(){e.hidePicker()};d.btnS.style.lineHeight=d.btn.style.height;switch(u){case 0:var g="hs.png";break;case 1:g="hv.png"}d.padM.style.backgroundImage="url('"+jscolor.getDir()+"cross.gif')";d.padM.style.backgroundRepeat="no-repeat";d.sldM.style.backgroundImage="url('"+jscolor.getDir()+"arrow.gif')";d.sldM.style.backgroundRepeat="no-repeat";d.pad.style.backgroundImage=
-"url('"+jscolor.getDir()+g+"')";d.pad.style.backgroundRepeat="no-repeat";d.pad.style.backgroundPosition="0 0";A();G();jscolor.picker.owner=e;document.getElementsByTagName("body")[0].appendChild(d.boxB)}function v(b){return[2*b.pickerInset+2*b.pickerFace+jscolor.images.pad[0]+(b.slider?2*b.pickerInset+2*jscolor.images.arrow[0]+jscolor.images.sld[0]:0),b.pickerClosable?4*b.pickerInset+3*b.pickerFace+jscolor.images.pad[1]+b.pickerButtonHeight:2*b.pickerInset+2*b.pickerFace+jscolor.images.pad[1]]}function A(){switch(u){case 0:var b=
-1;break;case 1:b=2}var a=Math.round(e.hsv[0]/6*(jscolor.images.pad[0]-1)),b=Math.round((1-e.hsv[b])*(jscolor.images.pad[1]-1));jscolor.picker.padM.style.backgroundPosition=e.pickerFace+e.pickerInset+a-Math.floor(jscolor.images.cross[0]/2)+"px "+(e.pickerFace+e.pickerInset+b-Math.floor(jscolor.images.cross[1]/2))+"px";a=jscolor.picker.sld.childNodes;switch(u){case 0:for(var m=c(e.hsv[0],e.hsv[1],1),b=0;b<a.length;b+=1)a[b].style.backgroundColor="rgb("+m[0]*(1-b/a.length)*100+"%,"+m[1]*(1-b/a.length)*
-100+"%,"+m[2]*(1-b/a.length)*100+"%)";break;case 1:var f,d=[e.hsv[2],0,0],b=Math.floor(e.hsv[0]),l=b%2?e.hsv[0]-b:1-(e.hsv[0]-b);switch(b){case 6:case 0:m=[0,1,2];break;case 1:m=[1,0,2];break;case 2:m=[2,0,1];break;case 3:m=[2,1,0];break;case 4:m=[1,2,0];break;case 5:m=[0,2,1]}for(b=0;b<a.length;b+=1)f=1-1/(a.length-1)*b,d[1]=d[0]*(1-f*l),d[2]=d[0]*(1-f),a[b].style.backgroundColor="rgb("+100*d[m[0]]+"%,"+100*d[m[1]]+"%,"+100*d[m[2]]+"%)"}}function G(){switch(u){case 0:var b=2;break;case 1:b=1}b=Math.round((1-
-e.hsv[b])*(jscolor.images.sld[1]-1));jscolor.picker.sldM.style.backgroundPosition="0 "+(e.pickerFace+e.pickerInset+b-Math.floor(jscolor.images.arrow[1]/2))+"px"}function z(){return jscolor.picker&&jscolor.picker.owner===e}function H(){k!==a&&e.importColor()}function B(b){var a=jscolor.getRelMousePos(b);b=a.x-e.pickerFace-e.pickerInset;a=a.y-e.pickerFace-e.pickerInset;switch(u){case 0:e.fromHSV(6/(jscolor.images.pad[0]-1)*b,1-a/(jscolor.images.pad[1]-1),null,D);break;case 1:e.fromHSV(6/(jscolor.images.pad[0]-
-1)*b,null,1-a/(jscolor.images.pad[1]-1),D)}}function C(b){b=jscolor.getRelMousePos(b).y-e.pickerFace-e.pickerInset;switch(u){case 0:e.fromHSV(null,null,1-b/(jscolor.images.sld[1]-1),E);break;case 1:e.fromHSV(null,1-b/(jscolor.images.sld[1]-1),null,E)}}function x(){e.onImmediateChange&&("string"===typeof e.onImmediateChange?new Function(e.onImmediateChange):e.onImmediateChange).call(e)}this.adjust=this.required=!0;this.hash=!1;this.slider=this.caps=!0;this.styleElement=this.valueElement=a;this.onImmediateChange=
-null;this.hsv=[0,0,1];this.rgb=[1,1,1];this.minH=0;this.maxH=6;this.minS=0;this.maxS=1;this.minV=0;this.maxV=1;this.pickerOnfocus=!0;this.pickerMode="HSV";this.pickerPosition="bottom";this.pickerSmartPosition=!0;this.pickerButtonHeight=20;this.pickerClosable=!1;this.pickerCloseText="Close";this.pickerButtonColor="ButtonText";this.pickerFace=10;this.pickerFaceColor="ThreeDFace";this.pickerBorder=1;this.pickerBorderColor="ThreeDHighlight ThreeDShadow ThreeDShadow ThreeDHighlight";this.pickerInset=1;
-this.pickerInsetColor="ThreeDShadow ThreeDHighlight ThreeDHighlight ThreeDShadow";this.pickerZIndex=1E4;for(var p in f)f.hasOwnProperty(p)&&(this[p]=f[p]);this.hidePicker=function(){z()&&(delete jscolor.picker.owner,document.getElementsByTagName("body")[0].removeChild(jscolor.picker.boxB))};this.showPicker=function(){if(!z()){var b=jscolor.getElementPos(a),c=jscolor.getElementSize(a),e=jscolor.getViewPos(),f=jscolor.getViewSize(),d=v(this),l,h,g;switch(this.pickerPosition.toLowerCase()){case "left":l=
-1;h=0;g=-1;break;case "right":l=1;h=0;g=1;break;case "top":l=0;h=1;g=-1;break;default:l=0,g=h=1}var k=(c[h]+d[h])/2,b=this.pickerSmartPosition?[-e[l]+b[l]+d[l]>f[l]?-e[l]+b[l]+c[l]/2>f[l]/2&&0<=b[l]+c[l]-d[l]?b[l]+c[l]-d[l]:b[l]:b[l],-e[h]+b[h]+c[h]+d[h]-k+k*g>f[h]?-e[h]+b[h]+c[h]/2>f[h]/2&&0<=b[h]+c[h]-k-k*g?b[h]+c[h]-k-k*g:b[h]+c[h]-k+k*g:0<=b[h]+c[h]-k+k*g?b[h]+c[h]-k+k*g:b[h]+c[h]-k-k*g]:[b[l],b[h]+c[h]-k+k*g];n(b[l],b[h])}};this.importColor=function(){k?this.adjust?!this.required&&/^\s*$/.test(k.value)?
-(k.value="",g.style.backgroundImage=g.jscStyle.backgroundImage,g.style.backgroundColor=g.jscStyle.backgroundColor,g.style.color=g.jscStyle.color,this.exportColor(y|F)):this.fromString(k.value)||this.exportColor():this.fromString(k.value,y)||(g.style.backgroundImage=g.jscStyle.backgroundImage,g.style.backgroundColor=g.jscStyle.backgroundColor,g.style.color=g.jscStyle.color,this.exportColor(y|F)):this.exportColor()};this.exportColor=function(b){if(!(b&y)&&k){var a=this.toString();this.caps&&(a=a.toUpperCase());
-this.hash&&(a="#"+a);k.value=a}b&F||!g||(g.style.backgroundImage="none",g.style.backgroundColor="#"+this.toString(),g.style.color=.5>.213*this.rgb[0]+.715*this.rgb[1]+.072*this.rgb[2]?"#FFF":"#000");b&E||!z()||A();b&D||!z()||G()};this.fromHSV=function(b,a,e,f){null!==b&&(b=Math.max(0,this.minH,Math.min(6,this.maxH,b)));null!==a&&(a=Math.max(0,this.minS,Math.min(1,this.maxS,a)));null!==e&&(e=Math.max(0,this.minV,Math.min(1,this.maxV,e)));this.rgb=c(null===b?this.hsv[0]:this.hsv[0]=b,null===a?this.hsv[1]:
-this.hsv[1]=a,null===e?this.hsv[2]:this.hsv[2]=e);this.exportColor(f)};this.fromRGB=function(b,a,e,f){null!==b&&(b=Math.max(0,Math.min(1,b)));null!==a&&(a=Math.max(0,Math.min(1,a)));null!==e&&(e=Math.max(0,Math.min(1,e)));b=null===b?this.rgb[0]:b;a=null===a?this.rgb[1]:a;var d=null===e?this.rgb[2]:e,g=Math.min(Math.min(b,a),d);e=Math.max(Math.max(b,a),d);var h=e-g;0===h?b=[null,0,e]:(b=b===g?3+(d-a)/h:a===g?5+(b-d)/h:1+(a-b)/h,b=[6===b?0:b,h/e,e]);null!==b[0]&&(this.hsv[0]=Math.max(0,this.minH,Math.min(6,
-this.maxH,b[0])));0!==b[2]&&(this.hsv[1]=null===b[1]?null:Math.max(0,this.minS,Math.min(1,this.maxS,b[1])));this.hsv[2]=null===b[2]?null:Math.max(0,this.minV,Math.min(1,this.maxV,b[2]));b=c(this.hsv[0],this.hsv[1],this.hsv[2]);this.rgb[0]=b[0];this.rgb[1]=b[1];this.rgb[2]=b[2];this.exportColor(f)};this.fromString=function(b,a){var c=b.match(/^\W*([0-9A-F]{3}([0-9A-F]{3})?)\W*$/i);return c?(6===c[1].length?this.fromRGB(parseInt(c[1].substr(0,2),16)/255,parseInt(c[1].substr(2,2),16)/255,parseInt(c[1].substr(4,
-2),16)/255,a):this.fromRGB(parseInt(c[1].charAt(0)+c[1].charAt(0),16)/255,parseInt(c[1].charAt(1)+c[1].charAt(1),16)/255,parseInt(c[1].charAt(2)+c[1].charAt(2),16)/255,a),!0):!1};this.toString=function(){return(256|Math.round(255*this.rgb[0])).toString(16).substr(1)+(256|Math.round(255*this.rgb[1])).toString(16).substr(1)+(256|Math.round(255*this.rgb[2])).toString(16).substr(1)};var e=this,u="hvs"===this.pickerMode.toLowerCase()?1:0,w=!1,k=jscolor.fetchElement(this.valueElement),g=jscolor.fetchElement(this.styleElement),
-q=!1,r=!1,t={},y=1,F=2,E=4,D=8;jscolor.isColorAttrSupported=!1;p=document.createElement("input");p.setAttribute&&(p.setAttribute("type","color"),"color"==p.type.toLowerCase()&&(jscolor.isColorAttrSupported=!0));jscolor.addEvent(a,"focus",function(){e.pickerOnfocus&&e.showPicker()});jscolor.addEvent(a,"blur",function(){w?w=!1:window.setTimeout(function(){w||(k===a&&e.importColor(),e.pickerOnfocus&&e.hidePicker());w=!1},0)});k&&(p=function(){e.fromString(k.value,y);x()},jscolor.addEvent(k,"keyup",p),
-jscolor.addEvent(k,"input",p),jscolor.addEvent(k,"blur",H),k.setAttribute("autocomplete","off"));g&&(g.jscStyle={backgroundImage:g.style.backgroundImage,backgroundColor:g.style.backgroundColor,color:g.style.color});switch(u){case 0:jscolor.requireImage("hs.png");break;case 1:jscolor.requireImage("hv.png")}jscolor.requireImage("cross.gif");jscolor.requireImage("arrow.gif");this.importColor()}};jscolor.install();
+/**
+ * jscolor, JavaScript Color Picker
+ *
+ * @version 1.4.4
+ * @license GNU Lesser General Public License, http://www.gnu.org/copyleft/lesser.html
+ * @author  Jan Odvarko, http://odvarko.cz
+ * @created 2008-06-15
+ * @updated 2014-12-09
+ * @link    http://jscolor.com
+ */
+
+
+var jscolor = {
+
+
+	dir : '', // location of jscolor directory (leave empty to autodetect)
+	bindClass : 'color', // class name
+	binding : true, // automatic binding via <input class="...">
+	preloading : true, // use image preloading?
+
+
+	install : function() {
+		jscolor.addEvent(window, 'load', jscolor.init);
+	},
+
+
+	init : function() {
+		if(jscolor.binding) {
+			jscolor.bind();
+		}
+		if(jscolor.preloading) {
+			jscolor.preload();
+		}
+	},
+
+
+	getDir : function() {
+		if(!jscolor.dir) {
+			var detected = jscolor.detectDir();
+			jscolor.dir = detected!==false ? detected : 'jscolor/';
+		}
+		return jscolor.dir;
+	},
+
+
+	detectDir : function() {
+		var base = location.href;
+
+		var e = document.getElementsByTagName('base');
+		for(var i=0; i<e.length; i+=1) {
+			if(e[i].href) { base = e[i].href; }
+		}
+
+		var e = document.getElementsByTagName('script');
+		for(var i=0; i<e.length; i+=1) {
+			if(e[i].src && /(^|\/)jscolor\.js([?#].*)?$/i.test(e[i].src)) {
+				var src = new jscolor.URI(e[i].src);
+				var srcAbs = src.toAbsolute(base);
+				srcAbs.path = srcAbs.path.replace(/[^\/]+$/, ''); // remove filename
+				srcAbs.query = null;
+				srcAbs.fragment = null;
+				return srcAbs.toString();
+			}
+		}
+		return false;
+	},
+
+
+	bind : function() {
+		var matchClass = new RegExp('(^|\\s)('+jscolor.bindClass+')(\\s*(\\{[^}]*\\})|\\s|$)', 'i');
+		var e = document.getElementsByTagName('input');
+		for(var i=0; i<e.length; i+=1) {
+			if(jscolor.isColorAttrSupported && e[i].type.toLowerCase() == 'color') {
+				// skip inputs of type 'color' if the browser supports this feature
+				continue;
+			}
+			var m;
+			if(!e[i].color && e[i].className && (m = e[i].className.match(matchClass))) {
+				var prop = {};
+				if(m[4]) {
+					try {
+						prop = (new Function ('return (' + m[4] + ')'))();
+					} catch(eInvalidProp) {}
+				}
+				e[i].color = new jscolor.color(e[i], prop);
+			}
+		}
+	},
+
+
+	preload : function() {
+		for(var fn in jscolor.imgRequire) {
+			if(jscolor.imgRequire.hasOwnProperty(fn)) {
+				jscolor.loadImage(fn);
+			}
+		}
+	},
+
+
+	images : {
+		pad : [ 181, 101 ],
+		sld : [ 16, 101 ],
+		cross : [ 15, 15 ],
+		arrow : [ 7, 11 ]
+	},
+
+
+	imgRequire : {},
+	imgLoaded : {},
+
+
+	requireImage : function(filename) {
+		jscolor.imgRequire[filename] = true;
+	},
+
+
+	loadImage : function(filename) {
+		if(!jscolor.imgLoaded[filename]) {
+			jscolor.imgLoaded[filename] = new Image();
+			jscolor.imgLoaded[filename].src = jscolor.getDir()+filename;
+		}
+	},
+
+
+	fetchElement : function(mixed) {
+		return typeof mixed === 'string' ? document.getElementById(mixed) : mixed;
+	},
+
+
+	addEvent : function(el, evnt, func) {
+		if(el.addEventListener) {
+			el.addEventListener(evnt, func, false);
+		} else if(el.attachEvent) {
+			el.attachEvent('on'+evnt, func);
+		}
+	},
+
+
+	fireEvent : function(el, evnt) {
+		if(!el) {
+			return;
+		}
+		if(document.createEvent) {
+			var ev = document.createEvent('HTMLEvents');
+			ev.initEvent(evnt, true, true);
+			el.dispatchEvent(ev);
+		} else if(document.createEventObject) {
+			var ev = document.createEventObject();
+			el.fireEvent('on'+evnt, ev);
+		} else if(el['on'+evnt]) { // alternatively use the traditional event model (IE5)
+			el['on'+evnt]();
+		}
+	},
+
+
+	getElementPos : function(e) {
+		var e1=e, e2=e;
+		var x=0, y=0;
+		if(e1.offsetParent) {
+			do {
+				x += e1.offsetLeft;
+				y += e1.offsetTop;
+			} while(e1 = e1.offsetParent);
+		}
+		while((e2 = e2.parentNode) && e2.nodeName.toUpperCase() !== 'BODY') {
+			x -= e2.scrollLeft;
+			y -= e2.scrollTop;
+		}
+		return [x, y];
+	},
+
+
+	getElementSize : function(e) {
+		return [e.offsetWidth, e.offsetHeight];
+	},
+
+
+	getRelMousePos : function(e) {
+		var x = 0, y = 0;
+		if (!e) { e = window.event; }
+		if (typeof e.offsetX === 'number') {
+			x = e.offsetX;
+			y = e.offsetY;
+		} else if (typeof e.layerX === 'number') {
+			x = e.layerX;
+			y = e.layerY;
+		}
+		return { x: x, y: y };
+	},
+
+
+	getViewPos : function() {
+		if(typeof window.pageYOffset === 'number') {
+			return [window.pageXOffset, window.pageYOffset];
+		} else if(document.body && (document.body.scrollLeft || document.body.scrollTop)) {
+			return [document.body.scrollLeft, document.body.scrollTop];
+		} else if(document.documentElement && (document.documentElement.scrollLeft || document.documentElement.scrollTop)) {
+			return [document.documentElement.scrollLeft, document.documentElement.scrollTop];
+		} else {
+			return [0, 0];
+		}
+	},
+
+
+	getViewSize : function() {
+		if(typeof window.innerWidth === 'number') {
+			return [window.innerWidth, window.innerHeight];
+		} else if(document.body && (document.body.clientWidth || document.body.clientHeight)) {
+			return [document.body.clientWidth, document.body.clientHeight];
+		} else if(document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+			return [document.documentElement.clientWidth, document.documentElement.clientHeight];
+		} else {
+			return [0, 0];
+		}
+	},
+
+
+	URI : function(uri) { // See RFC3986
+
+		this.scheme = null;
+		this.authority = null;
+		this.path = '';
+		this.query = null;
+		this.fragment = null;
+
+		this.parse = function(uri) {
+			var m = uri.match(/^(([A-Za-z][0-9A-Za-z+.-]*)(:))?((\/\/)([^\/?#]*))?([^?#]*)((\?)([^#]*))?((#)(.*))?/);
+			this.scheme = m[3] ? m[2] : null;
+			this.authority = m[5] ? m[6] : null;
+			this.path = m[7];
+			this.query = m[9] ? m[10] : null;
+			this.fragment = m[12] ? m[13] : null;
+			return this;
+		};
+
+		this.toString = function() {
+			var result = '';
+			if(this.scheme !== null) { result = result + this.scheme + ':'; }
+			if(this.authority !== null) { result = result + '//' + this.authority; }
+			if(this.path !== null) { result = result + this.path; }
+			if(this.query !== null) { result = result + '?' + this.query; }
+			if(this.fragment !== null) { result = result + '#' + this.fragment; }
+			return result;
+		};
+
+		this.toAbsolute = function(base) {
+			var base = new jscolor.URI(base);
+			var r = this;
+			var t = new jscolor.URI;
+
+			if(base.scheme === null) { return false; }
+
+			if(r.scheme !== null && r.scheme.toLowerCase() === base.scheme.toLowerCase()) {
+				r.scheme = null;
+			}
+
+			if(r.scheme !== null) {
+				t.scheme = r.scheme;
+				t.authority = r.authority;
+				t.path = removeDotSegments(r.path);
+				t.query = r.query;
+			} else {
+				if(r.authority !== null) {
+					t.authority = r.authority;
+					t.path = removeDotSegments(r.path);
+					t.query = r.query;
+				} else {
+					if(r.path === '') {
+						t.path = base.path;
+						if(r.query !== null) {
+							t.query = r.query;
+						} else {
+							t.query = base.query;
+						}
+					} else {
+						if(r.path.substr(0,1) === '/') {
+							t.path = removeDotSegments(r.path);
+						} else {
+							if(base.authority !== null && base.path === '') {
+								t.path = '/'+r.path;
+							} else {
+								t.path = base.path.replace(/[^\/]+$/,'')+r.path;
+							}
+							t.path = removeDotSegments(t.path);
+						}
+						t.query = r.query;
+					}
+					t.authority = base.authority;
+				}
+				t.scheme = base.scheme;
+			}
+			t.fragment = r.fragment;
+
+			return t;
+		};
+
+		function removeDotSegments(path) {
+			var out = '';
+			while(path) {
+				if(path.substr(0,3)==='../' || path.substr(0,2)==='./') {
+					path = path.replace(/^\.+/,'').substr(1);
+				} else if(path.substr(0,3)==='/./' || path==='/.') {
+					path = '/'+path.substr(3);
+				} else if(path.substr(0,4)==='/../' || path==='/..') {
+					path = '/'+path.substr(4);
+					out = out.replace(/\/?[^\/]*$/, '');
+				} else if(path==='.' || path==='..') {
+					path = '';
+				} else {
+					var rm = path.match(/^\/?[^\/]*/)[0];
+					path = path.substr(rm.length);
+					out = out + rm;
+				}
+			}
+			return out;
+		}
+
+		if(uri) {
+			this.parse(uri);
+		}
+
+	},
+
+
+	//
+	// Usage example:
+	// var myColor = new jscolor.color(myInputElement)
+	//
+
+	color : function(target, prop) {
+
+
+		this.required = true; // refuse empty values?
+		this.adjust = true; // adjust value to uniform notation?
+		this.hash = false; // prefix color with # symbol?
+		this.caps = true; // uppercase?
+		this.slider = true; // show the value/saturation slider?
+		this.valueElement = target; // value holder
+		this.styleElement = target; // where to reflect current color
+		this.onImmediateChange = null; // onchange callback (can be either string or function)
+		this.hsv = [0, 0, 1]; // read-only  0-6, 0-1, 0-1
+		this.rgb = [1, 1, 1]; // read-only  0-1, 0-1, 0-1
+		this.minH = 0; // read-only  0-6
+		this.maxH = 6; // read-only  0-6
+		this.minS = 0; // read-only  0-1
+		this.maxS = 1; // read-only  0-1
+		this.minV = 0; // read-only  0-1
+		this.maxV = 1; // read-only  0-1
+
+		this.pickerOnfocus = true; // display picker on focus?
+		this.pickerMode = 'HSV'; // HSV | HVS
+		this.pickerPosition = 'bottom'; // left | right | top | bottom
+		this.pickerSmartPosition = true; // automatically adjust picker position when necessary
+		this.pickerButtonHeight = 20; // px
+		this.pickerClosable = false;
+		this.pickerCloseText = 'Close';
+		this.pickerButtonColor = 'ButtonText'; // px
+		this.pickerFace = 10; // px
+		this.pickerFaceColor = 'ThreeDFace'; // CSS color
+		this.pickerBorder = 1; // px
+		this.pickerBorderColor = 'ThreeDHighlight ThreeDShadow ThreeDShadow ThreeDHighlight'; // CSS color
+		this.pickerInset = 1; // px
+		this.pickerInsetColor = 'ThreeDShadow ThreeDHighlight ThreeDHighlight ThreeDShadow'; // CSS color
+		this.pickerZIndex = 10000;
+
+
+		for(var p in prop) {
+			if(prop.hasOwnProperty(p)) {
+				this[p] = prop[p];
+			}
+		}
+
+
+		this.hidePicker = function() {
+			if(isPickerOwner()) {
+				removePicker();
+			}
+		};
+
+
+		this.showPicker = function() {
+			if(!isPickerOwner()) {
+				var tp = jscolor.getElementPos(target); // target pos
+				var ts = jscolor.getElementSize(target); // target size
+				var vp = jscolor.getViewPos(); // view pos
+				var vs = jscolor.getViewSize(); // view size
+				var ps = getPickerDims(this); // picker size
+				var a, b, c;
+				switch(this.pickerPosition.toLowerCase()) {
+					case 'left': a=1; b=0; c=-1; break;
+					case 'right':a=1; b=0; c=1; break;
+					case 'top':  a=0; b=1; c=-1; break;
+					default:     a=0; b=1; c=1; break;
+				}
+				var l = (ts[b]+ps[b])/2;
+
+				// picker pos
+				if (!this.pickerSmartPosition) {
+					var pp = [
+						tp[a],
+						tp[b]+ts[b]-l+l*c
+					];
+				} else {
+					var pp = [
+						-vp[a]+tp[a]+ps[a] > vs[a] ?
+							(-vp[a]+tp[a]+ts[a]/2 > vs[a]/2 && tp[a]+ts[a]-ps[a] >= 0 ? tp[a]+ts[a]-ps[a] : tp[a]) :
+							tp[a],
+						-vp[b]+tp[b]+ts[b]+ps[b]-l+l*c > vs[b] ?
+							(-vp[b]+tp[b]+ts[b]/2 > vs[b]/2 && tp[b]+ts[b]-l-l*c >= 0 ? tp[b]+ts[b]-l-l*c : tp[b]+ts[b]-l+l*c) :
+							(tp[b]+ts[b]-l+l*c >= 0 ? tp[b]+ts[b]-l+l*c : tp[b]+ts[b]-l-l*c)
+					];
+				}
+				drawPicker(pp[a], pp[b]);
+			}
+		};
+
+
+		this.importColor = function() {
+			if(!valueElement) {
+				this.exportColor();
+			} else {
+				if(!this.adjust) {
+					if(!this.fromString(valueElement.value, leaveValue)) {
+						styleElement.style.backgroundImage = styleElement.jscStyle.backgroundImage;
+						styleElement.style.backgroundColor = styleElement.jscStyle.backgroundColor;
+						styleElement.style.color = styleElement.jscStyle.color;
+						this.exportColor(leaveValue | leaveStyle);
+					}
+				} else if(!this.required && /^\s*$/.test(valueElement.value)) {
+					valueElement.value = '';
+					styleElement.style.backgroundImage = styleElement.jscStyle.backgroundImage;
+					styleElement.style.backgroundColor = styleElement.jscStyle.backgroundColor;
+					styleElement.style.color = styleElement.jscStyle.color;
+					this.exportColor(leaveValue | leaveStyle);
+
+				} else if(this.fromString(valueElement.value)) {
+					// OK
+				} else {
+					this.exportColor();
+				}
+			}
+		};
+
+
+		this.exportColor = function(flags) {
+			if(!(flags & leaveValue) && valueElement) {
+				var value = this.toString();
+				if(this.caps) { value = value.toUpperCase(); }
+				if(this.hash) { value = '#'+value; }
+				valueElement.value = value;
+			}
+			if(!(flags & leaveStyle) && styleElement) {
+				styleElement.style.backgroundImage = "none";
+				styleElement.style.backgroundColor =
+					'#'+this.toString();
+				styleElement.style.color =
+					0.213 * this.rgb[0] +
+					0.715 * this.rgb[1] +
+					0.072 * this.rgb[2]
+					< 0.5 ? '#FFF' : '#000';
+			}
+			if(!(flags & leavePad) && isPickerOwner()) {
+				redrawPad();
+			}
+			if(!(flags & leaveSld) && isPickerOwner()) {
+				redrawSld();
+			}
+		};
+
+
+		this.fromHSV = function(h, s, v, flags) { // null = don't change
+			if(h !== null) { h = Math.max(0.0, this.minH, Math.min(6.0, this.maxH, h)); }
+			if(s !== null) { s = Math.max(0.0, this.minS, Math.min(1.0, this.maxS, s)); }
+			if(v !== null) { v = Math.max(0.0, this.minV, Math.min(1.0, this.maxV, v)); }
+
+			this.rgb = HSV_RGB(
+				h===null ? this.hsv[0] : (this.hsv[0]=h),
+				s===null ? this.hsv[1] : (this.hsv[1]=s),
+				v===null ? this.hsv[2] : (this.hsv[2]=v)
+			);
+
+			this.exportColor(flags);
+		};
+
+
+		this.fromRGB = function(r, g, b, flags) { // null = don't change
+			if(r !== null) { r = Math.max(0.0, Math.min(1.0, r)); }
+			if(g !== null) { g = Math.max(0.0, Math.min(1.0, g)); }
+			if(b !== null) { b = Math.max(0.0, Math.min(1.0, b)); }
+
+			var hsv = RGB_HSV(
+				r===null ? this.rgb[0] : r,
+				g===null ? this.rgb[1] : g,
+				b===null ? this.rgb[2] : b
+			);
+			if(hsv[0] !== null) {
+				this.hsv[0] = Math.max(0.0, this.minH, Math.min(6.0, this.maxH, hsv[0]));
+			}
+			if(hsv[2] !== 0) {
+				this.hsv[1] = hsv[1]===null ? null : Math.max(0.0, this.minS, Math.min(1.0, this.maxS, hsv[1]));
+			}
+			this.hsv[2] = hsv[2]===null ? null : Math.max(0.0, this.minV, Math.min(1.0, this.maxV, hsv[2]));
+
+			// update RGB according to final HSV, as some values might be trimmed
+			var rgb = HSV_RGB(this.hsv[0], this.hsv[1], this.hsv[2]);
+			this.rgb[0] = rgb[0];
+			this.rgb[1] = rgb[1];
+			this.rgb[2] = rgb[2];
+
+			this.exportColor(flags);
+		};
+
+
+		this.fromString = function(hex, flags) {
+			var m = hex.match(/^\W*([0-9A-F]{3}([0-9A-F]{3})?)\W*$/i);
+			if(!m) {
+				return false;
+			} else {
+				if(m[1].length === 6) { // 6-char notation
+					this.fromRGB(
+						parseInt(m[1].substr(0,2),16) / 255,
+						parseInt(m[1].substr(2,2),16) / 255,
+						parseInt(m[1].substr(4,2),16) / 255,
+						flags
+					);
+				} else { // 3-char notation
+					this.fromRGB(
+						parseInt(m[1].charAt(0)+m[1].charAt(0),16) / 255,
+						parseInt(m[1].charAt(1)+m[1].charAt(1),16) / 255,
+						parseInt(m[1].charAt(2)+m[1].charAt(2),16) / 255,
+						flags
+					);
+				}
+				return true;
+			}
+		};
+
+
+		this.toString = function() {
+			return (
+				(0x100 | Math.round(255*this.rgb[0])).toString(16).substr(1) +
+				(0x100 | Math.round(255*this.rgb[1])).toString(16).substr(1) +
+				(0x100 | Math.round(255*this.rgb[2])).toString(16).substr(1)
+			);
+		};
+
+
+		function RGB_HSV(r, g, b) {
+			var n = Math.min(Math.min(r,g),b);
+			var v = Math.max(Math.max(r,g),b);
+			var m = v - n;
+			if(m === 0) { return [ null, 0, v ]; }
+			var h = r===n ? 3+(b-g)/m : (g===n ? 5+(r-b)/m : 1+(g-r)/m);
+			return [ h===6?0:h, m/v, v ];
+		}
+
+
+		function HSV_RGB(h, s, v) {
+			if(h === null) { return [ v, v, v ]; }
+			var i = Math.floor(h);
+			var f = i%2 ? h-i : 1-(h-i);
+			var m = v * (1 - s);
+			var n = v * (1 - s*f);
+			switch(i) {
+				case 6:
+				case 0: return [v,n,m];
+				case 1: return [n,v,m];
+				case 2: return [m,v,n];
+				case 3: return [m,n,v];
+				case 4: return [n,m,v];
+				case 5: return [v,m,n];
+			}
+		}
+
+
+		function removePicker() {
+			delete jscolor.picker.owner;
+			document.getElementsByTagName('body')[0].removeChild(jscolor.picker.boxB);
+		}
+
+
+		function drawPicker(x, y) {
+			if(!jscolor.picker) {
+				jscolor.picker = {
+					box : document.createElement('div'),
+					boxB : document.createElement('div'),
+					pad : document.createElement('div'),
+					padB : document.createElement('div'),
+					padM : document.createElement('div'),
+					sld : document.createElement('div'),
+					sldB : document.createElement('div'),
+					sldM : document.createElement('div'),
+					btn : document.createElement('div'),
+					btnS : document.createElement('span'),
+					btnT : document.createTextNode(THIS.pickerCloseText)
+				};
+				for(var i=0,segSize=4; i<jscolor.images.sld[1]; i+=segSize) {
+					var seg = document.createElement('div');
+					seg.style.height = segSize+'px';
+					seg.style.fontSize = '1px';
+					seg.style.lineHeight = '0';
+					jscolor.picker.sld.appendChild(seg);
+				}
+				jscolor.picker.sldB.appendChild(jscolor.picker.sld);
+				jscolor.picker.box.appendChild(jscolor.picker.sldB);
+				jscolor.picker.box.appendChild(jscolor.picker.sldM);
+				jscolor.picker.padB.appendChild(jscolor.picker.pad);
+				jscolor.picker.box.appendChild(jscolor.picker.padB);
+				jscolor.picker.box.appendChild(jscolor.picker.padM);
+				jscolor.picker.btnS.appendChild(jscolor.picker.btnT);
+				jscolor.picker.btn.appendChild(jscolor.picker.btnS);
+				jscolor.picker.box.appendChild(jscolor.picker.btn);
+				jscolor.picker.boxB.appendChild(jscolor.picker.box);
+			}
+
+			var p = jscolor.picker;
+
+			// controls interaction
+			p.box.onmouseup =
+			p.box.onmouseout = function() { target.focus(); };
+			p.box.onmousedown = function() { abortBlur=true; };
+			p.box.onmousemove = function(e) {
+				if (holdPad || holdSld) {
+					holdPad && setPad(e);
+					holdSld && setSld(e);
+					if (document.selection) {
+						document.selection.empty();
+					} else if (window.getSelection) {
+						window.getSelection().removeAllRanges();
+					}
+					dispatchImmediateChange();
+				}
+			};
+			if('ontouchstart' in window) { // if touch device
+				var handle_touchmove = function(e) {
+					var event={
+						'offsetX': e.touches[0].pageX-touchOffset.X,
+						'offsetY': e.touches[0].pageY-touchOffset.Y
+					};
+					if (holdPad || holdSld) {
+						holdPad && setPad(event);
+						holdSld && setSld(event);
+						dispatchImmediateChange();
+					}
+					e.stopPropagation(); // prevent move "view" on broswer
+					e.preventDefault(); // prevent Default - Android Fix (else android generated only 1-2 touchmove events)
+				};
+				p.box.removeEventListener('touchmove', handle_touchmove, false)
+				p.box.addEventListener('touchmove', handle_touchmove, false)
+			}
+			p.padM.onmouseup =
+			p.padM.onmouseout = function() { if(holdPad) { holdPad=false; jscolor.fireEvent(valueElement,'change'); } };
+			p.padM.onmousedown = function(e) {
+				// if the slider is at the bottom, move it up
+				switch(modeID) {
+					case 0: if (THIS.hsv[2] === 0) { THIS.fromHSV(null, null, 1.0); }; break;
+					case 1: if (THIS.hsv[1] === 0) { THIS.fromHSV(null, 1.0, null); }; break;
+				}
+				holdSld=false;
+				holdPad=true;
+				setPad(e);
+				dispatchImmediateChange();
+			};
+			if('ontouchstart' in window) {
+				p.padM.addEventListener('touchstart', function(e) {
+					touchOffset={
+						'X': e.target.offsetParent.offsetLeft,
+						'Y': e.target.offsetParent.offsetTop
+					};
+					this.onmousedown({
+						'offsetX':e.touches[0].pageX-touchOffset.X,
+						'offsetY':e.touches[0].pageY-touchOffset.Y
+					});
+				});
+			}
+			p.sldM.onmouseup =
+			p.sldM.onmouseout = function() { if(holdSld) { holdSld=false; jscolor.fireEvent(valueElement,'change'); } };
+			p.sldM.onmousedown = function(e) {
+				holdPad=false;
+				holdSld=true;
+				setSld(e);
+				dispatchImmediateChange();
+			};
+			if('ontouchstart' in window) {
+				p.sldM.addEventListener('touchstart', function(e) {
+					touchOffset={
+						'X': e.target.offsetParent.offsetLeft,
+						'Y': e.target.offsetParent.offsetTop
+					};
+					this.onmousedown({
+						'offsetX':e.touches[0].pageX-touchOffset.X,
+						'offsetY':e.touches[0].pageY-touchOffset.Y
+					});
+				});
+			}
+
+			// picker
+			var dims = getPickerDims(THIS);
+			p.box.style.width = dims[0] + 'px';
+			p.box.style.height = dims[1] + 'px';
+
+			// picker border
+			p.boxB.style.position = 'absolute';
+			p.boxB.style.clear = 'both';
+			p.boxB.style.left = x+'px';
+			p.boxB.style.top = y+'px';
+			p.boxB.style.zIndex = THIS.pickerZIndex;
+			p.boxB.style.border = THIS.pickerBorder+'px solid';
+			p.boxB.style.borderColor = THIS.pickerBorderColor;
+			p.boxB.style.background = THIS.pickerFaceColor;
+
+			// pad image
+			p.pad.style.width = jscolor.images.pad[0]+'px';
+			p.pad.style.height = jscolor.images.pad[1]+'px';
+
+			// pad border
+			p.padB.style.position = 'absolute';
+			p.padB.style.left = THIS.pickerFace+'px';
+			p.padB.style.top = THIS.pickerFace+'px';
+			p.padB.style.border = THIS.pickerInset+'px solid';
+			p.padB.style.borderColor = THIS.pickerInsetColor;
+
+			// pad mouse area
+			p.padM.style.position = 'absolute';
+			p.padM.style.left = '0';
+			p.padM.style.top = '0';
+			p.padM.style.width = THIS.pickerFace + 2*THIS.pickerInset + jscolor.images.pad[0] + jscolor.images.arrow[0] + 'px';
+			p.padM.style.height = p.box.style.height;
+			p.padM.style.cursor = 'crosshair';
+
+			// slider image
+			p.sld.style.overflow = 'hidden';
+			p.sld.style.width = jscolor.images.sld[0]+'px';
+			p.sld.style.height = jscolor.images.sld[1]+'px';
+
+			// slider border
+			p.sldB.style.display = THIS.slider ? 'block' : 'none';
+			p.sldB.style.position = 'absolute';
+			p.sldB.style.right = THIS.pickerFace+'px';
+			p.sldB.style.top = THIS.pickerFace+'px';
+			p.sldB.style.border = THIS.pickerInset+'px solid';
+			p.sldB.style.borderColor = THIS.pickerInsetColor;
+
+			// slider mouse area
+			p.sldM.style.display = THIS.slider ? 'block' : 'none';
+			p.sldM.style.position = 'absolute';
+			p.sldM.style.right = '0';
+			p.sldM.style.top = '0';
+			p.sldM.style.width = jscolor.images.sld[0] + jscolor.images.arrow[0] + THIS.pickerFace + 2*THIS.pickerInset + 'px';
+			p.sldM.style.height = p.box.style.height;
+			try {
+				p.sldM.style.cursor = 'pointer';
+			} catch(eOldIE) {
+				p.sldM.style.cursor = 'hand';
+			}
+
+			// "close" button
+			function setBtnBorder() {
+				var insetColors = THIS.pickerInsetColor.split(/\s+/);
+				var pickerOutsetColor = insetColors.length < 2 ? insetColors[0] : insetColors[1] + ' ' + insetColors[0] + ' ' + insetColors[0] + ' ' + insetColors[1];
+				p.btn.style.borderColor = pickerOutsetColor;
+			}
+			p.btn.style.display = THIS.pickerClosable ? 'block' : 'none';
+			p.btn.style.position = 'absolute';
+			p.btn.style.left = THIS.pickerFace + 'px';
+			p.btn.style.bottom = THIS.pickerFace + 'px';
+			p.btn.style.padding = '0 15px';
+			p.btn.style.height = '18px';
+			p.btn.style.border = THIS.pickerInset + 'px solid';
+			setBtnBorder();
+			p.btn.style.color = THIS.pickerButtonColor;
+			p.btn.style.font = '12px sans-serif';
+			p.btn.style.textAlign = 'center';
+			try {
+				p.btn.style.cursor = 'pointer';
+			} catch(eOldIE) {
+				p.btn.style.cursor = 'hand';
+			}
+			p.btn.onmousedown = function () {
+				THIS.hidePicker();
+			};
+			p.btnS.style.lineHeight = p.btn.style.height;
+
+			// load images in optimal order
+			switch(modeID) {
+				case 0: var padImg = 'hs.png'; break;
+				case 1: var padImg = 'hv.png'; break;
+			}
+			p.padM.style.backgroundImage = "url('"+jscolor.getDir()+"cross.gif')";
+			p.padM.style.backgroundRepeat = "no-repeat";
+			p.sldM.style.backgroundImage = "url('"+jscolor.getDir()+"arrow.gif')";
+			p.sldM.style.backgroundRepeat = "no-repeat";
+			p.pad.style.backgroundImage = "url('"+jscolor.getDir()+padImg+"')";
+			p.pad.style.backgroundRepeat = "no-repeat";
+			p.pad.style.backgroundPosition = "0 0";
+
+			// place pointers
+			redrawPad();
+			redrawSld();
+
+			jscolor.picker.owner = THIS;
+			document.getElementsByTagName('body')[0].appendChild(p.boxB);
+		}
+
+
+		function getPickerDims(o) {
+			var dims = [
+				2*o.pickerInset + 2*o.pickerFace + jscolor.images.pad[0] +
+					(o.slider ? 2*o.pickerInset + 2*jscolor.images.arrow[0] + jscolor.images.sld[0] : 0),
+				o.pickerClosable ?
+					4*o.pickerInset + 3*o.pickerFace + jscolor.images.pad[1] + o.pickerButtonHeight :
+					2*o.pickerInset + 2*o.pickerFace + jscolor.images.pad[1]
+			];
+			return dims;
+		}
+
+
+		function redrawPad() {
+			// redraw the pad pointer
+			switch(modeID) {
+				case 0: var yComponent = 1; break;
+				case 1: var yComponent = 2; break;
+			}
+			var x = Math.round((THIS.hsv[0]/6) * (jscolor.images.pad[0]-1));
+			var y = Math.round((1-THIS.hsv[yComponent]) * (jscolor.images.pad[1]-1));
+			jscolor.picker.padM.style.backgroundPosition =
+				(THIS.pickerFace+THIS.pickerInset+x - Math.floor(jscolor.images.cross[0]/2)) + 'px ' +
+				(THIS.pickerFace+THIS.pickerInset+y - Math.floor(jscolor.images.cross[1]/2)) + 'px';
+
+			// redraw the slider image
+			var seg = jscolor.picker.sld.childNodes;
+
+			switch(modeID) {
+				case 0:
+					var rgb = HSV_RGB(THIS.hsv[0], THIS.hsv[1], 1);
+					for(var i=0; i<seg.length; i+=1) {
+						seg[i].style.backgroundColor = 'rgb('+
+							(rgb[0]*(1-i/seg.length)*100)+'%,'+
+							(rgb[1]*(1-i/seg.length)*100)+'%,'+
+							(rgb[2]*(1-i/seg.length)*100)+'%)';
+					}
+					break;
+				case 1:
+					var rgb, s, c = [ THIS.hsv[2], 0, 0 ];
+					var i = Math.floor(THIS.hsv[0]);
+					var f = i%2 ? THIS.hsv[0]-i : 1-(THIS.hsv[0]-i);
+					switch(i) {
+						case 6:
+						case 0: rgb=[0,1,2]; break;
+						case 1: rgb=[1,0,2]; break;
+						case 2: rgb=[2,0,1]; break;
+						case 3: rgb=[2,1,0]; break;
+						case 4: rgb=[1,2,0]; break;
+						case 5: rgb=[0,2,1]; break;
+					}
+					for(var i=0; i<seg.length; i+=1) {
+						s = 1 - 1/(seg.length-1)*i;
+						c[1] = c[0] * (1 - s*f);
+						c[2] = c[0] * (1 - s);
+						seg[i].style.backgroundColor = 'rgb('+
+							(c[rgb[0]]*100)+'%,'+
+							(c[rgb[1]]*100)+'%,'+
+							(c[rgb[2]]*100)+'%)';
+					}
+					break;
+			}
+		}
+
+
+		function redrawSld() {
+			// redraw the slider pointer
+			switch(modeID) {
+				case 0: var yComponent = 2; break;
+				case 1: var yComponent = 1; break;
+			}
+			var y = Math.round((1-THIS.hsv[yComponent]) * (jscolor.images.sld[1]-1));
+			jscolor.picker.sldM.style.backgroundPosition =
+				'0 ' + (THIS.pickerFace+THIS.pickerInset+y - Math.floor(jscolor.images.arrow[1]/2)) + 'px';
+		}
+
+
+		function isPickerOwner() {
+			return jscolor.picker && jscolor.picker.owner === THIS;
+		}
+
+
+		function blurTarget() {
+			if(valueElement === target) {
+				THIS.importColor();
+			}
+			if(THIS.pickerOnfocus) {
+				THIS.hidePicker();
+			}
+		}
+
+
+		function blurValue() {
+			if(valueElement !== target) {
+				THIS.importColor();
+			}
+		}
+
+
+		function setPad(e) {
+			var mpos = jscolor.getRelMousePos(e);
+			var x = mpos.x - THIS.pickerFace - THIS.pickerInset;
+			var y = mpos.y - THIS.pickerFace - THIS.pickerInset;
+			switch(modeID) {
+				case 0: THIS.fromHSV(x*(6/(jscolor.images.pad[0]-1)), 1 - y/(jscolor.images.pad[1]-1), null, leaveSld); break;
+				case 1: THIS.fromHSV(x*(6/(jscolor.images.pad[0]-1)), null, 1 - y/(jscolor.images.pad[1]-1), leaveSld); break;
+			}
+		}
+
+
+		function setSld(e) {
+			var mpos = jscolor.getRelMousePos(e);
+			var y = mpos.y - THIS.pickerFace - THIS.pickerInset;
+			switch(modeID) {
+				case 0: THIS.fromHSV(null, null, 1 - y/(jscolor.images.sld[1]-1), leavePad); break;
+				case 1: THIS.fromHSV(null, 1 - y/(jscolor.images.sld[1]-1), null, leavePad); break;
+			}
+		}
+
+
+		function dispatchImmediateChange() {
+			if (THIS.onImmediateChange) {
+				var callback;
+				if (typeof THIS.onImmediateChange === 'string') {
+					callback = new Function (THIS.onImmediateChange);
+				} else {
+					callback = THIS.onImmediateChange;
+				}
+				callback.call(THIS);
+			}
+		}
+
+
+		var THIS = this;
+		var modeID = this.pickerMode.toLowerCase()==='hvs' ? 1 : 0;
+		var abortBlur = false;
+		var
+			valueElement = jscolor.fetchElement(this.valueElement),
+			styleElement = jscolor.fetchElement(this.styleElement);
+		var
+			holdPad = false,
+			holdSld = false,
+			touchOffset = {};
+		var
+			leaveValue = 1<<0,
+			leaveStyle = 1<<1,
+			leavePad = 1<<2,
+			leaveSld = 1<<3;
+
+		jscolor.isColorAttrSupported = false;
+		var el = document.createElement('input');
+		if(el.setAttribute) {
+			el.setAttribute('type', 'color');
+			if(el.type.toLowerCase() == 'color') {
+				jscolor.isColorAttrSupported = true;
+			}
+		}
+
+		// target
+		jscolor.addEvent(target, 'focus', function() {
+			if(THIS.pickerOnfocus) { THIS.showPicker(); }
+		});
+		jscolor.addEvent(target, 'blur', function() {
+			if(!abortBlur) {
+				window.setTimeout(function(){ abortBlur || blurTarget(); abortBlur=false; }, 0);
+			} else {
+				abortBlur = false;
+			}
+		});
+
+		// valueElement
+		if(valueElement) {
+			var updateField = function() {
+				THIS.fromString(valueElement.value, leaveValue);
+				dispatchImmediateChange();
+			};
+			jscolor.addEvent(valueElement, 'keyup', updateField);
+			jscolor.addEvent(valueElement, 'input', updateField);
+			jscolor.addEvent(valueElement, 'blur', blurValue);
+			valueElement.setAttribute('autocomplete', 'off');
+		}
+
+		// styleElement
+		if(styleElement) {
+			styleElement.jscStyle = {
+				backgroundImage : styleElement.style.backgroundImage,
+				backgroundColor : styleElement.style.backgroundColor,
+				color : styleElement.style.color
+			};
+		}
+
+		// require images
+		switch(modeID) {
+			case 0: jscolor.requireImage('hs.png'); break;
+			case 1: jscolor.requireImage('hv.png'); break;
+		}
+		jscolor.requireImage('cross.gif');
+		jscolor.requireImage('arrow.gif');
+
+		this.importColor();
+	}
+
+};
+
+
+jscolor.install();
