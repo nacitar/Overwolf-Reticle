@@ -194,14 +194,16 @@ overlay.Reticle.prototype.render = function(data) {
       data['crossStrokeColor'], data['crossStrokeSize']);
 
   var period = parseInt(data['crossSpinPeriod'], 10);
-  if (period != this.currentPeriod_) {
-    if (period > 0) {
+  if (period > 0) {
+    if (period != this.currentPeriod_) {
       this.currentPeriod_ = period;
       this.spin();
     } else {
-      this.currentPeriod_ = 0;
-      this.setRotation(data['crossRotation']);
+      this.currentPeriod_ = period;
     }
+  } else {
+    this.currentPeriod_ = 0;
+    this.setRotation(data['crossRotation']);
   }
   this.imageScale_ = data['imageScale'];
   this.imageURL_ = data['imageURL'];
