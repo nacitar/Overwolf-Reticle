@@ -2,6 +2,7 @@
 goog.provide('overlay');
 goog.require('nx');
 goog.require('nx.Reticle');
+goog.require('overlay.common');
 
 /**
  * The overlay window.
@@ -86,7 +87,7 @@ overlay.render = function() {
 overlay.onStorageEvent = function(storageEvent) {
   var key = storageEvent.key;
   console.log('Got storage event: ' + key);
-  if (nx.Reticle.defaultData.hasOwnProperty(key)) {
+  if (overlay.common.defaultSettings.hasOwnProperty(key)) {
     // In IE, the actual storage value is not updated yet, so delay rendering
     // such that the new value will be present when it executes.
     setTimeout(overlay.render, 0);
@@ -109,13 +110,6 @@ overlay.onHotkeyPressed = function(name) {
  */
 overlay.init = function() {
   overlay.reticle = new nx.Reticle('reticleSurface');
-  // Initialize stored settings
-  nx.forEachProperty(nx.Reticle.defaultData, function(key, value) {
-    var stored = nx.storage.get(/** @type {string} */ (key));
-    if (stored === null) {
-      nx.storage.set(/** @type {string} */ (key), value);
-    }
-  });
   nx.storage.addListener(overlay.onStorageEvent);
   if (window.overwolf) {
     overwolf.windows.getCurrentWindow(overlay.onCurrentWindow);
@@ -132,7 +126,7 @@ overlay.init = function() {
   } else {
     document.body.bgColor = 'black';
   }
-  overlay.reticle.setDataCallback(nx.storage.get);
+  overlay.reticle.setDataCallback(overlay.common.getSetting);
   overlay.render();
 };
 

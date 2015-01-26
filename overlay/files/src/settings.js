@@ -1,4 +1,5 @@
 goog.provide('overlay.settings');
+goog.require('overlay.common');
 
 /**
  * The form containing all the settings.
@@ -17,28 +18,6 @@ overlay.settings.onChange = function(element) {
 };
 
 /**
- * Initialization for the settings.
- * @param {string} formId The id for the form element.
- */
-overlay.settings.init = function(formId) {
-  if (!window.overwolf) {
-    document.body.bgColor = 'black';
-  }
-  overlay.settings.form = document.getElementById(formId);
-  var length = overlay.settings.form.elements.length;
-  for (var i = 0; i < length; ++i) {
-    var element = overlay.settings.form.elements[i];
-    if (element.id) {
-      var value = JSON.parse(window.localStorage.getItem(element.id));
-      if (value !== null) {
-        nx.setField(element, value);
-      }
-      element.onchange = function() { overlay.settings.onChange(this); };
-    }
-  }
-};
-
-/**
  * Hides the settings window.
  */
 overlay.settings.hide = function() {
@@ -50,3 +29,40 @@ overlay.settings.hide = function() {
     });
   }
 };
+
+/**
+ * Triggered when stored data changes.
+ * @param {Event} storageEvent The event information.
+ */
+overlay.settings.onStorageEvent = function(storageEvent) {
+  var key = storageEvent.key;
+  console.log('Got storage event: ' + key);
+  var element = document.getElementById(key);
+  nx.setField(element,
+      /** @type {boolean|string} */ (JSON.parse(storageEvent.newValue)));
+};
+/**
+ * Initialization for the settings.
+ * @param {string} formId The id for the form element.
+ */
+overlay.settings.init = function(formId) {
+  if (!window.overwolf) {
+    document.body.bgColor = 'black';
+  }
+  overlay.settings.form = document.getElementById(formId);
+
+  nx.storage.addListener(overlay.settings.onStorageEvent);
+
+  var length = overlay.settings.form.elements.length;
+  for (var i = 0; i < length; ++i) {
+    var element = overlay.settings.form.elements[i];
+    if (element.id) {
+      var value = overlay.common.getSetting(element.id);
+      if (value !== null) {
+        nx.setField(element, /** @type {boolean|string} */ (value));
+      }
+      element.onchange = function() { overlay.settings.onChange(this); };
+    }
+  }
+};
+

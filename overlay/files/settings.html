@@ -6,7 +6,7 @@
 
 <script src="3rdparty/closure/goog/base.js"></script>
 <script src="3rdparty/jscolor/jscolor.js"></script>
-<script src="src/nx/core.js"></script>
+<script src="src/deps.js"></script>
 <script src="src/settings.js"></script>
 
 <div id="settingsDialog" class="settings">
@@ -14,39 +14,38 @@
     <div class="header">Reticle Settings</div>
     <hr>
     <select id="shapeRendering" style="width: auto">
-      <option value="geometricPrecision" selected="selected">Geometric
-      Precision</option>
+      <option value="geometricPrecision">Geometric Precision</option>
       <option value="crispEdges">Crisp Edges</option>
     </select>
     <hr>
-    <input id="opacity" value="1.0">
+    <input id="opacity">
     <label for="opacity">opacity [0-1]</label>
     <br>
-    <input id="crossEnabled" type="checkbox" checked="checked">
+    <input id="crossEnabled" type="checkbox">
     <label for="crossEnabled">cross enabled</label>
     <br>
-    <input id="crossColor" class="color" value="#0000FF">
+    <input id="crossColor" class="color {hash:true,pickerClosable:true}">
     <label for="crossColor">fill color</label>
     <br>
-    <input id="crossStrokeColor" class="color" value="#FFFFFF">
+    <input id="crossStrokeColor" class="color {hash:true,pickerClosable:true}">
     <label for="crossStrokeColor">stroke color</label>
     <br>
-    <input id="crossLength" value="8">
+    <input id="crossLength">
     <label for="crossLength">length</label>
     <br>
-    <input id="crossSpread" value="7">
+    <input id="crossSpread">
     <label for="crossSpread">spread</label>
     <br>
-    <input id="crossThickness" value="2">
+    <input id="crossThickness">
     <label for="crossThickness">thickness</label>
     <br>
-    <input id="crossStrokeSize" value="1">
+    <input id="crossStrokeSize">
     <label for="crossStrokeSize">stroke size</label>
     <br>
-    <input id="crossSpinPeriod" value="1000">
+    <input id="crossSpinPeriod">
     <label for="crossSpinPeriod">spin period (ms)</label>
     <br>
-    <input id="crossRotation" value="0">
+    <input id="crossRotation">
     <label for="crossRotation">degrees rotated</label>
     <br>
     <input id="centerEnabled" type="checkbox" checked="checked">
@@ -58,42 +57,42 @@
     </select>
     <label for="centerShape">shape</label>
     <br>
-    <input id="centerColor" class="color {hash:true,pickerClosable:true}" value="#0000FF">
+    <input id="centerColor" class="color {hash:true,pickerClosable:true}">
     <label for="centerColor">fill color</label>
     <br>
-    <input id="centerStrokeColor" class="color" value="#FFFFFF">
+    <input id="centerStrokeColor" class="color {hash:true,pickerClosable:true}">
     <label for="centerStrokeColor">stroke color</label>
     <br>
-    <input id="centerDiameter" value="4">
+    <input id="centerDiameter">
     <label for="centerDiameter">diameter/width</label>
     <br>
-    <input id="centerStrokeSize" value="1">
+    <input id="centerStrokeSize">
     <label for="centerStrokeSize">stroke size</label>
     <br>
-    <input id="circleEnabled" type="checkbox" checked="checked">
+    <input id="circleEnabled" type="checkbox">
     <label for="circleEnabled">circle enabled</label>
     <br>
-    <input id="circleColor" class="color" value="#0000FF">
+    <input id="circleColor" class="color {hash:true,pickerClosable:true}">
     <label for="circleColor">fill color</label>
     <br>
-    <input id="circleStrokeColor" class="color" value="#FFFFFF">
+    <input id="circleStrokeColor" class="color {hash:true,pickerClosable:true}">
     <label for="circleStrokeColor">stroke color</label>
     <br>
-    <input id="circleDiameter" value="38">
+    <input id="circleDiameter">
     <label for="circleDiameter">diameter</label>
     <br>
-    <input id="circleThickness" value="1">
+    <input id="circleThickness">
     <label for="circleThickness">thickness</label>
     <br>
-    <input id="circleStrokeSize" value="1">
+    <input id="circleStrokeSize">
     <label for="circleStrokeSize">stroke size</label>
     <br>
     <input id="imageEnabled" type="checkbox" checked="checked">
     <label for="imageEnabled">image url enabled</label>
     <br>
-    <input id="imageURL" value="" style="width: 100%">
+    <input id="imageURL" style="width: 100%">
     <br>
-    <input id="imageScale" value="1">
+    <input id="imageScale">
     <label for="imageScale">image scale</label>
     <hr>
     <div class="buttons">

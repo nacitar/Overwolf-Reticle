@@ -3,6 +3,8 @@ goog.provide('nx.Reticle');
 goog.require('nx');
 goog.require('nx.svg');
 
+/* TODO: document settings */
+
 /**
  * Constructor for a nx.Reticle.
  * @param {string} surfaceElementId The id of the svg DOM element on which to
@@ -51,40 +53,6 @@ nx.Reticle = function(surfaceElementId) {
   this.imageScale_ = 1;
   this.imageURL_ = '';
 };
-
-/**
- * Default data for rendering the reticle.
- * @type {Object}
- */
-nx.Reticle.defaultData = {
-  'shapeRendering': 'geometricPrecision',
-  'opacity': '1.0',
-  'crossEnabled': true,
-  'crossColor': '#0000FF',
-  'crossStrokeColor': '#FFFFFF',
-  'crossLength': '8',
-  'crossSpread': '7',
-  'crossThickness': '2',
-  'crossStrokeSize': '1',
-  'crossSpinPeriod': '1000',
-  'crossRotation': '0',
-  'centerEnabled': true,
-  'centerShape': 'circle',
-  'centerColor': '#0000FF',
-  'centerStrokeColor': '#FFFFFF',
-  'centerDiameter': '4',
-  'centerStrokeSize': '1',
-  'circleEnabled': true,
-  'circleColor': '#0000FF',
-  'circleStrokeColor': '#FFFFFF',
-  'circleDiameter': '38',
-  'circleThickness': '1',
-  'circleStrokeSize': '1',
-  'imageEnabled': true,
-  'imageURL': '',
-  'imageScale': '1'
-};
-
 /**
  * Called when the image loads or needs updating.
  */
@@ -159,17 +127,12 @@ nx.Reticle.prototype.setDataCallback = function(callback) {
 };
 
 /**
- * Returns the current value for a given setting, first looking at the data
- * callback and then checking the default data.
+ * Returns the current value for a given setting, using the data callback.
  * @param {string} key The name of the setting.
  * @return {*} The value of the setting.
  */
 nx.Reticle.prototype.setting = function(key) {
-  var value;
-  if (this.dataCallback) {
-    value = this.dataCallback(key);
-  }
-  return nx.default(value, nx.Reticle.defaultData[key]);
+  return this.dataCallback(key);
 };
 
 /**
