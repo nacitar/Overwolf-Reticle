@@ -45,5 +45,7 @@ overlay.settings.hide = function() {
         overwolf.windows.minimize(result.window.id);
       }
     });
+  } else {
+    document.body.bgColor = 'black';
   }
 };

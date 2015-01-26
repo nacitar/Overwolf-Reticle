@@ -87,7 +87,9 @@ overlay.onStorageEvent = function(storageEvent) {
   var key = storageEvent.key;
   console.log('Got storage event: ' + key);
   if (nx.Reticle.defaultData.hasOwnProperty(key)) {
-    overlay.render();
+    // In IE, the actual storage value is not updated yet, so delay rendering
+    // such that the new value will be present when it executes.
+    setTimeout(overlay.render, 0);
   }
 };
 /**
