@@ -28,7 +28,6 @@ var overwolf = {};
 overwolf.version = '0.81.70';
 
 // TODO: StreamSettings, StreamParams, StreamAudioOptions, WatermarkSettings
-//     ODKWindow, GameInfo, GameInfoChangeData
 overwolf.streaming = {};
 /** @param {Function=} callback */
 overwolf.streaming.start = function(settings, callback) {};
@@ -142,3 +141,12 @@ GameInfoChangeData.prototype.resolutionChanged = true;
 GameInfoChangeData.prototype.focusChanged = true;
 GameInfoChangeData.prototype.runningChanged = true;
 GameInfoChangeData.prototype.gameChanged = true;
+
+/** @constructor */
+var ODKWindow = function() {};
+ODKWindow.prototype.id = '';
+ODKWindow.prototype.width = 0;
+ODKWindow.prototype.height = 0;
+ODKWindow.prototype.top = 0;
+ODKWindow.prototype.left = 0;
+ODKWindow.prototype.isVisible = false;

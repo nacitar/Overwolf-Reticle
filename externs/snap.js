@@ -43,6 +43,10 @@ Paper.prototype.rect = function() {};
  */
 Paper.prototype.image = function() {};
 /**
+ * @return {Element} an svg element
+ */
+Paper.prototype.svg = function() {};
+/**
  * @public {Node}
  */
 Paper.prototype.node = null;

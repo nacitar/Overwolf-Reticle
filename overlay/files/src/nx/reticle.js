@@ -16,7 +16,7 @@ nx.Reticle = function(surfaceElementId) {
   // Make a group for everything
   this.reticleGroup = this.surface.svg();
   // Initialize the attributes
-  this.reticleGroup.attr({'x': '50%', 'y': '50%', 'overflow':'visible'});
+  this.reticleGroup.attr({'x': '50%', 'y': '50%', 'overflow': 'visible'});
   // Make a group for the cross
   this.cross = this.surface.group();
   // Make and add the shapes
@@ -54,7 +54,7 @@ nx.Reticle = function(surfaceElementId) {
 
 /**
  * Default data for rendering the reticle.
- * @type {object}
+ * @type {Object}
  */
 nx.Reticle.defaultData = {
   'shapeRendering': 'geometricPrecision',
@@ -152,7 +152,7 @@ nx.Reticle.prototype.spin = function() {
 
 /**
  * Sets the callback to invoke when the value of a given setting is needed.
- * @param {function} callback A callback accepting a setting name.
+ * @param {function(string)} callback A callback accepting a setting name.
  */
 nx.Reticle.prototype.setDataCallback = function(callback) {
   this.dataCallback = callback;
@@ -162,9 +162,10 @@ nx.Reticle.prototype.setDataCallback = function(callback) {
  * Returns the current value for a given setting, first looking at the data
  * callback and then checking the default data.
  * @param {string} key The name of the setting.
+ * @return {*} The value of the setting.
  */
 nx.Reticle.prototype.setting = function(key) {
-  var value
+  var value;
   if (this.dataCallback) {
     value = this.dataCallback(key);
   }
@@ -183,39 +184,48 @@ nx.Reticle.prototype.render = function() {
   // but also simplifies the code in general.
 
   this.outerCircle.attr({
-      'r': this.setting('circleDiameter') / 2.0,
+      'r': parseInt(this.setting('circleDiameter'), 10) / 2.0,
       'fill': 'none',
       'stroke': this.setting('circleColor'),
-      'visibility': this.toVisibility(this.setting('circleEnabled')),
+      'visibility': this.toVisibility(
+          /** @type {boolean} */ (this.setting('circleEnabled'))),
       'strokeWidth': this.setting('circleThickness')});
   this.outerCircle.setOutline(
-      this.setting('circleStrokeColor'), this.setting('circleStrokeSize'));
+      /** @type {string} */ (this.setting('circleStrokeColor')),
+      /** @type {number} */ (this.setting('circleStrokeSize')));
 
-  var halfCenterDiameter = this.setting('centerDiameter') / 2.0;
+  var halfCenterDiameter = parseInt(this.setting('centerDiameter'), 10) / 2.0;
   this.centerDot.attr({
       'r': halfCenterDiameter,
       'fill': this.setting('centerColor'),
-      'visibility': this.toVisibility(this.setting('centerEnabled') &&
-          this.setting('centerShape') == 'circle')});
+      'visibility': this.toVisibility(
+          /** @type {boolean} */ (this.setting('centerEnabled')) &&
+          this.setting('centerShape') === 'circle')});
   this.centerDot.setOutline(
-      this.setting('centerStrokeColor'), this.setting('centerStrokeSize'));
+      /** @type {string} */ (this.setting('centerStrokeColor')),
+      /** @type {number} */ (this.setting('centerStrokeSize')));
   this.centerBox.attr({
       'width': this.setting('centerDiameter'),
       'height': this.setting('centerDiameter'),
       'fill': this.setting('centerColor'),
-      'visibility': this.toVisibility(this.setting('centerEnabled') &&
-          this.setting('centerShape') == 'square'),
+      'visibility': this.toVisibility(
+        /** @type {boolean} */ (this.setting('centerEnabled')) &&
+          this.setting('centerShape') === 'square'),
       'transform': 't' + [-halfCenterDiameter, -halfCenterDiameter]});
   this.centerBox.setOutline(
-      this.setting('centerStrokeColor'), this.setting('centerStrokeSize'));
+      /** @type {string} */ (this.setting('centerStrokeColor')),
+      /** @type {number} */ (this.setting('centerStrokeSize')));
 
   // Offset for left/top offsets to gap from the center
-  var negativeOffset = (
-      -this.setting('crossLength') - this.setting('crossSpread'));
-  var halfThickness = -(this.setting('crossThickness') / 2);
+  var negativeOffset = -(
+      parseInt(this.setting('crossLength'), 10) +
+      parseInt(this.setting('crossSpread'), 10));
+  var halfThickness = -(
+      /** @type {number} */ (this.setting('crossThickness')) / 2);
   var cross = {
       'fill': this.setting('crossColor'),
-      'visibility': this.toVisibility(this.setting('crossEnabled')) };
+      'visibility': this.toVisibility(
+          /** @type {boolean} */ (this.setting('crossEnabled'))) };
   var topBottom = {
       'width': this.setting('crossThickness'),
       'height': this.setting('crossLength')};
@@ -233,13 +243,17 @@ nx.Reticle.prototype.render = function() {
       'transform': 't' + [this.setting('crossSpread'), halfThickness]});
 
   this.crossTop.setOutline(
-      this.setting('crossStrokeColor'), this.setting('crossStrokeSize'));
+      /** @type {string} */ (this.setting('crossStrokeColor')),
+      /** @type {number} */ (this.setting('crossStrokeSize')));
   this.crossBottom.setOutline(
-      this.setting('crossStrokeColor'), this.setting('crossStrokeSize'));
+      /** @type {string} */ (this.setting('crossStrokeColor')),
+      /** @type {number} */ (this.setting('crossStrokeSize')));
   this.crossLeft.setOutline(
-      this.setting('crossStrokeColor'), this.setting('crossStrokeSize'));
+      /** @type {string} */ (this.setting('crossStrokeColor')),
+      /** @type {number} */ (this.setting('crossStrokeSize')));
   this.crossRight.setOutline(
-      this.setting('crossStrokeColor'), this.setting('crossStrokeSize'));
+      /** @type {string} */ (this.setting('crossStrokeColor')),
+      /** @type {number} */ (this.setting('crossStrokeSize')));
 
   var period = parseInt(this.setting('crossSpinPeriod'), 10);
   if (period > 0) {
@@ -251,15 +265,16 @@ nx.Reticle.prototype.render = function() {
     }
   } else {
     this.currentPeriod_ = 0;
-    this.setRotation(this.setting('crossRotation'));
+    this.setRotation(parseInt(this.setting('crossRotation'), 10));
   }
-  this.imageScale_ = this.setting('imageScale');
+  this.imageScale_ = parseFloat(this.setting('imageScale'));
   this.imageURL_ = this.setting('imageURL');
   if (this.rawImage.src != this.imageURL_) {
     this.clearImage();
   }
   this.image.attr({
-      'visibility' : this.toVisibility(this.setting('imageEnabled'))});
+      'visibility' : this.toVisibility(
+          /** @type {boolean} */ (this.setting('imageEnabled')))});
   this.rawImage.src = this.imageURL_;
   this.updateImage();
 };

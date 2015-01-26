@@ -1,36 +1,65 @@
 
 goog.provide('overlay');
 goog.require('nx');
+goog.require('nx.Reticle');
 
+/**
+ * The overlay window.
+ * @type {?ODKWindow}
+ */
 overlay.window = null;
+/**
+ * The settings window
+ * @type {?ODKWindow}
+ */
 overlay.settingsWindow = null;
+/**
+ * The game information.
+ * @type {?GameInfo}
+ */
 overlay.game = null;
-
+/**
+ * The nx.Reticle object.
+ * @type {nx.Reticle}
+ */
+overlay.reticle = null;
+/**
+ * Positions the overlay window so that it is centered.
+ */
 overlay.positionWindow = function() {
-  var dest
+  var dest;
   if (!overlay.game || !overlay.game.isRunning) {
-    console.log ('Positioning: using screen.');
+    console.log('Positioning: using screen.');
     dest = window.screen;
   } else {
-    console.log ('Positioning: using game window.');
+    console.log('Positioning: using game window.');
     dest = overlay.game;
   }
-  //overwolf.windows.restore(overlay.window.id);
   // Get center the overlay on the game window using integral offsets.
   var x = (dest.width - overlay.window.width) / 2 | 0;
   var y = (dest.height - overlay.window.height) / 2 | 0;
   overwolf.windows.changePosition(overlay.window.id, x, y);
 };
 
+/**
+ * Invoked when new GameInfo has been retrieved.
+ * @param {GameInfo} gameInfo
+ */
 overlay.onGameInfo = function(gameInfo) {
   overlay.game = gameInfo;
   overlay.positionWindow();
 };
-
+/**
+ * Invoked when a GameInfo change is reported.
+ * @param {GameInfoChangeData} changeData The change data.
+ */
 overlay.onGameInfoUpdated = function(changeData) {
   overlay.onGameInfo(changeData && changeData.gameInfo || null);
 };
-
+/**
+ * Invoked when the current window is retrieved; used for initialization.
+ * @param {Object} result The overwolf result object.
+ */
 overlay.onCurrentWindow = function(result) {
   if (result.status === 'success' && result.window !== null) {
     var isFirstTime = (overlay.window === null);
@@ -44,12 +73,16 @@ overlay.onCurrentWindow = function(result) {
     }
   }
 };
-
-overlay.reticle = null;
-
+/**
+ * Renders the reticle with the current settings.
+ */
 overlay.render = function() {
   overlay.reticle.render();
 };
+/**
+ * Triggered when stored data changes.
+ * @param {Event} storageEvent The event information.
+ */
 overlay.onStorageEvent = function(storageEvent) {
   var key = storageEvent.key;
   console.log('Got storage event: ' + key);
@@ -69,15 +102,16 @@ overlay.onHotkeyPressed = function(name) {
     }
   }
 };
-
-
+/**
+ * Initializes the overlay.
+ */
 overlay.init = function() {
   overlay.reticle = new nx.Reticle('reticleSurface');
   // Initialize stored settings
   nx.forEachProperty(nx.Reticle.defaultData, function(key, value) {
-    var stored = nx.storage.get(key);
+    var stored = nx.storage.get(/** @type {string} */ (key));
     if (stored === null) {
-      nx.storage.set(key, value);
+      nx.storage.set(/** @type {string} */ (key), value);
     }
   });
   nx.storage.addListener(overlay.onStorageEvent);

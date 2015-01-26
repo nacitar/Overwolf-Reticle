@@ -23,7 +23,7 @@ nx.isNumber = function(value) {
  * @param {*} value The value to check.
  * @return {boolean} True if a function, false otherwise.
  */
-nx.isFunction = function (value) {
+nx.isFunction = function(value) {
   return Object.prototype.toString.call(value) === '[object Function]';
 };
 /**
@@ -61,7 +61,7 @@ nx.signal = function() {
 };
 /**
  * Allows a function to be connected as a slot for this signal.
- * @param {function} slot The slot to connect.
+ * @param {function(...[*])} slot The slot to connect.
  * @return {boolean} True if newly connected, false if already connected.
  */
 nx.signal.prototype.connect = function(slot) {
@@ -73,8 +73,8 @@ nx.signal.prototype.connect = function(slot) {
       this.slots_.push(slot);
       return true;
     }
-    return false;
   }
+  return false;
 };
 /**
  * Invokes all connected slots, forwarding any arguments passed.
@@ -86,13 +86,13 @@ nx.signal.prototype.emit = function() {
 };
 /**
  * Disconnects the provided slot, if it is already connected.
- * @param {function} slot The slot to disconnect.
+ * @param {function(...[*])} slot The slot to disconnect.
  * @return {boolean} True if found and removed, false if not found.
  */
 nx.signal.prototype.disconnect = function(slot) {
   var i = this.slots_.indexOf(slot);
   if (i !== -1) {
-    this.slots_.splice(i,1);
+    this.slots_.splice(i, 1);
     return true;
   }
   return false;
@@ -102,12 +102,12 @@ nx.signal.prototype.disconnect = function(slot) {
  * For each property of the object, invokes the given callback with two
  * arguments: a key and a value.  An optional third argument specified the
  * object to use as 'this' when invoking the callback.
- * @param {object} object The object to examine.
- * @param {function} callback The callback to invoke.
- * @param {?object} opt_this The object to use as 'this'.
+ * @param {Object} object The object to examine.
+ * @param {function(...[*])} callback The callback to invoke.
+ * @param {Object=} opt_this The object to use as 'this'.
  */
 nx.forEachProperty = function(object, callback, opt_this) {
-  for (key in object) {
+  for (var key in object) {
     if (object.hasOwnProperty(key)) {
       callback.apply(opt_this, [key, object[key]]);
     }
@@ -120,7 +120,7 @@ nx.forEachProperty = function(object, callback, opt_this) {
  * @return {string|boolean} The value.
  */
 nx.getField = function(element) {
-  var value
+  var value;
   if (element.type === 'checkbox') {
     value = element.checked;
   } else {
@@ -143,14 +143,32 @@ nx.setField = function(element, value) {
   }
 };
 
-// .key, .oldValue, .newValue, ...
+/**
+ * Adds a storage listener that will be fired in other browser windows of the
+ * same domain when storage is changed.
+ * @param {function(Event)} callback The callback to invoke with the change
+ * event.
+ */
 nx.storage.addListener = function(callback) {
   window.addEventListener('storage', callback, false);
 };
-
+/**
+ * Sets the specified storage value.
+ * @param {string} key The key to set.
+ * @param {*} value The value.
+ */
 nx.storage.set = function(key, value) {
   window.localStorage.setItem(key, JSON.stringify(value));
 };
+/**
+ * Gets the specified storage value.
+ * @param {string} key The key to get.
+ * @return {*} The value.
+ */
 nx.storage.get = function(key) {
-  return JSON.parse(window.localStorage.getItem(key));
+  var value = window.localStorage.getItem(key);
+  if (value !== null) {
+    return JSON.parse(value);
+  }
+  return value;
 };
