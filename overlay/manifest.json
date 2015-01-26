@@ -3,7 +3,7 @@
   "type": "WebApp",
   "meta":{
     "name": "Reticle Overlay",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "minimum-overwolf-version": "0.77.4.0",
     "author": "nacitar sevaht",
     "icon": "files/images/IconMouseOver.png",

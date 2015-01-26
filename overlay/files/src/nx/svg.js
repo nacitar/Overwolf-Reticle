@@ -1,4 +1,5 @@
 goog.provide('nx.svg');
+goog.require('nx');
 
 /**
  * An enum to identify types of shapes.
@@ -41,9 +42,7 @@ nx.svg.Shape.prototype.getAttr = function(key, opt_default) {
   var value = this.shape.attr(key);
   if (value == null) {
     // prefer null over undefined.
-    if (!nx.isUndefined(opt_default)) {
-      value = opt_default;
-    }
+    value = nx.default(opt_default, null);
   } else if (/px$/.test(value)) {
     // remove "px" from pixel values
     var parsed = parseFloat(value);

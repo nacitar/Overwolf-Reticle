@@ -3,6 +3,6 @@
 goog.addDependency('../../../src/common.js', ['overlay.common'], ['nx'], false);
 goog.addDependency('../../../src/nx/core.js', ['nx', 'nx.storage'], [], false);
 goog.addDependency('../../../src/nx/reticle.js', ['nx.Reticle'], ['nx', 'nx.svg'], false);
-goog.addDependency('../../../src/nx/svg.js', ['nx.svg'], [], false);
+goog.addDependency('../../../src/nx/svg.js', ['nx.svg'], ['nx'], false);
 goog.addDependency('../../../src/overlay.js', ['overlay'], ['nx', 'nx.Reticle', 'overlay.common'], false);
 goog.addDependency('../../../src/settings.js', ['overlay.settings'], ['overlay.common'], false);
