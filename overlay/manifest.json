@@ -3,7 +3,7 @@
   "type": "WebApp",
   "meta":{
     "name": "Reticle Overlay",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "minimum-overwolf-version": "0.77.4.0",
     "author": "nacitar sevaht",
     "icon": "files/images/IconMouseOver.png",
@@ -11,10 +11,26 @@
     "description": "Reticle Overlay"
   },
   "data": {
-    "start_window": "MainWindow",
+    "start_window": "ReticleWindow",
     "windows": {
-      "MainWindow": {
-        "file": "files/index.html",
+      "ReticleWindow": {
+        "file": "files/reticle.html",
+        "transparent": true,
+        "resizable": false,
+        "clickthrough": true,
+        "show_in_taskbar": false,
+        "in_game_only": true,
+        "size": {
+          "width": 640,
+          "height": 480
+        },
+        "start_position": {
+          "top": 0,
+          "left": 0
+        }
+      },
+      "SettingsWindow": {
+        "file": "files/settings.html",
         "transparent": true,
         "resizable": true,
         "clickthrough": false,
@@ -31,7 +47,7 @@
       }
     },
     "hotkeys": {
-      "reticle_menu": {
+      "reticleMenu": {
         "title": "Toggle Reticle Menu",
         "action-type": "custom",
         "default": "Ctrl+Shift+Back"

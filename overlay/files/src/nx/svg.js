@@ -60,7 +60,8 @@ nx.svg.Shape.prototype.getAttr = function(key, opt_default) {
  * @param {Element} group A Snap.svg group element.
  */
 nx.svg.Shape.prototype.addToGroup = function(group) {
-  group.add(this.outline, this.shape);
+  group.add(this.outline);
+  group.add(this.shape);
 };
 /**
  * Updates the outline shape's settings to match the real object.

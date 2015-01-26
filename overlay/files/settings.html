@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>Reticle Settings</title>
+
+<link rel="stylesheet" href="css/overlay.css">
+
+<script src="3rdparty/closure/goog/base.js"></script>
+<script src="3rdparty/jscolor/jscolor.js"></script>
+<script src="src/nx/core.js"></script>
+<script src="src/settings.js"></script>
+
+<div id="settingsDialog" class="settings">
+  <form id="reticleSettings">
+    <div class="header">Reticle Settings</div>
+    <hr>
+    <select id="shapeRendering" style="width: auto">
+      <option value="geometricPrecision" selected="selected">Geometric
+      Precision</option>
+      <option value="crispEdges">Crisp Edges</option>
+    </select>
+    <hr>
+    <input id="opacity" value="1.0">
+    <label for="opacity">opacity [0-1]</label>
+    <br>
+    <input id="crossEnabled" type="checkbox" checked="checked">
+    <label for="crossEnabled">cross enabled</label>
+    <br>
+    <input id="crossColor" class="color" value="#0000FF">
+    <label for="crossColor">fill color</label>
+    <br>
+    <input id="crossStrokeColor" class="color" value="#FFFFFF">
+    <label for="crossStrokeColor">stroke color</label>
+    <br>
+    <input id="crossLength" value="8">
+    <label for="crossLength">length</label>
+    <br>
+    <input id="crossSpread" value="7">
+    <label for="crossSpread">spread</label>
+    <br>
+    <input id="crossThickness" value="2">
+    <label for="crossThickness">thickness</label>
+    <br>
+    <input id="crossStrokeSize" value="1">
+    <label for="crossStrokeSize">stroke size</label>
+    <br>
+    <input id="crossSpinPeriod" value="1000">
+    <label for="crossSpinPeriod">spin period (ms)</label>
+    <br>
+    <input id="crossRotation" value="0">
+    <label for="crossRotation">degrees rotated</label>
+    <br>
+    <input id="centerEnabled" type="checkbox" checked="checked">
+    <label for="centerEnabled">center enabled</label>
+    <br/>
+    <select id="centerShape">
+      <option value="circle" selected="selected">Circle</option>
+      <option value="square">Square</option>
+    </select>
+    <label for="centerShape">shape</label>
+    <br>
+    <input id="centerColor" class="color {hash:true,pickerClosable:true}" value="#0000FF">
+    <label for="centerColor">fill color</label>
+    <br>
+    <input id="centerStrokeColor" class="color" value="#FFFFFF">
+    <label for="centerStrokeColor">stroke color</label>
+    <br>
+    <input id="centerDiameter" value="4">
+    <label for="centerDiameter">diameter/width</label>
+    <br>
+    <input id="centerStrokeSize" value="1">
+    <label for="centerStrokeSize">stroke size</label>
+    <br>
+    <input id="circleEnabled" type="checkbox" checked="checked">
+    <label for="circleEnabled">circle enabled</label>
+    <br>
+    <input id="circleColor" class="color" value="#0000FF">
+    <label for="circleColor">fill color</label>
+    <br>
+    <input id="circleStrokeColor" class="color" value="#FFFFFF">
+    <label for="circleStrokeColor">stroke color</label>
+    <br>
+    <input id="circleDiameter" value="38">
+    <label for="circleDiameter">diameter</label>
+    <br>
+    <input id="circleThickness" value="1">
+    <label for="circleThickness">thickness</label>
+    <br>
+    <input id="circleStrokeSize" value="1">
+    <label for="circleStrokeSize">stroke size</label>
+    <br>
+    <input id="imageEnabled" type="checkbox" checked="checked">
+    <label for="imageEnabled">image url enabled</label>
+    <br>
+    <input id="imageURL" value="" style="width: 100%">
+    <br>
+    <input id="imageScale" value="1">
+    <label for="imageScale">image scale</label>
+    <hr>
+    <div class="buttons">
+      <input type="button" value="Close" onclick="overlay.settings.hide()">
+    </div>
+  </form>
+</div>
+<script>
+  overlay.settings.init('reticleSettings');
+</script>

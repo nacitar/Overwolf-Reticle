@@ -3,10 +3,9 @@
   border: 0; /* TODO: give a white border */
   border-radius: 10px;
   box-shadow: 0 2px 8px 1px rgba(0, 0, 0, .75);
-  display: none; /* start invisible */
   left: 10px;
   padding: 5px;
-  position: fixed;
+  display: inline-block;
   top: 10px;
 }
 
@@ -22,6 +21,10 @@
 .settings input[type='text'] {
   border: none;
   width: 30px;
+}
+
+.settings .buttons {
+  text-align: center;
 }
 
 .settings input.color,
