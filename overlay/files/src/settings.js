@@ -21,6 +21,9 @@ overlay.settings.onChange = function(element) {
  * @param {string} formId The id for the form element.
  */
 overlay.settings.init = function(formId) {
+  if (!window.overwolf) {
+    document.body.bgColor = 'black';
+  }
   overlay.settings.form = document.getElementById(formId);
   var length = overlay.settings.form.elements.length;
   for (var i = 0; i < length; ++i) {
@@ -45,7 +48,5 @@ overlay.settings.hide = function() {
         overwolf.windows.minimize(result.window.id);
       }
     });
-  } else {
-    document.body.bgColor = 'black';
   }
 };
