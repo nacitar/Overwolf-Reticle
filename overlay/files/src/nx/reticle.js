@@ -186,10 +186,10 @@ nx.Reticle.prototype.render = function() {
   var halfThickness = -(
       /** @type {number} */ (this.setting('crossThickness')) / 2);
 
-  var crossEnabled = /** @type {boolean} */ this.setting('crossEnabled');
+  var crossEnabled = this.setting('crossEnabled');
   var cross = {
       'fill': this.setting('crossColor'),
-      'visibility': this.toVisibility(crossEnabled)};
+      'visibility': this.toVisibility(/** @type {boolean} */ (crossEnabled))};
   var topBottom = {
       'width': this.setting('crossThickness'),
       'height': this.setting('crossLength')};

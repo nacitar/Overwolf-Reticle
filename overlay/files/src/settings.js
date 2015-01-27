@@ -91,7 +91,7 @@ overlay.settings.setField = function(element, opt_data) {
  * @param {?Object} data The object.
  */
 overlay.settings.apply = function(data) {
-  overlay.settings.forEachField(function (element) {
+  overlay.settings.forEachField(function(element) {
     overlay.settings.setField(element, this);
   }, data);
 };
@@ -102,7 +102,7 @@ overlay.settings.apply = function(data) {
  */
 overlay.settings.retrieve = function() {
   var data = {};
-  overlay.settings.forEachField(function (element) {
+  overlay.settings.forEachField(function(element) {
       this[element.id] = nx.getField(element);
   }, data);
   return data;
@@ -205,7 +205,7 @@ overlay.settings.init = function(formId) {
 
   nx.storage.addListener(overlay.settings.onStorageEvent);
 
-  overlay.settings.forEachField(function (element) {
+  overlay.settings.forEachField(function(element) {
     overlay.settings.setField(element);
     element.onchange = function() { overlay.settings.onChange(this); };
   });
