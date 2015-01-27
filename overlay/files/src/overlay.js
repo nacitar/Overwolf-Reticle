@@ -98,7 +98,7 @@ overlay.onStorageEvent = function(storageEvent) {
  * @param {string} name The name of the hotkey that was triggered.
  */
 overlay.onHotkeyPressed = function(name) {
-  if (name == 'reticleMenu') {
+  if (name === 'reticleSettings') {
     console.log('Reticle menu hotkey triggered.');
     if (overlay.settingsWindow) {
       overwolf.windows.restore(overlay.settingsWindow.id);
@@ -118,9 +118,9 @@ overlay.init = function() {
           overlay.settingsWindow = result.window;
         }
     });
-    overwolf.settings.registerHotKey('reticleMenu', function(result) {
+    overwolf.settings.registerHotKey('reticleSettings', function(result) {
         if (result.status === 'success') {
-          overlay.onHotkeyPressed('reticleMenu');
+          overlay.onHotkeyPressed('reticleSettings');
         }
     });
   } else {

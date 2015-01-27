@@ -3,7 +3,7 @@
   "type": "WebApp",
   "meta":{
     "name": "Reticle Overlay",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "minimum-overwolf-version": "0.77.4.0",
     "author": "nacitar sevaht",
     "icon": "files/images/IconMouseOver.png",
@@ -47,8 +47,8 @@
       }
     },
     "hotkeys": {
-      "reticleMenu": {
-        "title": "Toggle Reticle Menu",
+      "reticleSettings": {
+        "title": "Toggle Reticle Settings",
         "action-type": "custom",
         "default": "Ctrl+Shift+Back"
       }
