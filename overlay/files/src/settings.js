@@ -119,11 +119,11 @@ overlay.settings.storagePrefix = 'saved_';
 overlay.settings.saveData = function(label) {
   label = nx.default(label, '');
   if (label !== '') {
-    label = overlay.settings.storagePrefix + label;
     var data = overlay.settings.retrieve();
-    nx.storage.set(label, data);
+    nx.storage.set(overlay.settings.storagePrefix + label, data);
+    alert('Saved - ' + label);
   } else {
-    alert('ERROR: invalid label');
+    alert('ERROR: invalid label - ' + label);
   }
 };
 /**
@@ -136,12 +136,13 @@ overlay.settings.loadData = function(label) {
   if (label !== '') {
     var data = nx.storage.get(overlay.settings.storagePrefix + label);
     if (data === null) {
-      alert('ERROR: no data found under label: ' + label);
+      alert('ERROR: no data found under label - ' + label);
       return;
     }
     overlay.settings.apply(data);
+    alert('Loaded - ' + label);
   } else {
-    alert('ERROR: invalid label');
+    alert('ERROR: invalid label - ' + label);
   }
 };
 
@@ -152,18 +153,23 @@ overlay.settings.export = function() {
   console.log('Opening export prompt.');
   nx.setField(overlay.settings.dataTransfer,
       JSON.stringify(overlay.settings.retrieve()));
+  alert('Data exported.');
   overlay.settings.dataTransfer.select();
 };
 /**
  * Imports JSON settings to be used.
  */
 overlay.settings.import = function() {
-  console.log('Opening import prompt.');
-  var data = JSON.parse(nx.getField(overlay.settings.dataTransfer));
+  var data = null;
+  try {
+    data = JSON.parse(nx.getField(overlay.settings.dataTransfer));
+  } catch (e) {
+  }
   if (data instanceof Object) {
     overlay.settings.apply(data);
+    alert('Data imported.');
   } else {
-    alert('ERROR: Provided data is not valid JSON for an Object!');
+    alert('ERROR: Provided data is not valid JSON for an Object.');
   }
 };
 /**
@@ -183,6 +189,7 @@ overlay.settings.load = function() {
  */
 overlay.settings.defaults = function() {
   overlay.settings.apply(overlay.common.defaultSettings);
+  alert('Default settings restored.');
 };
 /**
  * Initialization for the settings.
