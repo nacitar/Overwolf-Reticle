@@ -94,11 +94,22 @@
     <br>
     <input id="imageScale">
     <label for="imageScale">image scale</label>
-    <hr>
-    <div class="buttons">
-      <input type="button" value="Close" onclick="overlay.settings.hide()">
-    </div>
   </form>
+  <hr>
+  <div class="buttons">
+    <input type="button" value="Import" onclick="overlay.settings.import()">
+    <input type="button" value="Export" onclick="overlay.settings.export()">
+    <br>
+    <input id="dataTransfer" style="width: 100%">
+    <hr>
+    <input type="button" value="Save" onclick="overlay.settings.save()">
+    <input type="button" value="Load" onclick="overlay.settings.load()">
+    <input type="button" value="Defaults" onclick="overlay.settings.defaults()">
+    <br>
+    <input id="saveLabel" style="width: 100%">
+    <hr>
+    <input type="button" value="Close" onclick="overlay.settings.hide()">
+  </div>
 </div>
 <script>
   overlay.settings.init('reticleSettings');

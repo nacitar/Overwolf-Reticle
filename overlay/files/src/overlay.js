@@ -1,4 +1,3 @@
-
 goog.provide('overlay');
 goog.require('nx');
 goog.require('nx.Reticle');
@@ -41,7 +40,6 @@ overlay.positionWindow = function() {
   var y = (dest.height - overlay.window.height) / 2 | 0;
   overwolf.windows.changePosition(overlay.window.id, x, y);
 };
-
 /**
  * Invoked when new GameInfo has been retrieved.
  * @param {GameInfo} gameInfo
@@ -129,4 +127,3 @@ overlay.init = function() {
   overlay.reticle.setDataCallback(overlay.common.getSetting);
   overlay.render();
 };
-

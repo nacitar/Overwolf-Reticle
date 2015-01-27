@@ -185,10 +185,11 @@ nx.Reticle.prototype.render = function() {
       parseInt(this.setting('crossSpread'), 10));
   var halfThickness = -(
       /** @type {number} */ (this.setting('crossThickness')) / 2);
+
+  var crossEnabled = /** @type {boolean} */ this.setting('crossEnabled');
   var cross = {
       'fill': this.setting('crossColor'),
-      'visibility': this.toVisibility(
-          /** @type {boolean} */ (this.setting('crossEnabled'))) };
+      'visibility': this.toVisibility(crossEnabled)};
   var topBottom = {
       'width': this.setting('crossThickness'),
       'height': this.setting('crossLength')};
@@ -218,7 +219,9 @@ nx.Reticle.prototype.render = function() {
       /** @type {string} */ (this.setting('crossStrokeColor')),
       /** @type {number} */ (this.setting('crossStrokeSize')));
 
-  var period = parseInt(this.setting('crossSpinPeriod'), 10);
+  var period = (
+      crossEnabled ? parseInt(this.setting('crossSpinPeriod'), 10) : 0);
+
   if (period > 0) {
     if (period != this.currentPeriod_) {
       this.currentPeriod_ = period;

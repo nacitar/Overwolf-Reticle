@@ -132,15 +132,21 @@ nx.getField = function(element) {
  * Sets the value of a form field.
  * @param {Element} element A form element.
  * @param {string|boolean} value The value.
+ * @return {boolean} True if the value changed, false if it is the same.
  */
 nx.setField = function(element, value) {
+  var changed = false;
   if (element.type === 'checkbox') {
+    changed = (element.checked !== value);
     element.checked = value;
   } else if (element.color && element.color.fromString) {
+    changed = (element.value !== value);
     element.color.fromString(value);
   } else {
+    changed = (element.value !== value);
     element.value = value;
   }
+  return changed;
 };
 
 /**
