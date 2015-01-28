@@ -1,0 +1,123 @@
+<style>
+/* default fill color for stroked */
+.stroked text {
+  fill: #ffffff;
+}
+/* default stroke settings for stroked */
+.stroked .stroke {
+  stroke: #000000;
+  stroke-width: 1px;
+  stroke-opacity: 1;
+}
+
+#accordion {
+  display: inline-block;
+}
+#accordion input {
+	display: none;
+}
+#accordion label {
+	background: linear-gradient(#4d4d4d, #0d0d0d);
+  border: 1px solid #999999;
+	border-radius: .25em;
+	cursor: pointer;
+	display: block;
+	margin-bottom: .125em;
+	padding: .25em 1em;
+  text-align: center;
+  vertical-align: middle;
+}
+#accordion article {
+	height:0px;
+	overflow:hidden;
+  padding: 0em 1em;
+}
+#accordion input:checked + label {
+	background: linear-gradient(#8c8c8c, #0d0d0d);
+  border: 1px solid #999999;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+#accordion input:checked ~ article {
+  border: 1px solid #999999;
+	background: #555555;
+  color: #ffffff;
+	border-bottom-left-radius: .25em;
+	border-bottom-right-radius: .25em;
+	height: auto;
+	margin-bottom: .125em;
+  padding-top: .25em;
+  padding-bottom: .25em;
+}
+
+/* Defaults for accordion labels */
+#accordion input + label .stroked text {
+  fill: #8c8c8c;
+  font-weight: bold;
+}
+/* Selected accordion labels */
+#accordion input:checked + label .stroked text {
+  fill: #ffffff;
+}
+#accordion label:hover {
+	background: #8c8c8c;
+}
+#accordion label:hover .stroked text {
+	fill: #ffffff;
+}
+</style>
+<script src="3rdparty/snap.svg.js"></script>
+<body bgColor="black">
+  You will have to exclude these from the settings somehow...<br>
+  <section id="accordion">
+    <div>
+      <input type="radio" name="argh" id="check-1">
+      <label for="check-1">
+        <svg class="stroked"><text>Cross</text></svg>
+      </label>
+      <article>
+        bananaaaaaaaaaaaaaaaaaaaaaa
+        <br>
+        bananaaaaaaaaaaaaaaaaaaaaaa
+      </article>
+    </div>
+    <div>
+      <input type="radio" name="argh" id="check-2">
+      <label for="check-2">
+        <svg class="stroked"><text>Center</text></svg>
+      </label>
+      <article>
+        ostrich
+      </article>
+    </div>
+    <div>
+      <input type="radio" name="argh" id="check-3">
+      <label for="check-3">
+        <svg class="stroked"><text>Circle</text></svg>
+      </label>
+      <article>
+        muffin
+      </article>
+    </div>
+  </section>
+</body>
+<script>
+  function fixStroked() {
+    var elements = document.querySelectorAll('.stroked');
+    for (var i = 0, length = elements.length; i < length; ++i) {
+      surface = Snap(elements[i]);
+      surface.attr({'overflow': 'visible'});
+      var children = surface.node.querySelectorAll('text');
+      var stroke = (children.length ? Snap(children[0]) : null);
+      if (stroke) {
+        var group = surface.group(stroke);
+        var text=stroke.clone();
+        stroke.attr({'class': 'stroke'});
+        var box = surface.getBBox();
+        group.attr({'transform': 't' + [-box.x, -box.y]});
+        surface.attr({'width': box.width, 'height': box.height});
+      }
+    }
+  }
+  fixStroked();
+</script>
