@@ -2,6 +2,6 @@
 /***** A blue variant for checked section labels. *****/
 
 /* Checked label */
-.accordion input:checked + label {
+.accordion > input:checked + label {
 	background: linear-gradient(#88b, #223);
 }

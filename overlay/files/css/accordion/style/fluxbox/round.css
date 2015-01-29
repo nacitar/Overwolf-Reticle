@@ -1,10 +1,10 @@
 
 /***** Rounded corners for accordion sections. *****/
 
-.accordion input + label {
+.accordion > input + label {
   border-radius: .25em;
 }
-.accordion input:checked + label + article {
+.accordion > input:checked + label + article {
 	border-bottom-left-radius: .25em;
 	border-bottom-right-radius: .25em;
 }

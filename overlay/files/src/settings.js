@@ -5,7 +5,7 @@ goog.require('overlay.common');
  * The form containing all the settings.
  * @type {Element}
  */
-overlay.settings.form = null;
+overlay.settings.formList = null;
 /**
  * The element into which we will import/export settings data.
  * @type {Element}
@@ -55,11 +55,14 @@ overlay.settings.onStorageEvent = function(storageEvent) {
  * @param {Object=} opt_this The object to use as 'this'.
  */
 overlay.settings.forEachField = function(callback, opt_this) {
-  var length = overlay.settings.form.elements.length;
-  for (var i = 0; i < length; ++i) {
-    var element = overlay.settings.form.elements[i];
-    if (element.id) {
-      callback.apply(opt_this, [element]);
+  var formCount = overlay.settings.formList.length;
+  for (var j = 0; j < formCount; ++j) {
+    var form = overlay.settings.formList[j];
+    for (var i = 0, length = form.elements.length; i < length; ++i) {
+      var element = form.elements[i];
+      if (element.id) {
+        callback.apply(opt_this, [element]);
+      }
     }
   }
 };
@@ -195,11 +198,12 @@ overlay.settings.defaults = function() {
  * Initialization for the settings.
  * @param {string} formId The id for the form element.
  */
-overlay.settings.init = function(formId) {
+overlay.settings.init = function() {
   if (!window.overwolf) {
     document.body.bgColor = 'black';
   }
-  overlay.settings.form = document.getElementById(formId);
+  // Settings are divided among multiple forms.
+  overlay.settings.formList = document.querySelectorAll('form');
   overlay.settings.dataTransfer = document.getElementById('dataTransfer');
   overlay.settings.saveLabel = document.getElementById('saveLabel');
 

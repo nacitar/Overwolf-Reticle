@@ -1,19 +1,6 @@
 .settings {
-  background: #444;
-  border: 0; /* TODO: give a white border */
-  border-radius: 10px;
-  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, .75);
-  left: 10px;
-  padding: 5px;
   display: inline-block;
-  top: 10px;
-}
-
-.settings .header {
-  color: #ff0;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
+  margin: 10px;
 }
 
 /* For text fields (with and without type specified) */
@@ -57,3 +44,7 @@ body {
   width: 100%;
 }
 
+/* Style the outer accordion differently. */
+.settings > input:checked + label {
+	background: linear-gradient(#999, #222);
+}

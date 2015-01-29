@@ -1,15 +1,18 @@
 <style>
 body {
   background: black;
-};
+}
+.container {
+  display: inline-block;
+}
 </style>
 <link rel="stylesheet" href="css/accordion/accordion.css">
 <link rel="stylesheet" href="css/accordion/style/fluxbox/core.css">
 <link rel="stylesheet" href="css/accordion/style/fluxbox/blue.css">
 <link rel="stylesheet" href="css/accordion/style/fluxbox/round.css">
 <body>
-  <section class="accordion">
-    <div>
+  <div class="container">
+    <div class="accordion">
       <input type="radio" name="accordionA" id="accordionSection1">
       <label for="accordionSection1">
         Cross
@@ -20,7 +23,7 @@ body {
         bananaaaaaaaaaaaaaaaaaaaaaa
       </article>
     </div>
-    <div>
+    <div class="accordion">
       <input type="radio" name="accordionA" id="accordionSection2">
       <label for="accordionSection2">
         Center
@@ -29,7 +32,7 @@ body {
         ostrich
       </article>
     </div>
-    <div>
+    <div class="accordion">
       <input type="radio" name="accordionA" id="accordionSection3">
       <label for="accordionSection3">
         Circle
@@ -38,5 +41,5 @@ body {
         muffin
       </article>
     </div>
-  </section>
+  </div>
 </body>
