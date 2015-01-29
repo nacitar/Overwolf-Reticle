@@ -1,13 +1,13 @@
 <style>
 /* default fill color for stroked */
-.stroked text {
-  fill: #ffffff;
+.stroked {
 }
 /* default stroke settings for stroked */
 .stroked .stroke {
-  stroke: #000000;
-  stroke-width: 1px;
+  stroke-width: 2px;
   stroke-opacity: 1;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
 }
 
 #accordion {
@@ -51,18 +51,23 @@
 }
 
 /* Defaults for accordion labels */
-#accordion input + label .stroked text {
+#accordion input + label .stroked {
+  color: #8c8c8c;
   fill: #8c8c8c;
-  font-weight: bold;
+}
+#accordion input + label .stroked .stroke {
+  stroke: #000000;
 }
 /* Selected accordion labels */
-#accordion input:checked + label .stroked text {
+#accordion input:checked + label .stroked {
+  color: #ffffff;
   fill: #ffffff;
 }
 #accordion label:hover {
 	background: #8c8c8c;
 }
-#accordion label:hover .stroked text {
+#accordion label:hover .stroked {
+  color: #ffffff;
 	fill: #ffffff;
 }
 </style>
@@ -73,7 +78,7 @@
     <div>
       <input type="radio" name="argh" id="check-1">
       <label for="check-1">
-        <svg class="stroked"><text>Cross</text></svg>
+        <span class="stroked">Cross</span>
       </label>
       <article>
         bananaaaaaaaaaaaaaaaaaaaaaa
@@ -84,7 +89,7 @@
     <div>
       <input type="radio" name="argh" id="check-2">
       <label for="check-2">
-        <svg class="stroked"><text>Center</text></svg>
+        <span class="stroked">Center</span>
       </label>
       <article>
         ostrich
@@ -93,7 +98,7 @@
     <div>
       <input type="radio" name="argh" id="check-3">
       <label for="check-3">
-        <svg class="stroked"><text>Circle</text></svg>
+        <span class="stroked">Circle</span>
       </label>
       <article>
         muffin
@@ -105,19 +110,32 @@
   function fixStroked() {
     var elements = document.querySelectorAll('.stroked');
     for (var i = 0, length = elements.length; i < length; ++i) {
-      surface = Snap(elements[i]);
-      surface.attr({'overflow': 'visible'});
-      var children = surface.node.querySelectorAll('text');
-      var stroke = (children.length ? Snap(children[0]) : null);
-      if (stroke) {
-        var group = surface.group(stroke);
-        var text=stroke.clone();
-        stroke.attr({'class': 'stroke'});
-        var box = surface.getBBox();
-        group.attr({'transform': 't' + [-box.x, -box.y]});
-        surface.attr({'width': box.width, 'height': box.height});
+      // Get element information
+      var el = elements[i];
+      var innerText = el.innerText;
+      var rect = el.getBoundingClientRect();
+      // Create the SVG with some reasonable defaults
+      var surface = Snap(el.offsetWidth, el.offsetHeight);
+      var svg = surface.node;
+      // Copy the classes from the element over to the SVG, and allow overflow.
+      for (var j = 0, jlength = el.classList.length; j < jlength; ++j) {
+        svg.classList.add(el.classList.item(j));
       }
+      surface.attr({'overflow': 'visible'});
+      // Make the swap
+      el.parentNode.replaceChild(svg, el);
+
+      // Draw!
+      var stroke = surface.text(0, 0, innerText);
+      stroke.addClass('value');
+      var group = surface.group(stroke);
+      var text=stroke.clone();
+      stroke.addClass('stroke');
+      var box = surface.getBBox();
+      group.attr({'transform': 't' + [-box.x, -box.y]});
+      surface.attr({'width': box.width, 'height': box.height});
     }
   }
   fixStroked();
+  // TODO: label shrinks by 1 pixel for no good reason... Font?
 </script>
