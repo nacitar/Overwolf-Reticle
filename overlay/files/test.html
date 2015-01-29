@@ -1,56 +1,17 @@
 <style>
-#accordion {
-  display: inline-block;
-}
-#accordion input {
-	display: none;
-}
-#accordion label {
-	background: linear-gradient(#4d4d4d, #0d0d0d);
-  border: 1px solid #999999;
-	/*border-radius: .25em;*/
-  color: #8c8c8c;
-	cursor: pointer;
-	display: block;
-	margin-bottom: .125em;
-	padding: .25em 1em;
-  text-align: center;
-  vertical-align: middle;
-}
-#accordion article {
-	height: 0px;
-	overflow: hidden;
-  padding: 0em 1em;
-}
-#accordion input:checked + label {
-  /* original first color was #8c8c8c */
-	background: linear-gradient(#8c8cbc, #0d0d0d);
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 0;
-  color: #ffffff;
-}
-#accordion input:checked ~ article {
-  border: 1px solid #999999;
-	background: #555555;
-  color: #ffffff;
-	/*border-bottom-left-radius: .25em;
-	border-bottom-right-radius: .25em;*/
-	height: auto;
-	margin-bottom: .125em;
-  padding-top: .25em;
-  padding-bottom: .25em;
-}
-#accordion label:hover {
-	background: #8c8c8c;
-  color: #ffffff;
-}
+body {
+  background: black;
+};
 </style>
-<body bgColor="black">
-  You will have to exclude these from the settings somehow...<br>
-  <section id="accordion">
+<link rel="stylesheet" href="css/accordion/accordion.css">
+<link rel="stylesheet" href="css/accordion/style/fluxbox/core.css">
+<link rel="stylesheet" href="css/accordion/style/fluxbox/blue.css">
+<link rel="stylesheet" href="css/accordion/style/fluxbox/round.css">
+<body>
+  <section class="accordion">
     <div>
-      <input type="radio" name="argh" id="check-1">
-      <label for="check-1">
+      <input type="radio" name="accordionA" id="accordionSection1">
+      <label for="accordionSection1">
         Cross
       </label>
       <article>
@@ -60,8 +21,8 @@
       </article>
     </div>
     <div>
-      <input type="radio" name="argh" id="check-2">
-      <label for="check-2">
+      <input type="radio" name="accordionA" id="accordionSection2">
+      <label for="accordionSection2">
         Center
       </label>
       <article>
@@ -69,8 +30,8 @@
       </article>
     </div>
     <div>
-      <input type="radio" name="argh" id="check-3">
-      <label for="check-3">
+      <input type="radio" name="accordionA" id="accordionSection3">
+      <label for="accordionSection3">
         Circle
       </label>
       <article>

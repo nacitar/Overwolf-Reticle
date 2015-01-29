@@ -1,0 +1,41 @@
+
+/***** Makes the accordion look like nacitar's fluxbox theme. *****/
+
+/* Unchecked label */
+.accordion input + label {
+	background: linear-gradient(#444, #111);
+  border: 1px solid #999;
+  color: #888;
+	margin-bottom: .125em;
+	padding: .25em 1em;
+  text-align: center;
+  vertical-align: middle;
+}
+/* Selectable label hover */
+.accordion input:not([type='radio']) + label:hover,
+.accordion input[type='radio']:not(:checked) + label:hover {
+	background: #888;
+  color: #fff;
+}
+/* Checked label */
+.accordion input:checked + label {
+	background: linear-gradient(#999, #222);
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+  color: #fff;
+  margin-bottom: 0;
+}
+/* Hidden article */
+.accordion input + label + article {
+  padding: 0em 1em;
+}
+/* Visible article */
+.accordion input:checked + label + article {
+  border: 1px solid #999;
+  border-top-width: 0;
+	background: #555;
+  color: #fff;
+	margin-bottom: .125em;
+  padding-top: .25em;
+  padding-bottom: .25em;
+}

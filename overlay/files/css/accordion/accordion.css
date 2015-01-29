@@ -1,0 +1,22 @@
+/* Make the accordion fit content horizontally, not fill its container. */
+.accordion {
+  display: inline-block;
+}
+/* Hide the checkout/radio button; we use the label to interact with it. */
+.accordion input {
+	display: none;
+}
+/* Fill the accordion with the label; indicate clickability via cursor. */
+.accordion input + label {
+	display: block;
+  cursor: pointer;
+}
+/* Checked radio buttons don't change state when clicked; fix the cursor. */
+.accordion input[type='radio']:checked + label:hover {
+  cursor: default;
+}
+/* Hide the article if the input isn't checked. */
+.accordion input:not(:checked) + label + article {
+	height: 0;
+	overflow: hidden;
+}
