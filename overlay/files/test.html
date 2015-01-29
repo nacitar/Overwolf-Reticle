@@ -1,15 +1,4 @@
 <style>
-/* default fill color for stroked */
-.stroked {
-}
-/* default stroke settings for stroked */
-.stroked .stroke {
-  stroke-width: 2px;
-  stroke-opacity: 1;
-  stroke-linecap: square;
-  stroke-linejoin: miter;
-}
-
 #accordion {
   display: inline-block;
 }
@@ -19,7 +8,8 @@
 #accordion label {
 	background: linear-gradient(#4d4d4d, #0d0d0d);
   border: 1px solid #999999;
-	border-radius: .25em;
+	/*border-radius: .25em;*/
+  color: #8c8c8c;
 	cursor: pointer;
 	display: block;
 	margin-bottom: .125em;
@@ -28,57 +18,40 @@
   vertical-align: middle;
 }
 #accordion article {
-	height:0px;
-	overflow:hidden;
+	height: 0px;
+	overflow: hidden;
   padding: 0em 1em;
 }
 #accordion input:checked + label {
-	background: linear-gradient(#8c8c8c, #0d0d0d);
-  border: 1px solid #999999;
+  /* original first color was #8c8c8c */
+	background: linear-gradient(#8c8cbc, #0d0d0d);
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
+  color: #ffffff;
 }
 #accordion input:checked ~ article {
   border: 1px solid #999999;
 	background: #555555;
   color: #ffffff;
-	border-bottom-left-radius: .25em;
-	border-bottom-right-radius: .25em;
+	/*border-bottom-left-radius: .25em;
+	border-bottom-right-radius: .25em;*/
 	height: auto;
 	margin-bottom: .125em;
   padding-top: .25em;
   padding-bottom: .25em;
 }
-
-/* Defaults for accordion labels */
-#accordion input + label .stroked {
-  color: #8c8c8c;
-  fill: #8c8c8c;
-}
-#accordion input + label .stroked .stroke {
-  stroke: #000000;
-}
-/* Selected accordion labels */
-#accordion input:checked + label .stroked {
-  color: #ffffff;
-  fill: #ffffff;
-}
 #accordion label:hover {
 	background: #8c8c8c;
-}
-#accordion label:hover .stroked {
   color: #ffffff;
-	fill: #ffffff;
 }
 </style>
-<script src="3rdparty/snap.svg.js"></script>
 <body bgColor="black">
   You will have to exclude these from the settings somehow...<br>
   <section id="accordion">
     <div>
       <input type="radio" name="argh" id="check-1">
       <label for="check-1">
-        <span class="stroked">Cross</span>
+        Cross
       </label>
       <article>
         bananaaaaaaaaaaaaaaaaaaaaaa
@@ -89,7 +62,7 @@
     <div>
       <input type="radio" name="argh" id="check-2">
       <label for="check-2">
-        <span class="stroked">Center</span>
+        Center
       </label>
       <article>
         ostrich
@@ -98,7 +71,7 @@
     <div>
       <input type="radio" name="argh" id="check-3">
       <label for="check-3">
-        <span class="stroked">Circle</span>
+        Circle
       </label>
       <article>
         muffin
@@ -106,36 +79,3 @@
     </div>
   </section>
 </body>
-<script>
-  function fixStroked() {
-    var elements = document.querySelectorAll('.stroked');
-    for (var i = 0, length = elements.length; i < length; ++i) {
-      // Get element information
-      var el = elements[i];
-      var innerText = el.innerText;
-      var rect = el.getBoundingClientRect();
-      // Create the SVG with some reasonable defaults
-      var surface = Snap(el.offsetWidth, el.offsetHeight);
-      var svg = surface.node;
-      // Copy the classes from the element over to the SVG, and allow overflow.
-      for (var j = 0, jlength = el.classList.length; j < jlength; ++j) {
-        svg.classList.add(el.classList.item(j));
-      }
-      surface.attr({'overflow': 'visible'});
-      // Make the swap
-      el.parentNode.replaceChild(svg, el);
-
-      // Draw!
-      var stroke = surface.text(0, 0, innerText);
-      stroke.addClass('value');
-      var group = surface.group(stroke);
-      var text=stroke.clone();
-      stroke.addClass('stroke');
-      var box = surface.getBBox();
-      group.attr({'transform': 't' + [-box.x, -box.y]});
-      surface.attr({'width': box.width, 'height': box.height});
-    }
-  }
-  fixStroked();
-  // TODO: label shrinks by 1 pixel for no good reason... Font?
-</script>
