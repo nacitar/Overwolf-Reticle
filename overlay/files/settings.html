@@ -11,6 +11,7 @@
 <script src="3rdparty/closure/goog/base.js"></script>
 <script src="3rdparty/jscolor/jscolor.js"></script>
 <script src="src/deps.js"></script>
+<script src="src/nx/base.js"></script>
 <script src="src/settings.js"></script>
 
 <style>
@@ -37,6 +38,7 @@
             <option value="geometricPrecision">Geometric Precision</option>
             <option value="crispEdges">Crisp Edges</option>
           </select>
+          <label for="shapeRendering">mode</label>
           <br>
           <input id="opacity">
           <label for="opacity">opacity [0-1]</label>
@@ -182,5 +184,5 @@
   </article>
 </div>
 <script>
-  overlay.settings.init('reticleSettings');
+  nx.initialize();
 </script>

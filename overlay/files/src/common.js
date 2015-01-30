@@ -52,3 +52,45 @@ overlay.common.getSetting = function(key) {
   return value;
 };
 
+/**
+ * The signal invoked when the GameInfo changes.
+ * @type {nx.signal}
+ */
+overlay.common.eventGameInfo = new nx.signal();
+/**
+ * Invoked when new GameInfo has been retrieved.
+ * @param {GameInfo} gameInfo
+ * @private
+ */
+overlay.common.onGameInfo_ = function(gameInfo) {
+  overlay.common.game = gameInfo;
+  overlay.common.eventGameInfo.emit();
+};
+/**
+ * Invoked when a GameInfo change is reported.
+ * @param {GameInfoChangeData} changeData The change data.
+ * @private
+ */
+overlay.common.onGameInfoUpdated_ = function(changeData) {
+  overlay.common.onGameInfo_(changeData && changeData.gameInfo || null);
+};
+/**
+ * Indicates whether or not we're listening for GameInfo changes.
+ * @type {boolean}
+ * @private
+ */
+overlay.common.isListeningForGameInfo_ = false;
+/**
+ * Installs GameInfo monitoring hooks.  Fires eventGameInfo upon changes.
+ */
+overlay.common.listenForGameInfo = function() {
+  // Only install once.
+  if (!overlay.common.isListeningForGameInfo_) {
+    overlay.common.isListeningForGameInfo_ = true;
+    // Listen for new changes to the info
+    overwolf.games.onGameInfoUpdated.addListener(
+        overlay.common.onGameInfoUpdated_);
+    // Retrieve the current info
+    overwolf.games.getRunningGameInfo(overlay.common.onGameInfo_);
+  }
+};

@@ -52,6 +52,7 @@ nx.escapeRegExp = function(value) {
 nx.default = function(value, defaultValue) {
   return (nx.isUndefined(value) ? defaultValue : value);
 };
+// TODO: better handling for bind() as slots
 /**
  * A signal class, implementing the sigslot paradigm.
  * @constructor
@@ -97,7 +98,12 @@ nx.signal.prototype.disconnect = function(slot) {
   }
   return false;
 };
-
+/**
+ * Disconnects all slots.
+ */
+nx.signal.prototype.disconnectAll = function() {
+  this.slots_ = [];
+};
 /**
  * For each property of the object, invokes the given callback with two
  * arguments: a key and a value.  An optional third argument specified the
@@ -195,8 +201,48 @@ nx.storage.length = function() {
 /**
  * Returns the key at the given index.
  * @param {number} index The index.
- * @return {string|null} The key.
+ * @return {?string} The key.
  */
 nx.storage.key = function(index) {
   return window.localStorage.key(index);
+};
+/**
+ * The current window, if running in overwolf.
+ * @type {?ODKWindow}
+ */
+nx.odkWindow = null;
+/**
+ * A signal people can connect to for invoking initialization code.
+ * @type {nx.signal}
+ */
+nx.eventInitialize = new nx.signal();
+/**
+ * Fires the initialize event, disconnecting all slots.
+ * @private
+ */
+nx.fireInitialize_ = function() {
+  nx.eventInitialize.emit();
+  nx.eventInitialize.disconnectAll();
+};
+/**
+ * Calls when the current window is retrieved; triggers initialization code.
+ * @param {Object} result The overwolf result object.
+ * @private
+ */
+nx.onCurrentWindow_ = function(result) {
+  if (result.status === 'success' && result.window !== null) {
+    nx.odkWindow = result.window;
+    nx.fireInitialize_();
+  }
+};
+/**
+ * Fires initialization code after any necessary events have taken place.  For
+ * overwolf, the current window will be obtained.
+ */
+nx.initialize = function() {
+  if (window.overwolf) {
+    overwolf.windows.getCurrentWindow(nx.onCurrentWindow_);
+  } else {
+    nx.fireInitialize_();
+  }
 };

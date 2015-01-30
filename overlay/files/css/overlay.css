@@ -6,7 +6,6 @@
 /* For text fields (with and without type specified) */
 .settings input:not([type]),
 .settings input[type='text'] {
-  border: none;
   width: 30px;
 }
 
@@ -16,7 +15,6 @@
 
 .settings input.color,
 .settings select {
-  border: none;
   color: #000;
   width: 60px;
 }

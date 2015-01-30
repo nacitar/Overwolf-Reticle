@@ -35,7 +35,6 @@ overlay.settings.hide = function() {
   if (window.overwolf) {
     overwolf.windows.getCurrentWindow(function(result) {
       if (result.status === 'success') {
-        // TODO: close?
         overwolf.windows.minimize(result.window.id);
       }
     });
@@ -263,21 +262,25 @@ overlay.settings.updateProfiles = function() {
   }
   nx.setField(list, selected);
 };
+
+/**
+ * Positions the window at the top left.
+ */
+overlay.settings.positionWindow = function() {
+  overwolf.windows.changePosition(nx.odkWindow.id, 0, 0);
+};
 /**
  * Initialization for the settings.
  */
 overlay.settings.init = function() {
-  if (!window.overwolf) {
-    document.body.bgColor = 'black';
-  } else {
+  if (window.overwolf) {
     // Workaround stupid overwolf CSS bugs.
     overlay.settings.installBugWorkaround();
-    // TODO: do this when the reticle window moves too.
-    overwolf.windows.getCurrentWindow(function(result) {
-      if (result.status === 'success') {
-        overwolf.windows.changePosition(result.window.id, 0, 0);
-      }
-    });
+
+    overlay.common.eventGameInfo.connect(overlay.settings.positionWindow);
+    overlay.common.listenForGameInfo();
+  } else {
+    document.body.bgColor = 'black';
   }
   // Settings are divided among multiple forms.
   overlay.settings.formList = document.querySelectorAll('form');
@@ -293,3 +296,4 @@ overlay.settings.init = function() {
   overlay.settings.updateProfiles();
 };
 
+nx.eventInitialize.connect(overlay.settings.init);
