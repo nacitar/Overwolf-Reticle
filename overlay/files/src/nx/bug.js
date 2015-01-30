@@ -1,4 +1,4 @@
-goog.provide('nx.bug')
+goog.provide('nx.bug');
 
 /**
  * Overwolf has a bug where CSS does not properly apply to everything when the
