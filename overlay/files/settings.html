@@ -26,140 +26,159 @@
     Reticle Settings
   </label>
   <article>
-  <div class="accordion">
-    <input type="radio" name="accordionA" id="accordionSection0">
-    <label for="accordionSection0">
-      General
-    </label>
-    <article>
-      <form>
-        <select id="shapeRendering" style="width: auto">
-          <option value="geometricPrecision">Geometric Precision</option>
-          <option value="crispEdges">Crisp Edges</option>
-        </select>
-        <br>
-        <input id="opacity">
-        <label for="opacity">opacity [0-1]</label>
-      </form>
-    </article>
-    <input type="radio" name="accordionA" id="accordionSection1">
-    <label for="accordionSection1">
-      Cross
-    </label>
-    <article>
-      <form>
-        <input id="crossEnabled" type="checkbox">
-        <label for="crossEnabled">enabled</label>
-        <br>
-        <input id="crossColor" class="color {hash:true,pickerClosable:true}">
-        <label for="crossColor">fill color</label>
-        <br>
-        <input id="crossStrokeColor" class="color {hash:true,pickerClosable:true}">
-        <label for="crossStrokeColor">stroke color</label>
-        <br>
-        <input id="crossLength">
-        <label for="crossLength">length</label>
-        <br>
-        <input id="crossSpread">
-        <label for="crossSpread">spread</label>
-        <br>
-        <input id="crossThickness">
-        <label for="crossThickness">thickness</label>
-        <br>
-        <input id="crossStrokeSize">
-        <label for="crossStrokeSize">stroke size</label>
-        <br>
-        <input id="crossSpinPeriod">
-        <label for="crossSpinPeriod">spin period (ms)</label>
-        <br>
-        <input id="crossRotation">
-        <label for="crossRotation">degrees rotated</label>
-      </form>
-    </article>
-    <input type="radio" name="accordionA" id="accordionSection2">
-    <label for="accordionSection2">
-      Center
-    </label>
-    <article>
-      <form>
-        <input id="centerEnabled" type="checkbox" checked="checked">
-        <label for="centerEnabled">enabled</label>
-        <br/>
-        <select id="centerShape">
-          <option value="circle" selected="selected">Circle</option>
-          <option value="square">Square</option>
-        </select>
-        <label for="centerShape">shape</label>
-        <br>
-        <input id="centerColor" class="color {hash:true,pickerClosable:true}">
-        <label for="centerColor">fill color</label>
-        <br>
-        <input id="centerStrokeColor" class="color {hash:true,pickerClosable:true}">
-        <label for="centerStrokeColor">stroke color</label>
-        <br>
-        <input id="centerDiameter">
-        <label for="centerDiameter">diameter/width</label>
-        <br>
-        <input id="centerStrokeSize">
-        <label for="centerStrokeSize">stroke size</label>
-      </form>
-    </article>
-    <input type="radio" name="accordionA" id="accordionSection3">
-    <label for="accordionSection3">
-      Circle
-    </label>
-    <article>
-      <form>
-        <input id="circleEnabled" type="checkbox">
-        <label for="circleEnabled">enabled</label>
-        <br>
-        <input id="circleColor" class="color {hash:true,pickerClosable:true}">
-        <label for="circleColor">fill color</label>
-        <br>
-        <input id="circleStrokeColor" class="color {hash:true,pickerClosable:true}">
-        <label for="circleStrokeColor">stroke color</label>
-        <br>
-        <input id="circleDiameter">
-        <label for="circleDiameter">diameter</label>
-        <br>
-        <input id="circleThickness">
-        <label for="circleThickness">thickness</label>
-        <br>
-        <input id="circleStrokeSize">
-        <label for="circleStrokeSize">stroke size</label>
-      </form>
-    </article>
-    <input type="radio" name="accordionA" id="accordionSection4">
-    <label for="accordionSection4">
-      Image
-    </label>
-    <article>
-      <form>
-        <input id="imageEnabled" type="checkbox" checked="checked">
-        <label for="imageEnabled">enabled</label>
-        <br>
-        <input id="imageURL" style="width: 100%">
-        <br>
-        <input id="imageScale">
-        <label for="imageScale">image scale</label>
-      </form>
-    </article>
-  </div>
-  <hr>
-  <div class="buttons">
-    <input type="button" value="Import" onclick="overlay.settings.import()">
-    <input type="button" value="Export" onclick="overlay.settings.export()">
-    <br>
-    <input id="dataTransfer" style="width: 100%">
+    <div class="accordion">
+      <input type="radio" name="accordionA" id="general">
+      <label for="general">
+        General
+      </label>
+      <article>
+        <form>
+          <select id="shapeRendering" style="width: auto">
+            <option value="geometricPrecision">Geometric Precision</option>
+            <option value="crispEdges">Crisp Edges</option>
+          </select>
+          <br>
+          <input id="opacity">
+          <label for="opacity">opacity [0-1]</label>
+        </form>
+      </article>
+      <input type="radio" name="accordionA" id="cross">
+      <label for="cross">
+        Cross
+      </label>
+      <article>
+        <form>
+          <input id="crossEnabled" type="checkbox">
+          <label for="crossEnabled">enabled</label>
+          <br>
+          <input id="crossColor" class="color {hash:true,pickerClosable:true}">
+          <label for="crossColor">fill color</label>
+          <br>
+          <input id="crossStrokeColor" class="color {hash:true,pickerClosable:true}">
+          <label for="crossStrokeColor">stroke color</label>
+          <br>
+          <input id="crossLength">
+          <label for="crossLength">length</label>
+          <br>
+          <input id="crossSpread">
+          <label for="crossSpread">spread</label>
+          <br>
+          <input id="crossThickness">
+          <label for="crossThickness">thickness</label>
+          <br>
+          <input id="crossStrokeSize">
+          <label for="crossStrokeSize">stroke size</label>
+          <br>
+          <input id="crossSpinPeriod">
+          <label for="crossSpinPeriod">spin period (ms)</label>
+          <br>
+          <input id="crossRotation">
+          <label for="crossRotation">degrees rotated</label>
+        </form>
+      </article>
+      <input type="radio" name="accordionA" id="center">
+      <label for="center">
+        Center
+      </label>
+      <article>
+        <form>
+          <input id="centerEnabled" type="checkbox" checked="checked">
+          <label for="centerEnabled">enabled</label>
+          <br/>
+          <select id="centerShape">
+            <option value="circle" selected="selected">Circle</option>
+            <option value="square">Square</option>
+          </select>
+          <label for="centerShape">shape</label>
+          <br>
+          <input id="centerColor" class="color {hash:true,pickerClosable:true}">
+          <label for="centerColor">fill color</label>
+          <br>
+          <input id="centerStrokeColor" class="color {hash:true,pickerClosable:true}">
+          <label for="centerStrokeColor">stroke color</label>
+          <br>
+          <input id="centerDiameter">
+          <label for="centerDiameter">diameter/width</label>
+          <br>
+          <input id="centerStrokeSize">
+          <label for="centerStrokeSize">stroke size</label>
+        </form>
+      </article>
+      <input type="radio" name="accordionA" id="circle">
+      <label for="circle">
+        Circle
+      </label>
+      <article>
+        <form>
+          <input id="circleEnabled" type="checkbox">
+          <label for="circleEnabled">enabled</label>
+          <br>
+          <input id="circleColor" class="color {hash:true,pickerClosable:true}">
+          <label for="circleColor">fill color</label>
+          <br>
+          <input id="circleStrokeColor" class="color {hash:true,pickerClosable:true}">
+          <label for="circleStrokeColor">stroke color</label>
+          <br>
+          <input id="circleDiameter">
+          <label for="circleDiameter">diameter</label>
+          <br>
+          <input id="circleThickness">
+          <label for="circleThickness">thickness</label>
+          <br>
+          <input id="circleStrokeSize">
+          <label for="circleStrokeSize">stroke size</label>
+        </form>
+      </article>
+      <input type="radio" name="accordionA" id="image">
+      <label for="image">
+        Image
+      </label>
+      <article>
+        <form>
+          <input id="imageEnabled" type="checkbox" checked="checked">
+          <label for="imageEnabled">enabled</label>
+          <br>
+          <input id="imageURL" style="width: 100%">
+          <br>
+          <input id="imageScale">
+          <label for="imageScale">image scale</label>
+        </form>
+      </article>
+      <hr>
+      <input type="radio" name="accordionA" id="sharing">
+      <label for="sharing">
+        Sharing
+      </label>
+      <article>
+        <div class="buttons">
+          <input id="dataTransfer" style="width: 100%">
+          <br>
+          <label for="dataTransfer">copy/paste data above</label>
+          <br>
+          <input type="button" value="Import" onclick="overlay.settings.import()">
+          <input type="button" value="Export" onclick="overlay.settings.export()">
+        </div>
+      </article>
+      <input type="radio" name="accordionA" id="profile">
+      <label for="profile">
+        Profile
+      </label>
+      <article>
+        <select id="profileName" style="width: 100%"></select>
+        <div class="buttons">
+          <input type="button" value="Load" onclick="overlay.settings.load()">
+          <input type="button" value="Save" onclick="overlay.settings.save()">
+          <input type="button" value="New" onclick="overlay.settings.create()">
+          <input type="button" value="Delete" onclick="overlay.settings.remove()">
+          <hr>
+          <input type="button" value="Defaults" onclick="overlay.settings.defaults()">
+        </div>
+      </article>
+    </div>
     <hr>
-    <input type="button" value="Save" onclick="overlay.settings.save()">
-    <input type="button" value="Load" onclick="overlay.settings.load()">
-    <input type="button" value="Defaults" onclick="overlay.settings.defaults()">
-    <br>
-    <input id="saveLabel" style="width: 100%">
-    <hr>
-    <input type="button" value="Close" onclick="overlay.settings.hide()">
-  </div>
+    <div class="buttons">
+      <input type="button" value="Close" onclick="overlay.settings.hide()">
+    </div>
   </article>
 </div>
 <script>

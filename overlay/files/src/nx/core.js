@@ -178,3 +178,25 @@ nx.storage.get = function(key) {
   }
   return value;
 };
+/**
+ * Removes the specified storage item.
+ * @param {string} key The key to remove.
+ */
+nx.storage.remove = function(key) {
+  window.localStorage.removeItem(key);
+};
+/**
+ * Gets the number of localStorage entries.
+ * @return {number} The length.
+ */
+nx.storage.length = function() {
+  return window.localStorage.length;
+};
+/**
+ * Returns the key at the given index.
+ * @param {number} index The index.
+ * @return {string|null} The key.
+ */
+nx.storage.key = function(index) {
+  return window.localStorage.key(index);
+};

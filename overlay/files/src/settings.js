@@ -15,10 +15,10 @@ overlay.settings.formList = null;
  */
 overlay.settings.dataTransfer = null;
 /**
- * The element into which we will place save labels.
+ * The dropdown list of saved profile.
  * @type {Element}
  */
-overlay.settings.saveLabel = null;
+overlay.settings.profileName = null;
 /**
  * Invoked when a form element's value changes.
  * @param {Element} element The element that changed.
@@ -127,7 +127,6 @@ overlay.settings.saveData = function(label) {
   if (label !== '') {
     var data = overlay.settings.retrieve();
     nx.storage.set(overlay.settings.storagePrefix + label, data);
-    alert('Saved - ' + label);
   } else {
     alert('ERROR: invalid label - ' + label);
   }
@@ -146,7 +145,6 @@ overlay.settings.loadData = function(label) {
       return;
     }
     overlay.settings.apply(data);
-    alert('Loaded - ' + label);
   } else {
     alert('ERROR: invalid label - ' + label);
   }
@@ -156,10 +154,8 @@ overlay.settings.loadData = function(label) {
  * Exports the current settings as JSON for the user to share.
  */
 overlay.settings.export = function() {
-  console.log('Opening export prompt.');
   nx.setField(overlay.settings.dataTransfer,
       JSON.stringify(overlay.settings.retrieve()));
-  alert('Data exported.');
   overlay.settings.dataTransfer.select();
 };
 /**
@@ -173,22 +169,42 @@ overlay.settings.import = function() {
   }
   if (data instanceof Object) {
     overlay.settings.apply(data);
-    alert('Data imported.');
   } else {
     alert('ERROR: Provided data is not valid JSON for an Object.');
   }
 };
 /**
- * Saves the current settings to the label held by saveLabel.
+ * Saves the current settings to the label held by profileName.
  */
 overlay.settings.save = function() {
-  overlay.settings.saveData(nx.getField(overlay.settings.saveLabel));
+  overlay.settings.saveData(nx.getField(overlay.settings.profileName));
 };
 /**
- * Loads the settings stored under saveLabel.
+ * Loads the settings stored under profileName.
  */
 overlay.settings.load = function() {
-  overlay.settings.loadData(nx.getField(overlay.settings.saveLabel));
+  overlay.settings.loadData(nx.getField(overlay.settings.profileName));
+};
+/**
+ * Creates a new profile label with the current settings.
+ */
+overlay.settings.create = function() {
+  var name = prompt('Enter a profile name.');
+  if (name) {
+    overlay.settings.saveData(name);
+    overlay.settings.updateProfiles();
+    nx.setField(overlay.settings.profileName, name);
+  }
+};
+/**
+ * Removes the selected profile.
+ */
+overlay.settings.remove = function() {
+  var name = nx.getField(overlay.settings.profileName);
+  if (name) {
+    nx.storage.remove(overlay.settings.storagePrefix + name);
+    overlay.settings.updateProfiles();
+  }
 };
 /**
  * Resets the settings to default.
@@ -206,6 +222,47 @@ overlay.settings.installBugWorkaround = function() {
     sections[i].onchange = function() { nx.bug.redrawStyle(this.parentNode); };
   }
 };
+
+/**
+ * Updates the profile list.
+ */
+overlay.settings.updateProfiles = function() {
+  var list = overlay.settings.profileName;
+  var selected = list.value;
+  // Clear the form
+  while (list.firstChild) {
+    list.removeChild(list.firstChild);
+  }
+
+  // Find stored profiles
+  var profiles = [];
+  for (var i = 0, length = nx.storage.length(); i < length; ++i) {
+    var key = nx.storage.key(i);
+    if (key.indexOf(overlay.settings.storagePrefix) == 0) {
+      profiles.push(key.substr(overlay.settings.storagePrefix.length));
+    }
+  }
+  // Sort them
+  profiles.sort();
+
+  // Add them to the list
+  for (var i = 0, length = profiles.length; i < length; ++i) {
+    var name = profiles[i];
+    var option = document.createElement('option');
+    option.text = name;
+    option.value = name;
+    list.appendChild(option);
+  }
+  // default to selecting the first child
+  if (profiles.indexOf(selected) == -1) {
+    if (profiles) {
+      selected = profiles[0];
+    } else {
+      selected = '';
+    }
+  }
+  nx.setField(list, selected);
+};
 /**
  * Initialization for the settings.
  */
@@ -213,6 +270,7 @@ overlay.settings.init = function() {
   if (!window.overwolf) {
     document.body.bgColor = 'black';
   } else {
+    // Workaround stupid overwolf CSS bugs.
     overlay.settings.installBugWorkaround();
     // TODO: do this when the reticle window moves too.
     overwolf.windows.getCurrentWindow(function(result) {
@@ -224,7 +282,7 @@ overlay.settings.init = function() {
   // Settings are divided among multiple forms.
   overlay.settings.formList = document.querySelectorAll('form');
   overlay.settings.dataTransfer = document.getElementById('dataTransfer');
-  overlay.settings.saveLabel = document.getElementById('saveLabel');
+  overlay.settings.profileName = document.getElementById('profileName');
 
   nx.storage.addListener(overlay.settings.onStorageEvent);
 
@@ -232,5 +290,6 @@ overlay.settings.init = function() {
     overlay.settings.setField(element);
     element.onchange = function() { overlay.settings.onChange(this); };
   });
+  overlay.settings.updateProfiles();
 };
 
