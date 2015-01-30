@@ -1,5 +1,7 @@
 goog.provide('overlay.settings');
 goog.require('overlay.common');
+goog.require('nx');
+goog.require('nx.bug');
 
 /**
  * The form containing all the settings.
@@ -195,12 +197,29 @@ overlay.settings.defaults = function() {
   alert('Default settings restored.');
 };
 /**
+ * Works around a bug where Overwolf doesn't apply CSS styles when it should.
+ */
+overlay.settings.installBugWorkaround = function() {
+  var sections = document.querySelectorAll('.accordion > input');
+  for (var i = 0, length = sections.length; i < length; ++i) {
+    sections[i].onchange=function() { nx.bug.redrawStyle(this.parentNode); };
+  }
+};
+/**
  * Initialization for the settings.
  * @param {string} formId The id for the form element.
  */
 overlay.settings.init = function() {
   if (!window.overwolf) {
     document.body.bgColor = 'black';
+  } else {
+    overlay.settings.installBugWorkaround();
+    // TODO: do this when the reticle window moves too.
+    overwolf.windows.getCurrentWindow(function(result) {
+      if (result.status === 'success') {
+        overwolf.windows.changePosition(result.window.id, 0, 0);
+      }
+    });
   }
   // Settings are divided among multiple forms.
   overlay.settings.formList = document.querySelectorAll('form');
