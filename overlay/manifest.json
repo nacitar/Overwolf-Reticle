@@ -3,24 +3,35 @@
   "type": "WebApp",
   "meta":{
     "name": "Reticle Overlay",
+    "dock_button_title": "Reticle Overlay",
     "version": "15.1.29",
-    "minimum-overwolf-version": "0.77.4.0",
-    "author": "nacitar sevaht",
-    "icon": "files/images/IconMouseOver.png",
-    "icon_gray": "files/images/IconMouseNormal.png",
-    "description": "Reticle Overlay"
+    "minimum-overwolf-version": "0.83.46.0",
+    "author": "nacitar sevaht (Jacob McIntosh)",
+    "description": "A simple overlay that adds a customizable crosshair to the center of your game window.  Supports transparency, saving and loading settings profiles, sharing your settings with friends, and using a URL to an external crosshair image for more elaborate usages.",
+    "icon": "IconMouseOver.png",
+    "icon_gray": "IconMouseNormal.png",
+    "store_icon": "store/IconSmall.png",
+    "access-name": "com.ubercpp.reticle"
   },
   "data": {
-    "start_window": "ReticleWindow",
     "windows": {
       "ReticleWindow": {
         "file": "files/reticle.html",
+        "show_in_taskbar": false,
         "transparent": true,
         "resizable": false,
+        "show_minimize": false,
         "clickthrough": true,
-        "show_in_taskbar": false,
         "in_game_only": true,
         "size": {
+          "width": 640,
+          "height": 480
+        },
+        "min_size": {
+          "width": 640,
+          "height": 480
+        },
+        "max_size": {
           "width": 640,
           "height": 480
         },
@@ -31,12 +42,21 @@
       },
       "SettingsWindow": {
         "file": "files/settings.html",
+        "show_in_taskbar": false,
         "transparent": true,
         "resizable": true,
+        "show_minimize": false,
         "clickthrough": false,
-        "show_in_taskbar": false,
         "in_game_only": true,
         "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "min_size": {
+          "width": 1024,
+          "height": 768
+        },
+        "max_size": {
           "width": 1024,
           "height": 768
         },
@@ -46,12 +66,21 @@
         }
       }
     },
+    "start_window": "ReticleWindow",
+    "externally_connectable": {
+      "matches": [
+        "http://",
+        "https://"
+      ]
+    },
+    "plugins": [],
     "hotkeys": {
       "reticleSettings": {
         "title": "Toggle Reticle Settings",
-        "action-type": "custom",
-        "default": "Ctrl+Shift+Back"
+        "default": "Ctrl+Shift+Back",
+        "action-type": "custom"
       }
-    }
+    },
+    "launch_events": []
   }
 }
