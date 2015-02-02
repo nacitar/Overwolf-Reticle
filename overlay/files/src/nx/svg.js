@@ -58,7 +58,7 @@ nx.svg.Shape.prototype.getAttr = function(key, opt_default) {
 };
 /**
  * Adds the shape to the provided Snap.svg group.
- * @param {Element} group A Snap.svg group element.
+ * @param {Paper} group A Snap.svg group element.
  */
 nx.svg.Shape.prototype.addToGroup = function(group) {
   group.add(this.svg);
@@ -109,29 +109,3 @@ nx.svg.Shape.prototype.setOutline = function(color, thickness) {
   this.adjustOutline_();
   return this;
 };
-
-
-/////////////////////////////////////
-
-/*
-nx.svg.Group = function(snapGroup) {
-  this.group = snapGroup;
-};
-
-nx.svg.Group.prototype.add = function(element
-
-nx.svg.Canvas = function(elementId) {
-  this.id = elementId;
-  this.paper = Snap(this.element());
-};
-
-nx.svg.Canvas.prototype.element = function() {
-  return document.getElementById(this.id);
-};
-
-nx.svg.Canvas.prototype.group = function() {
-  // instanceof shape
-  return new nx.svg.Group(this.paper.g());
-};
-*/
-

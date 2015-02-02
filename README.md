@@ -16,8 +16,7 @@ center of your screen with various customizations.
 
 Future Plans
 ============
-Use the filesystem plugin to allow local images instead of only web URLs and
-allow render mode to be changed per-shape.
+Use the filesystem plugin to allow local images instead of only web URLs.
 
 
 Remarks

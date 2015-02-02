@@ -31,6 +31,7 @@
           <label for="opacity">opacity [0-1]</label>
         </form>
       </article>
+      <hr>
       <input type="radio" name="accordionA" id="cross">
       <label for="cross">
         Cross
@@ -46,10 +47,12 @@
           </select>
           <label for="crossRendering">mode</label>
           <br>
-          <input id="crossColor" class="color {hash:true,pickerClosable:true}">
+          <input id="crossColor"
+              class="color {hash:true,pickerClosable:true}">
           <label for="crossColor">fill color</label>
           <br>
-          <input id="crossStrokeColor" class="color {hash:true,pickerClosable:true}">
+          <input id="crossStrokeColor"
+              class="color {hash:true,pickerClosable:true}">
           <label for="crossStrokeColor">stroke color</label>
           <br>
           <input type="number" id="crossLength">
@@ -92,10 +95,12 @@
           </select>
           <label for="centerShape">shape</label>
           <br>
-          <input id="centerColor" class="color {hash:true,pickerClosable:true}">
+          <input id="centerColor"
+              class="color {hash:true,pickerClosable:true}">
           <label for="centerColor">fill color</label>
           <br>
-          <input id="centerStrokeColor" class="color {hash:true,pickerClosable:true}">
+          <input id="centerStrokeColor"
+              class="color {hash:true,pickerClosable:true}">
           <label for="centerStrokeColor">stroke color</label>
           <br>
           <input type="number" id="centerDiameter">
@@ -120,10 +125,12 @@
           </select>
           <label for="circleRendering">mode</label>
           <br>
-          <input id="circleColor" class="color {hash:true,pickerClosable:true}">
+          <input id="circleColor"
+              class="color {hash:true,pickerClosable:true}">
           <label for="circleColor">fill color</label>
           <br>
-          <input id="circleStrokeColor" class="color {hash:true,pickerClosable:true}">
+          <input id="circleStrokeColor"
+              class="color {hash:true,pickerClosable:true}">
           <label for="circleStrokeColor">stroke color</label>
           <br>
           <input type="number" id="circleDiameter">
@@ -166,8 +173,10 @@
           <br>
           <label for="dataTransfer">copy/paste data above</label>
           <br>
-          <input type="button" value="Import" onclick="overlay.settings.import()">
-          <input type="button" value="Export" onclick="overlay.settings.export()">
+          <input type="button" value="Import"
+              onclick="overlay.settings.import()">
+          <input type="button" value="Export"
+              onclick="overlay.settings.export()">
         </div>
       </article>
       <input type="radio" name="accordionA" id="profile">
@@ -177,12 +186,17 @@
       <article>
         <select id="profileName" style="width: 100%"></select>
         <div class="center">
-          <input id="loadButton" type="button" value="Load" onclick="overlay.settings.load()">
-          <input id="saveButton" type="button" value="Save" onclick="overlay.settings.save()">
-          <input id="newButton" type="button" value="New" onclick="overlay.settings.create()">
-          <input id="deleteButton" type="button" value="Delete" onclick="overlay.settings.remove()">
+          <input id="loadButton" type="button" value="Load"
+              onclick="overlay.settings.load()">
+          <input id="saveButton" type="button" value="Save"
+              onclick="overlay.settings.save()">
+          <input id="newButton" type="button" value="New"
+              onclick="overlay.settings.create()">
+          <input id="deleteButton" type="button" value="Delete"
+              onclick="overlay.settings.remove()">
           <hr>
-          <input type="button" value="Defaults" onclick="overlay.settings.defaults()">
+          <input type="button" value="Defaults"
+              onclick="overlay.settings.defaults()">
         </div>
       </article>
     </div>

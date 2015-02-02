@@ -82,7 +82,7 @@ nx.Reticle.prototype.clearImage = function() {
 };
 /**
  * Returns the svg DOM element to which we are rendering.
- * @return {Element} The DOM element.
+ * @return {HTMLElement} The element.
  */
 nx.Reticle.prototype.element = function() {
   var element = document.getElementById(this.elementId);
