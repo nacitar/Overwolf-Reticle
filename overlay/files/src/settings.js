@@ -225,7 +225,7 @@ overlay.settings.installBugWorkaround = function() {
  * An array of elements that require a profile in order to be useful.
  * @type {Array.<Element>}
  */
-overlay.settings.elementsRequiringProfile = [ ];
+overlay.settings.elementsRequiringProfile = [];
 
 /**
  * Sets the disabled state of elements that require a profile.
@@ -233,7 +233,7 @@ overlay.settings.elementsRequiringProfile = [ ];
  */
 overlay.settings.setProfileElementsDisabled = function(disabled) {
   var length = overlay.settings.elementsRequiringProfile.length;
-  for (var i=0; i < length; ++i) {
+  for (var i = 0; i < length; ++i) {
     overlay.settings.elementsRequiringProfile[i].disabled = disabled;
   }
 };
@@ -307,7 +307,7 @@ overlay.settings.init = function() {
     profileName,
     document.getElementById('loadButton'),
     document.getElementById('saveButton'),
-    document.getElementById('deleteButton') ];
+    document.getElementById('deleteButton')];
 
   nx.storage.addListener(overlay.settings.onStorageEvent);
 
