@@ -40,7 +40,7 @@
           </select>
           <label for="shapeRendering">mode</label>
           <br>
-          <input id="opacity">
+          <input type="number" id="opacity" min="0" max="1" step=".1">
           <label for="opacity">opacity [0-1]</label>
         </form>
       </article>
@@ -59,23 +59,23 @@
           <input id="crossStrokeColor" class="color {hash:true,pickerClosable:true}">
           <label for="crossStrokeColor">stroke color</label>
           <br>
-          <input id="crossLength">
+          <input type="number" id="crossLength">
           <label for="crossLength">length</label>
           <br>
-          <input id="crossSpread">
+          <input type="number" id="crossSpread">
           <label for="crossSpread">spread</label>
           <br>
-          <input id="crossThickness">
+          <input type="number" id="crossThickness">
           <label for="crossThickness">thickness</label>
           <br>
-          <input id="crossStrokeSize">
+          <input type="number" id="crossStrokeSize">
           <label for="crossStrokeSize">stroke size</label>
           <br>
-          <input id="crossSpinPeriod">
+          <input type="number" id="crossSpinPeriod">
           <label for="crossSpinPeriod">spin period (ms)</label>
           <br>
-          <input id="crossRotation">
-          <label for="crossRotation">degrees rotated</label>
+          <input type="number" id="crossRotation" min="0" max="89">
+          <label for="crossRotation">degrees rotated [0-89]</label>
         </form>
       </article>
       <input type="radio" name="accordionA" id="center">
@@ -99,10 +99,10 @@
           <input id="centerStrokeColor" class="color {hash:true,pickerClosable:true}">
           <label for="centerStrokeColor">stroke color</label>
           <br>
-          <input id="centerDiameter">
+          <input type="number" id="centerDiameter">
           <label for="centerDiameter">diameter/width</label>
           <br>
-          <input id="centerStrokeSize">
+          <input type="number" id="centerStrokeSize">
           <label for="centerStrokeSize">stroke size</label>
         </form>
       </article>
@@ -121,13 +121,13 @@
           <input id="circleStrokeColor" class="color {hash:true,pickerClosable:true}">
           <label for="circleStrokeColor">stroke color</label>
           <br>
-          <input id="circleDiameter">
+          <input type="number" id="circleDiameter">
           <label for="circleDiameter">diameter</label>
           <br>
-          <input id="circleThickness">
+          <input type="number" id="circleThickness">
           <label for="circleThickness">thickness</label>
           <br>
-          <input id="circleStrokeSize">
+          <input type="number" id="circleStrokeSize">
           <label for="circleStrokeSize">stroke size</label>
         </form>
       </article>
@@ -140,10 +140,14 @@
           <input id="imageEnabled" type="checkbox" checked="checked">
           <label for="imageEnabled">enabled</label>
           <br>
+          <input type="number" id="imageScale">
+          <label for="imageScale">image scale</label>
+          <br>
           <input id="imageURL" style="width: 100%">
           <br>
-          <input id="imageScale">
-          <label for="imageScale">image scale</label>
+          <div class="center">
+            <label for="imageURL">place URL to image above</label>
+          </div>
         </form>
       </article>
       <hr>
@@ -152,7 +156,7 @@
         Sharing
       </label>
       <article>
-        <div class="buttons">
+        <div class="center">
           <input id="dataTransfer" style="width: 100%">
           <br>
           <label for="dataTransfer">copy/paste data above</label>
@@ -167,18 +171,18 @@
       </label>
       <article>
         <select id="profileName" style="width: 100%"></select>
-        <div class="buttons">
-          <input type="button" value="Load" onclick="overlay.settings.load()">
-          <input type="button" value="Save" onclick="overlay.settings.save()">
-          <input type="button" value="New" onclick="overlay.settings.create()">
-          <input type="button" value="Delete" onclick="overlay.settings.remove()">
+        <div class="center">
+          <input id="loadButton" type="button" value="Load" onclick="overlay.settings.load()">
+          <input id="saveButton" type="button" value="Save" onclick="overlay.settings.save()">
+          <input id="newButton" type="button" value="New" onclick="overlay.settings.create()">
+          <input id="deleteButton" type="button" value="Delete" onclick="overlay.settings.remove()">
           <hr>
           <input type="button" value="Defaults" onclick="overlay.settings.defaults()">
         </div>
       </article>
     </div>
     <hr>
-    <div class="buttons">
+    <div class="center">
       <input type="button" value="Close" onclick="overlay.settings.hide()">
     </div>
   </article>

@@ -210,7 +210,6 @@ overlay.settings.remove = function() {
  */
 overlay.settings.defaults = function() {
   overlay.settings.apply(overlay.common.defaultSettings);
-  alert('Default settings restored.');
 };
 /**
  * Works around a bug where Overwolf doesn't apply CSS styles when it should.
@@ -222,6 +221,22 @@ overlay.settings.installBugWorkaround = function() {
   }
 };
 
+/**
+ * An array of elements that require a profile in order to be useful.
+ * @type {Array.<Element>}
+ */
+overlay.settings.elementsRequiringProfile = [ ];
+
+/**
+ * Sets the disabled state of elements that require a profile.
+ * @param {boolean} disabled True to disable, false to enable.
+ */
+overlay.settings.setProfileElementsDisabled = function(disabled) {
+  var length = overlay.settings.elementsRequiringProfile.length;
+  for (var i=0; i < length; ++i) {
+    overlay.settings.elementsRequiringProfile[i].disabled = disabled;
+  }
+};
 /**
  * Updates the profile list.
  */
@@ -253,12 +268,14 @@ overlay.settings.updateProfiles = function() {
     list.appendChild(option);
   }
   // default to selecting the first child
-  if (profiles.indexOf(selected) == -1) {
-    if (profiles) {
+  if (profiles.length) {
+    if (profiles.indexOf(selected) == -1) {
       selected = profiles[0];
-    } else {
-      selected = '';
     }
+    overlay.settings.setProfileElementsDisabled(false);
+  } else {
+    selected = '';
+    overlay.settings.setProfileElementsDisabled(true);
   }
   nx.setField(list, selected);
 };
@@ -286,6 +303,11 @@ overlay.settings.init = function() {
   overlay.settings.formList = document.querySelectorAll('form');
   overlay.settings.dataTransfer = document.getElementById('dataTransfer');
   overlay.settings.profileName = document.getElementById('profileName');
+  overlay.settings.elementsRequiringProfile = [
+    profileName,
+    document.getElementById('loadButton'),
+    document.getElementById('saveButton'),
+    document.getElementById('deleteButton') ];
 
   nx.storage.addListener(overlay.settings.onStorageEvent);
 

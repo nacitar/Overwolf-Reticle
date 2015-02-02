@@ -19,6 +19,11 @@ nx.Reticle = function(surfaceElementId) {
   this.reticleGroup = this.surface.svg();
   // Initialize the attributes
   this.reticleGroup.attr({'x': '50%', 'y': '50%', 'overflow': 'visible'});
+
+  // Add the 'image' first, so things we draw will go on top of it.
+  this.image = this.surface.image();
+  this.reticleGroup.add(this.image);
+
   // Make a group for the cross
   this.cross = this.surface.group();
   // Make and add the shapes
@@ -42,9 +47,7 @@ nx.Reticle = function(surfaceElementId) {
   this.crossRight = new nx.svg.Shape(this.surface, nx.svg.ShapeType.RECTANGLE);
   this.crossRight.addToGroup(this.cross);
 
-  this.image = this.surface.image();
-  this.reticleGroup.add(this.image);
-
+  // Details for handling the 'image'
   this.rawImage = new Image();
   this.rawImage.onload = nx.bind(this, this.updateImage);
   this.rawImage.onerror = nx.bind(this, this.clearImage);
@@ -139,12 +142,10 @@ nx.Reticle.prototype.setting = function(key) {
  * Renders the reticle using the provided settings.
  */
 nx.Reticle.prototype.render = function() {
-  // Set the rendering mode.
-  this.reticleGroup.attr({'shape-rendering': this.setting('shapeRendering')});
-
-  // Set opacity reticle-wide; avoids blend issues with overlapping shapes.
-  // Set position here as well; avoids rotational animation bug when resizing,
-  // but also simplifies the code in general.
+  // Set the rendering mode and opacity reticle-wide.
+  this.reticleGroup.attr({
+    'shape-rendering': this.setting('shapeRendering'),
+    'opacity': this.setting('opacity')});
 
   this.outerCircle.attr({
       'r': parseInt(this.setting('circleDiameter'), 10) / 2.0,

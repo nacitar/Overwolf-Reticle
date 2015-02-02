@@ -6,7 +6,7 @@ goog.require('nx');
  * @type {Object}
  */
 overlay.common.defaultSettings = {
-  'shapeRendering': 'geometricPrecision',
+  'shapeRendering': 'crispEdges',
   'opacity': '1.0',
   'crossEnabled': true,
   'crossColor': '#0000FF',
@@ -15,21 +15,21 @@ overlay.common.defaultSettings = {
   'crossSpread': '7',
   'crossThickness': '2',
   'crossStrokeSize': '1',
-  'crossSpinPeriod': '1000',
+  'crossSpinPeriod': '0',
   'crossRotation': '0',
   'centerEnabled': true,
-  'centerShape': 'circle',
+  'centerShape': 'square',
   'centerColor': '#0000FF',
   'centerStrokeColor': '#FFFFFF',
   'centerDiameter': '4',
   'centerStrokeSize': '1',
-  'circleEnabled': true,
+  'circleEnabled': false,
   'circleColor': '#0000FF',
   'circleStrokeColor': '#FFFFFF',
   'circleDiameter': '38',
   'circleThickness': '1',
   'circleStrokeSize': '1',
-  'imageEnabled': true,
+  'imageEnabled': false,
   'imageURL': '',
   'imageScale': '1'
 };
