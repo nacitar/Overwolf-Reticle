@@ -142,11 +142,12 @@ nx.Reticle.prototype.setting = function(key) {
  * Renders the reticle using the provided settings.
  */
 nx.Reticle.prototype.render = function() {
-  // Set the rendering mode and opacity reticle-wide.
+  // Set the opacity reticle-wide.
   this.reticleGroup.attr({
-    'shape-rendering': this.setting('shapeRendering'),
     'opacity': this.setting('opacity')});
 
+  this.outerCircle.svg.attr({
+    'shape-rendering': this.setting('circleRendering')});
   this.outerCircle.attr({
       'r': parseInt(this.setting('circleDiameter'), 10) / 2.0,
       'fill': 'none',
@@ -159,6 +160,8 @@ nx.Reticle.prototype.render = function() {
       /** @type {number} */ (this.setting('circleStrokeSize')));
 
   var halfCenterDiameter = parseInt(this.setting('centerDiameter'), 10) / 2.0;
+  this.centerDot.svg.attr({
+    'shape-rendering': this.setting('centerRendering')});
   this.centerDot.attr({
       'r': halfCenterDiameter,
       'fill': this.setting('centerColor'),
@@ -168,6 +171,8 @@ nx.Reticle.prototype.render = function() {
   this.centerDot.setOutline(
       /** @type {string} */ (this.setting('centerStrokeColor')),
       /** @type {number} */ (this.setting('centerStrokeSize')));
+  this.centerBox.svg.attr({
+    'shape-rendering': this.setting('centerRendering')});
   this.centerBox.attr({
       'width': this.setting('centerDiameter'),
       'height': this.setting('centerDiameter'),
@@ -197,6 +202,15 @@ nx.Reticle.prototype.render = function() {
   var leftRight = {
       'width': this.setting('crossLength'),
       'height': this.setting('crossThickness')};
+
+  this.crossTop.svg.attr({
+    'shape-rendering': this.setting('crossRendering')});
+  this.crossBottom.svg.attr({
+    'shape-rendering': this.setting('crossRendering')});
+  this.crossLeft.svg.attr({
+    'shape-rendering': this.setting('crossRendering')});
+  this.crossRight.svg.attr({
+    'shape-rendering': this.setting('crossRendering')});
 
   this.crossTop.attr(cross).attr(topBottom).attr({
       'transform': 't' + [halfThickness, negativeOffset]});

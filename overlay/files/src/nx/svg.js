@@ -13,14 +13,16 @@ nx.svg.ShapeType = {CIRCLE: 0, RECTANGLE: 1};
  * @constructor
  */
 nx.svg.Shape = function(paper, shapeType) {
+  this.svg = paper.svg();
+  this.svg.attr({'overflow': 'visible'});
   switch (shapeType) {
     case nx.svg.ShapeType.CIRCLE:
-      this.outline = paper.circle();
-      this.shape = paper.circle();
+      this.outline = this.svg.circle();
+      this.shape = this.svg.circle();
       break;
     case nx.svg.ShapeType.RECTANGLE:
-      this.outline = paper.rect();
-      this.shape = paper.rect();
+      this.outline = this.svg.rect();
+      this.shape = this.svg.rect();
       break;
     default:
       throw 'Invalid shape specified to nx.svg.Shape constructor.';
@@ -59,8 +61,7 @@ nx.svg.Shape.prototype.getAttr = function(key, opt_default) {
  * @param {Element} group A Snap.svg group element.
  */
 nx.svg.Shape.prototype.addToGroup = function(group) {
-  group.add(this.outline);
-  group.add(this.shape);
+  group.add(this.svg);
 };
 /**
  * Updates the outline shape's settings to match the real object.

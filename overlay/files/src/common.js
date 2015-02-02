@@ -6,9 +6,9 @@ goog.require('nx');
  * @type {Object}
  */
 overlay.common.defaultSettings = {
-  'shapeRendering': 'crispEdges',
   'opacity': '1.0',
   'crossEnabled': true,
+  'crossRendering': 'crispEdges',
   'crossColor': '#0000FF',
   'crossStrokeColor': '#FFFFFF',
   'crossLength': '8',
@@ -18,12 +18,14 @@ overlay.common.defaultSettings = {
   'crossSpinPeriod': '0',
   'crossRotation': '0',
   'centerEnabled': true,
+  'centerRendering': 'crispEdges',
   'centerShape': 'square',
   'centerColor': '#0000FF',
   'centerStrokeColor': '#FFFFFF',
   'centerDiameter': '4',
   'centerStrokeSize': '1',
   'circleEnabled': false,
+  'circleRendering': 'GeometricPrecision',
   'circleColor': '#0000FF',
   'circleStrokeColor': '#FFFFFF',
   'circleDiameter': '38',

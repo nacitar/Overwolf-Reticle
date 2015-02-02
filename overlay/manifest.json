@@ -10,7 +10,7 @@
     "description": "A simple overlay that adds a customizable crosshair to the center of your game window.  Supports transparency, saving and loading settings profiles, sharing your settings with friends, and using a URL to an external crosshair image for more elaborate usages.  A hotkey is used to open the settings window, and by default it is set to CTRL-SHIFT-Backspace but can be changed in the overwolf settings.",
     "icon": "IconMouseOver.png",
     "icon_gray": "IconMouseNormal.png",
-    "store_icon": "store/IconSmall.png",
+    "store_icon": "store/Icon.png",
     "access-name": "com.ubercpp.reticle"
   },
   "data": {

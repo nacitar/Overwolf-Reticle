@@ -3,18 +3,11 @@
   margin: 10px;
 }
 
-/* For text fields (with and without type specified) */
-.settings input[type='number'] {
-  width: 40px;
-}
-
 .settings .center {
   text-align: center;
 }
 
-.settings input.color,
-.settings select {
-  color: #000;
+.settings input:not([type='checkbox']) {
   width: 60px;
 }
 

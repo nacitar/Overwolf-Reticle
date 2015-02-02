@@ -14,13 +14,6 @@
 <script src="src/nx/base.js"></script>
 <script src="src/settings.js"></script>
 
-<style>
-.settings > input:checked + label {
-	background: linear-gradient(#999, #222);
-}
-</style>
-
-
 <div id="settingsDialog" class="accordion settings">
   <input type="radio"checked="checked">
   <label>
@@ -34,12 +27,6 @@
       </label>
       <article>
         <form>
-          <select id="shapeRendering" style="width: auto">
-            <option value="geometricPrecision">Geometric Precision</option>
-            <option value="crispEdges">Crisp Edges</option>
-          </select>
-          <label for="shapeRendering">mode</label>
-          <br>
           <input type="number" id="opacity" min="0" max="1" step=".1">
           <label for="opacity">opacity [0-1]</label>
         </form>
@@ -52,6 +39,12 @@
         <form>
           <input id="crossEnabled" type="checkbox">
           <label for="crossEnabled">enabled</label>
+          <br>
+          <select id="crossRendering" style="width: auto">
+            <option value="geometricPrecision">Geometric Precision</option>
+            <option value="crispEdges">Crisp Edges</option>
+          </select>
+          <label for="crossRendering">mode</label>
           <br>
           <input id="crossColor" class="color {hash:true,pickerClosable:true}">
           <label for="crossColor">fill color</label>
@@ -86,7 +79,13 @@
         <form>
           <input id="centerEnabled" type="checkbox" checked="checked">
           <label for="centerEnabled">enabled</label>
-          <br/>
+          <br>
+          <select id="centerRendering" style="width: auto">
+            <option value="geometricPrecision">Geometric Precision</option>
+            <option value="crispEdges">Crisp Edges</option>
+          </select>
+          <label for="centerRendering">mode</label>
+          <br>
           <select id="centerShape">
             <option value="circle" selected="selected">Circle</option>
             <option value="square">Square</option>
@@ -114,6 +113,12 @@
         <form>
           <input id="circleEnabled" type="checkbox">
           <label for="circleEnabled">enabled</label>
+          <br>
+          <select id="circleRendering" style="width: auto">
+            <option value="geometricPrecision">Geometric Precision</option>
+            <option value="crispEdges">Crisp Edges</option>
+          </select>
+          <label for="circleRendering">mode</label>
           <br>
           <input id="circleColor" class="color {hash:true,pickerClosable:true}">
           <label for="circleColor">fill color</label>
