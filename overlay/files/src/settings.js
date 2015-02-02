@@ -6,7 +6,7 @@ goog.require('overlay.common');
 
 /**
  * The form containing all the settings.
- * @type {Element}
+ * @type {NodeList}
  */
 overlay.settings.formList = null;
 /**
@@ -53,7 +53,7 @@ overlay.settings.onStorageEvent = function(storageEvent) {
 };
 /**
  * Invokes a callback for each field in the settings form that has a id.
- * @param {function(...[*])} callback The callback to invoke.
+ * @param {function(Element)} callback The callback to invoke.
  * @param {Object=} opt_this The object to use as 'this'.
  */
 overlay.settings.forEachField = function(callback, opt_this) {
@@ -79,13 +79,13 @@ overlay.settings.forEachField = function(callback, opt_this) {
 overlay.settings.setField = function(element, opt_data) {
   var changed = false;
   var key = element.id;
-  opt_data = nx.default(opt_data, {});
+  opt_data = /** @type {Object} */ (nx.default(opt_data, {}));
   if (key) {
     var value = nx.default(opt_data[key], overlay.common.getSetting(key));
     if (value !== null) {
       changed = nx.setField(element, /** @type {boolean|string} */ (value));
-      if (changed && element.onchange) {
-        element.onchange();
+      if (changed) {
+        element.dispatchEvent(new Event('change'));
       }
     }
   }
@@ -122,7 +122,7 @@ overlay.settings.storagePrefix = 'saved_';
  * @param {string} label The label.
  */
 overlay.settings.saveData = function(label) {
-  label = nx.default(label, '');
+  label = /** @type {string} */ (nx.default(label, ''));
   if (label !== '') {
     var data = overlay.settings.retrieve();
     nx.storage.set(overlay.settings.storagePrefix + label, data);
@@ -133,12 +133,13 @@ overlay.settings.saveData = function(label) {
 /**
  * Loads settings stored under the provided label; if either no label or an
  * empty label is provided, the default settings are loaded.
- * @param {string=} label The label.
+ * @param {string} label The label.
  */
 overlay.settings.loadData = function(label) {
-  label = nx.default(label, '');
+  label = /** @type {string} */ (nx.default(label, ''));
   if (label !== '') {
-    var data = nx.storage.get(overlay.settings.storagePrefix + label);
+    var data = /** @type {?Object} */ (
+        nx.storage.get(overlay.settings.storagePrefix + label));
     if (data === null) {
       alert('ERROR: no data found under label - ' + label);
       return;
@@ -163,7 +164,8 @@ overlay.settings.export = function() {
 overlay.settings.import = function() {
   var data = null;
   try {
-    data = JSON.parse(nx.getField(overlay.settings.dataTransfer));
+    data = JSON.parse(
+        /** @type {string} */ (nx.getField(overlay.settings.dataTransfer)));
   } catch (e) {
   }
   if (data instanceof Object) {
@@ -176,13 +178,15 @@ overlay.settings.import = function() {
  * Saves the current settings to the label held by profileName.
  */
 overlay.settings.save = function() {
-  overlay.settings.saveData(nx.getField(overlay.settings.profileName));
+  overlay.settings.saveData(
+      /** @type {string} */ (nx.getField(overlay.settings.profileName)));
 };
 /**
  * Loads the settings stored under profileName.
  */
 overlay.settings.load = function() {
-  overlay.settings.loadData(nx.getField(overlay.settings.profileName));
+  overlay.settings.loadData(
+      /** @type {string} */ (nx.getField(overlay.settings.profileName)));
 };
 /**
  * Creates a new profile label with the current settings.
@@ -217,7 +221,7 @@ overlay.settings.defaults = function() {
 overlay.settings.installBugWorkaround = function() {
   var sections = document.querySelectorAll('.accordion > input');
   for (var i = 0, length = sections.length; i < length; ++i) {
-    sections[i].onchange = function() { nx.bug.redrawStyle(this.parentNode); };
+    sections[i].onchange = nx.bug.redrawStyleFunction(sections[i].parentNode);
   }
 };
 
@@ -287,6 +291,15 @@ overlay.settings.positionWindow = function() {
   overwolf.windows.changePosition(nx.odkWindow.id, 0, 0);
 };
 /**
+ * Provides an onchange function that invokes overlay.settings.onChange for the
+ * provided element.
+ * @param {Element} element The element.
+ * @return {function()} The function to indicate a settings change.
+ */
+overlay.settings.fieldChangeFunction_ = function(element) {
+  return function() { overlay.settings.onChange(element); };
+};
+/**
  * Initialization for the settings.
  */
 overlay.settings.init = function() {
@@ -304,7 +317,7 @@ overlay.settings.init = function() {
   overlay.settings.dataTransfer = document.getElementById('dataTransfer');
   overlay.settings.profileName = document.getElementById('profileName');
   overlay.settings.elementsRequiringProfile = [
-    profileName,
+    overlay.settings.profileName,
     document.getElementById('loadButton'),
     document.getElementById('saveButton'),
     document.getElementById('deleteButton')];
@@ -313,7 +326,7 @@ overlay.settings.init = function() {
 
   overlay.settings.forEachField(function(element) {
     overlay.settings.setField(element);
-    element.onchange = function() { overlay.settings.onChange(this); };
+    element.onchange = overlay.settings.fieldChangeFunction_(element);
   });
   overlay.settings.updateProfiles();
 };

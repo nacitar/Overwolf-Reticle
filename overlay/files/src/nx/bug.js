@@ -7,10 +7,13 @@ goog.provide('nx.bug');
  * recalculate its size while its display state is 'none', then swapping it
  * back to its original state.
  * @param {Element} element The element whose style needs redrawn, or a parent.
+ * @return {function()} A function that redraws the provided element.
  */
-nx.bug.redrawStyle = function(element) {
-  var display = element.style.display;
-  element.style.display = 'none';
-  var forceCalculate = element.offsetHeight;
-  element.style.display = display;
+nx.bug.redrawStyleFunction = function(element) {
+  return function() {
+    var display = element.style.display;
+    element.style.display = 'none';
+    var forceCalculate = element.offsetHeight;
+    element.style.display = display;
+  };
 };
