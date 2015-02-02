@@ -86,13 +86,13 @@ overlay.settings.setField = function(element, opt_data) {
     if (value !== null) {
       changed = nx.setField(element, /** @type {boolean|string} */ (value));
       if (changed) {
-        if ("createEvent" in document) {
-          var evt = document.createEvent("HTMLEvents");
-          evt.initEvent("change", false, true);
+        if ('createEvent' in document) {
+          var evt = document.createEvent('HTMLEvents');
+          evt.initEvent('change', false, true);
           element.dispatchEvent(evt);
         }
         else {
-          element.fireEvent("onchange");
+          element.fireEvent('onchange');
         }
       }
     }
@@ -309,6 +309,7 @@ overlay.settings.positionWindow = function() {
  * provided element.
  * @param {Element} element The element.
  * @return {function()} The function to indicate a settings change.
+ * @private
  */
 overlay.settings.fieldChangeFunction_ = function(element) {
   return function() { overlay.settings.onChange(element); };
