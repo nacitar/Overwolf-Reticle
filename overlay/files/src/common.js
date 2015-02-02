@@ -25,7 +25,7 @@ overlay.common.defaultSettings = {
   'centerDiameter': '4',
   'centerStrokeSize': '1',
   'circleEnabled': false,
-  'circleRendering': 'GeometricPrecision',
+  'circleRendering': 'geometricPrecision',
   'circleColor': '#0000FF',
   'circleStrokeColor': '#FFFFFF',
   'circleDiameter': '38',
