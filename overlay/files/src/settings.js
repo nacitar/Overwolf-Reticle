@@ -85,7 +85,14 @@ overlay.settings.setField = function(element, opt_data) {
     if (value !== null) {
       changed = nx.setField(element, /** @type {boolean|string} */ (value));
       if (changed) {
-        element.dispatchEvent(new Event('change'));
+        if ("createEvent" in document) {
+          var evt = document.createEvent("HTMLEvents");
+          evt.initEvent("change", false, true);
+          element.dispatchEvent(evt);
+        }
+        else {
+          element.fireEvent("onchange");
+        }
       }
     }
   }
