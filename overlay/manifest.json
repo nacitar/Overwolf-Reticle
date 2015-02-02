@@ -5,7 +5,7 @@
     "name": "Reticle Overlay",
     "version": "15.2.2",
     "minimum-overwolf-version": "0.83.46.0",
-    "author": "nacitar sevaht (Jacob McIntosh)",
+    "author": "Jacob McIntosh (nacitar sevaht)",
     "description": "A simple overlay that adds a customizable crosshair to the center of your game window.  Supports transparency, saving and loading settings profiles, sharing your settings with friends, and using a URL to an external crosshair image for more elaborate usages.  A hotkey is used to open the settings window, and by default it is set to CTRL-SHIFT-Backspace but can be changed in the overwolf settings.",
     "icon": "IconMouseOver.png",
     "icon_gray": "IconMouseNormal.png",
