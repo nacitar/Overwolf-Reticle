@@ -30,6 +30,7 @@ overlay.settings.onChange = function(element) {
 };
 /**
  * Hides the settings window.
+ * @export
  */
 overlay.settings.hide = function() {
   if (window.overwolf) {
@@ -159,6 +160,7 @@ overlay.settings.loadData = function(label) {
 
 /**
  * Exports the current settings as JSON for the user to share.
+ * @export
  */
 overlay.settings.export = function() {
   nx.setField(overlay.settings.dataTransfer,
@@ -167,6 +169,7 @@ overlay.settings.export = function() {
 };
 /**
  * Imports JSON settings to be used.
+ * @export
  */
 overlay.settings.import = function() {
   var data = null;
@@ -183,6 +186,7 @@ overlay.settings.import = function() {
 };
 /**
  * Saves the current settings to the label held by profileName.
+ * @export
  */
 overlay.settings.save = function() {
   overlay.settings.saveData(
@@ -190,6 +194,7 @@ overlay.settings.save = function() {
 };
 /**
  * Loads the settings stored under profileName.
+ * @export
  */
 overlay.settings.load = function() {
   overlay.settings.loadData(
@@ -197,6 +202,7 @@ overlay.settings.load = function() {
 };
 /**
  * Creates a new profile label with the current settings.
+ * @export
  */
 overlay.settings.create = function() {
   var name = prompt('Enter a profile name.');
@@ -208,6 +214,7 @@ overlay.settings.create = function() {
 };
 /**
  * Removes the selected profile.
+ * @export
  */
 overlay.settings.remove = function() {
   var name = nx.getField(overlay.settings.profileName);

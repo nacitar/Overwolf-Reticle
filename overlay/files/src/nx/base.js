@@ -238,6 +238,7 @@ nx.onCurrentWindow_ = function(result) {
 /**
  * Fires initialization code after any necessary events have taken place.  For
  * overwolf, the current window will be obtained.
+ * @export
  */
 nx.initialize = function() {
   if (window.overwolf) {

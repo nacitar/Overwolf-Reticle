@@ -10,9 +10,11 @@ function doBuild() {
       --language_in ECMASCRIPT5 \
       --manage_closure_dependencies true \
       --only_closure_dependencies true \
+      --generate_exports \
       --closure_entry_point="$entry" \
       --js_output_file overlay/files/"$outfile".js \
       --create_source_map overlay/files/"$outfile".map \
+      overlay/files/3rdparty/closure/goog/base.js \
       overlay/files/src/nx/*.js \
       overlay/files/src/*.js \
       --externs externs/jscolor.js \
