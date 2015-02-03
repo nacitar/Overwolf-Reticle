@@ -21,12 +21,12 @@ overlay.render = function() {
 };
 /**
  * Triggered when stored data changes.
- * @param {Event} storageEvent The event information.
+ * @param {string} key The key whose value changed.
+ * @param {*} newValue The new value.
+ * @param {*} oldValue The old value.
  */
-overlay.onStorageEvent = function(storageEvent) {
-  var key = storageEvent.key;
-  console.log('Got storage event: ' + key);
-  if (overlay.common.defaultSettings.hasOwnProperty(key)) {
+overlay.onStorageChanged = function(key, newValue, oldValue) {
+  if (overlay.common.defaultReticleSettings.hasOwnProperty(key)) {
     // In IE, the actual storage value is not updated yet, so delay rendering
     // such that the new value will be present when it executes.
     setTimeout(overlay.render, 0);
@@ -61,10 +61,11 @@ overlay.positionWindow = function() {
   var y = (dest.height - nx.odkWindow.height) / 2 | 0;
   overwolf.windows.changePosition(nx.odkWindow.id, x, y);
 };
+
 /**
  * Initializes the overlay.
  */
-overlay.init = function() {
+overlay.initialize = function() {
   if (window.overwolf) {
     overlay.common.eventGameInfo.connect(overlay.positionWindow);
     overlay.common.listenForGameInfo();
@@ -83,9 +84,11 @@ overlay.init = function() {
     document.body.bgColor = 'black';
   }
   overlay.reticle = new nx.Reticle('reticleSurface');
-  nx.storage.addListener(overlay.onStorageEvent);
+  nx.storage.eventChange.connect(/** @type {function(...*)} */ (
+      overlay.onStorageChanged));
   overlay.reticle.setDataCallback(overlay.common.getSetting);
   overlay.render();
 };
 
-nx.eventInitialize.connect(overlay.init);
+// Register initialization code.
+nx.eventInitialize.connect(overlay.initialize);

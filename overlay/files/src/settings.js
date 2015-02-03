@@ -43,14 +43,19 @@ overlay.settings.hide = function() {
 };
 /**
  * Triggered when stored data changes.
- * @param {Event} storageEvent The event information.
+ * @param {string} key The key whose value changed.
+ * @param {*} newValue The new value.
+ * @param {*} oldValue The old value.
  */
-overlay.settings.onStorageEvent = function(storageEvent) {
-  var key = storageEvent.key;
-  console.log('Got storage event: ' + key);
+overlay.settings.onStorageChanged = function(key, newValue, oldValue) {
+  console.log('Storage changed: ' + key + ' = ' + newValue);
   var element = document.getElementById(key);
-  nx.setField(element,
-      /** @type {boolean|string} */ (JSON.parse(storageEvent.newValue)));
+  if (element !== null) {
+    // Don't trigger onChange for storage events; the data is already out
+    // there.
+    nx.setField(element,
+        /** @type {boolean|string} */ (overlay.common.getSetting(key)), true);
+  }
 };
 /**
  * Invokes a callback for each field in the settings form that has a id.
@@ -71,30 +76,22 @@ overlay.settings.forEachField = function(callback, opt_this) {
 };
 /**
  * Sets the specified field to its current stored value, first checking for a
- * new value in the optionally passed object.  Invokes the element's onchange
- * handler if present and a change was made.
+ * new value in the optionally passed object.
  * @param {Element} element The form field.
  * @param {Object=} opt_data The optional new data.
+ * @param {boolean=} opt_noChangeEvent If true, the onchange event is not fired
+ * if the data changes.
  * @return {boolean} True if the field now has a new value, false otherwise.
  */
-overlay.settings.setField = function(element, opt_data) {
+overlay.settings.setField = function(element, opt_data, opt_noChangeEvent) {
   var changed = false;
   var key = element.id;
   opt_data = /** @type {Object} */ (nx.default(opt_data, {}));
   if (key) {
     var value = nx.default(opt_data[key], overlay.common.getSetting(key));
     if (value !== null) {
-      changed = nx.setField(element, /** @type {boolean|string} */ (value));
-      if (changed) {
-        if ('createEvent' in document) {
-          var evt = document.createEvent('HTMLEvents');
-          evt.initEvent('change', false, true);
-          element.dispatchEvent(evt);
-        }
-        else {
-          element.fireEvent('onchange');
-        }
-      }
+      nx.setField(
+          element, /** @type {boolean|string} */ (value), opt_noChangeEvent);
     }
   }
   return changed;
@@ -102,10 +99,12 @@ overlay.settings.setField = function(element, opt_data) {
 /**
  * Applies the settings of the provided object.
  * @param {?Object} data The object.
+ * @param {boolean=} opt_noChangeEvent If true, the onchange event is not fired
+ * if the data changes.
  */
-overlay.settings.apply = function(data) {
+overlay.settings.apply = function(data, opt_noChangeEvent) {
   overlay.settings.forEachField(function(element) {
-    overlay.settings.setField(element, this);
+    overlay.settings.setField(element, this, opt_noChangeEvent);
   }, data);
 };
 
@@ -227,7 +226,10 @@ overlay.settings.remove = function() {
  * Resets the settings to default.
  */
 overlay.settings.defaults = function() {
-  overlay.settings.apply(overlay.common.defaultSettings);
+  // Not the most efficient approach ever because it loops over form fields
+  // twice but this isn't done often anyway.
+  overlay.settings.apply(overlay.common.defaultReticleSettings);
+  overlay.settings.apply(overlay.common.defaultGeneralSettings);
 };
 /**
  * Works around a bug where Overwolf doesn't apply CSS styles when it should.
@@ -317,7 +319,7 @@ overlay.settings.fieldChangeFunction_ = function(element) {
 /**
  * Initialization for the settings.
  */
-overlay.settings.init = function() {
+overlay.settings.initialize = function() {
   if (window.overwolf) {
     // Workaround stupid overwolf CSS bugs.
     overlay.settings.installBugWorkaround();
@@ -337,13 +339,15 @@ overlay.settings.init = function() {
     document.getElementById('saveButton'),
     document.getElementById('deleteButton')];
 
-  nx.storage.addListener(overlay.settings.onStorageEvent);
+  nx.storage.eventChange.connect(
+      /** @type {function(...*)} */ (overlay.settings.onStorageChanged));
 
   overlay.settings.forEachField(function(element) {
-    overlay.settings.setField(element);
+    overlay.settings.setField(element, undefined, true);
     element.onchange = overlay.settings.fieldChangeFunction_(element);
   });
   overlay.settings.updateProfiles();
 };
 
-nx.eventInitialize.connect(overlay.settings.init);
+// Register initialization code.
+nx.eventInitialize.connect(overlay.settings.initialize);

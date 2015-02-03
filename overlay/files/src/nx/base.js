@@ -44,13 +44,17 @@ nx.escapeRegExp = function(value) {
   return value.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
 /**
- * If defined, returns value.  Otherwise, returns defaultValue.
- * @param {*} value The value to use if defined.
- * @param {*} defaultValue The value to use if undefined.
- * @return {*} The result.
+ * Returns the first defined value passed in the arguments, or undefined.
+ * @param {...*} var_args Any number of arguments.
+ * @return {?*} The result.
  */
-nx.default = function(value, defaultValue) {
-  return (nx.isUndefined(value) ? defaultValue : value);
+nx.default = function(var_args) {
+  for (var i = 0, length = arguments.length; i < length; ++i) {
+    var arg = arguments[i];
+    if (!nx.isUndefined(arg)) {
+      return arg;
+    }
+  }
 };
 // TODO: better handling for bind() as slots
 /**
@@ -79,8 +83,9 @@ nx.signal.prototype.connect = function(slot) {
 };
 /**
  * Invokes all connected slots, forwarding any arguments passed.
+ * @param {...*} var_args The arguments.
  */
-nx.signal.prototype.emit = function() {
+nx.signal.prototype.emit = function(var_args) {
   for (var i = 0, length = this.slots_.length; i < length; ++i) {
     this.slots_[i].apply(undefined, arguments);
   }
@@ -138,9 +143,11 @@ nx.getField = function(element) {
  * Sets the value of a form field.
  * @param {Element} element A form element.
  * @param {string|boolean} value The value.
+ * @param {boolean=} opt_noChangeEvent If true, the onchange event not fired if
+ * the data changes.
  * @return {boolean} True if the value changed, false if it is the same.
  */
-nx.setField = function(element, value) {
+nx.setField = function(element, value, opt_noChangeEvent) {
   var changed = false;
   if (element.type === 'checkbox') {
     changed = (element.checked !== value);
@@ -152,17 +159,18 @@ nx.setField = function(element, value) {
     changed = (element.value !== value);
     element.value = value;
   }
+  // Fire the onchange event if needed
+  if (changed && opt_noChangeEvent !== true) {
+    if ('createEvent' in document) {
+      var evt = document.createEvent('HTMLEvents');
+      evt.initEvent('change', false, true);
+      element.dispatchEvent(evt);
+    }
+    else {
+      element.fireEvent('onchange');
+    }
+  }
   return changed;
-};
-
-/**
- * Adds a storage listener that will be fired in other browser windows of the
- * same domain when storage is changed.
- * @param {function(Event)} callback The callback to invoke with the change
- * event.
- */
-nx.storage.addListener = function(callback) {
-  window.addEventListener('storage', callback, false);
 };
 /**
  * Sets the specified storage value.
@@ -170,7 +178,10 @@ nx.storage.addListener = function(callback) {
  * @param {*} value The value.
  */
 nx.storage.set = function(key, value) {
+  var oldValue = nx.storage.get(key);
   window.localStorage.setItem(key, JSON.stringify(value));
+  nx.storage.eventLocalChange.emit(key, value, oldValue);
+  nx.storage.eventChange.emit(key, value, oldValue);
 };
 /**
  * Gets the specified storage value.
@@ -207,6 +218,63 @@ nx.storage.key = function(index) {
   return window.localStorage.key(index);
 };
 /**
+ * Returns a closure to invoke storage signals for this storage event.
+ * @param {Event} storageEvent The LocalStorage event.
+ * @return {function()} A function that triggers remote change signals.
+ * @private
+ */
+nx.storage.onRemoteChangeFunction_ = function(storageEvent) {
+  return function() {
+    var key = storageEvent.key;
+    var newValue = null;
+    var oldValue = null;
+    try {
+      newValue = JSON.parse(storageEvent.newValue);
+    } catch (e) {
+      console.warn('Storage event: could not parse key (' +
+          key + ') with value = ' + newValue);
+      console.error(e);
+    }
+    try {
+      oldValue = JSON.parse(storageEvent.oldValue);
+    } catch (e) {
+      console.warn('Storage event: could not parse key (' +
+          key + ') with oldValue = ' + newValue);
+      console.error(e);
+    }
+    nx.storage.eventRemoteChange.emit(key, newValue, oldValue);
+    nx.storage.eventChange.emit(key, newValue, oldValue);
+  };
+};
+/**
+ * Invoked when there's a storage event.
+ * @param {Event} storageEvent A localStorage event.
+ * @private
+ */
+nx.storage.onStorageEvent_ = function(storageEvent) {
+  // In IE, the actual storage value is not updated yet, so delay such that the
+  // new value will be present when it executes.
+  setTimeout(nx.storage.onRemoteChangeFunction_(storageEvent), 0);
+};
+/**
+ * A signal emitted when any storage value changes.
+ * Called with: key, newValue, oldValue
+ * @type {nx.signal}
+ */
+nx.storage.eventChange = new nx.signal();
+/**
+ * A signal emitted when any storage value changes via local nx.storage.set().
+ * Called with: key, newValue, oldValue
+ * @type {nx.signal}
+ */
+nx.storage.eventLocalChange = new nx.signal();
+/**
+ * A signal emitted when any storage value changes from a remote location.
+ * Called with: key, newValue, oldValue
+ * @type {nx.signal}
+ */
+nx.storage.eventRemoteChange = new nx.signal();
+/**
  * The current window, if running in overwolf.
  * @type {?ODKWindow}
  */
@@ -241,6 +309,7 @@ nx.onCurrentWindow_ = function(result) {
  * @export
  */
 nx.initialize = function() {
+  window.addEventListener('storage', nx.storage.onStorageEvent_, false);
   if (window.overwolf) {
     overwolf.windows.getCurrentWindow(nx.onCurrentWindow_);
   } else {

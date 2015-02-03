@@ -2,10 +2,10 @@ goog.provide('overlay.common');
 goog.require('nx');
 
 /**
- * Default data for rendering the reticle.
+ * Default reticle settings.
  * @type {Object}
  */
-overlay.common.defaultSettings = {
+overlay.common.defaultReticleSettings = {
   'opacity': '1.0',
   'crossEnabled': true,
   'crossRendering': 'crispEdges',
@@ -35,7 +35,13 @@ overlay.common.defaultSettings = {
   'imageURL': '',
   'imageScale': '1'
 };
-
+/**
+ * Default general settings.
+ * @type {Object}
+ */
+overlay.common.defaultGeneralSettings = {
+  'streamingMode': 'Never'
+};
 /**
  * Retrieves the specified setting from localStorage, falling back to defaults
  * otherwise.
@@ -44,11 +50,13 @@ overlay.common.defaultSettings = {
  */
 overlay.common.getSetting = function(key) {
   var value = null;
-  if (overlay.common.defaultSettings.hasOwnProperty(key)) {
+  if (overlay.common.defaultReticleSettings.hasOwnProperty(key) ||
+      overlay.common.defaultGeneralSettings.hasOwnProperty(key)) {
     value = nx.storage.get(key);
     if (value === null) {
-      value = overlay.common.defaultSettings[key];
-      nx.storage.set(key, value);
+      value = nx.default(
+          overlay.common.defaultReticleSettings[key],
+          overlay.common.defaultGeneralSettings[key]);
     }
   }
   return value;
@@ -96,3 +104,54 @@ overlay.common.listenForGameInfo = function() {
     overwolf.games.getRunningGameInfo(overlay.common.onGameInfo_);
   }
 };
+/**
+ * Sets the streaming mode of a window to the one in the 'streamingMode'
+ * setting.
+ * @param {string=} opt_windowId The overwolf window id, or by default the
+ * current window id.
+ * @param {string=} opt_mode The streaming mode, or by default the currently
+ * stored value.
+ */
+overlay.common.setWindowStreamingMode = function(opt_windowId, opt_mode) {
+  opt_windowId = /** @type {string} */ (
+      nx.default(opt_windowId, nx.odkWindow.id));
+  opt_mode = /** @type {string} */ (
+      nx.default(opt_mode, overlay.common.getSetting('streamingMode')));
+  overwolf.streaming.setWindowStreamingMode(
+      opt_windowId,
+      overwolf.streaming.enums.StreamingMode[opt_mode],
+      function(result) {
+        if (result.status === 'success') {
+          console.log('Streaming mode set successfully.');
+        }
+      });
+};
+/**
+ * Triggered when stored data changes.
+ * @param {string} key The key whose value changed.
+ * @param {*} newValue The new value.
+ * @param {*} oldValue The old value.
+ */
+overlay.common.onStorageChanged = function(key, newValue, oldValue) {
+  console.log('Common storage changed: ' + key + ' = ' + newValue);
+  if (overlay.common.defaultGeneralSettings.hasOwnProperty(key)) {
+    if (key === 'streamingMode') {
+      if (window.overwolf) {
+        overlay.common.setWindowStreamingMode();
+      }
+    }
+  }
+};
+/**
+ *
+ */
+overlay.common.initialize = function() {
+  if (window.overwolf) {
+    overlay.common.setWindowStreamingMode();
+  }
+  nx.storage.eventChange.connect(/** @type {function(...*)} */ (
+        overlay.common.onStorageChanged));
+};
+
+// Register initialization code.
+nx.eventInitialize.connect(overlay.common.initialize);
