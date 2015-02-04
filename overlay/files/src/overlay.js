@@ -61,7 +61,6 @@ overlay.positionWindow = function() {
   var y = (dest.height - nx.odkWindow.height) / 2 | 0;
   overwolf.windows.changePosition(nx.odkWindow.id, x, y);
 };
-
 /**
  * Initializes the overlay.
  */

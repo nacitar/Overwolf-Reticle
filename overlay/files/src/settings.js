@@ -107,7 +107,6 @@ overlay.settings.apply = function(data, opt_noChangeEvent) {
     overlay.settings.setField(element, this, opt_noChangeEvent);
   }, data);
 };
-
 /**
  * Retrieves the current settings as an object.
  * @return {Object} The settings object.
@@ -156,7 +155,6 @@ overlay.settings.loadData = function(label) {
     alert('ERROR: invalid label - ' + label);
   }
 };
-
 /**
  * Exports the current settings as JSON for the user to share.
  * @export
@@ -240,13 +238,11 @@ overlay.settings.installBugWorkaround = function() {
     sections[i].onchange = nx.bug.redrawStyleFunction(sections[i].parentNode);
   }
 };
-
 /**
  * An array of elements that require a profile in order to be useful.
  * @type {Array.<Element>}
  */
 overlay.settings.elementsRequiringProfile = [];
-
 /**
  * Sets the disabled state of elements that require a profile.
  * @param {boolean} disabled True to disable, false to enable.
@@ -278,7 +274,6 @@ overlay.settings.updateProfiles = function() {
   }
   // Sort them
   profiles.sort();
-
   // Add them to the list
   for (var i = 0, length = profiles.length; i < length; ++i) {
     var name = profiles[i];
@@ -299,7 +294,6 @@ overlay.settings.updateProfiles = function() {
   }
   nx.setField(list, selected);
 };
-
 /**
  * Positions the window at the top left.
  */

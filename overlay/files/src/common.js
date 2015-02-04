@@ -61,7 +61,6 @@ overlay.common.getSetting = function(key) {
   }
   return value;
 };
-
 /**
  * The signal invoked when the GameInfo changes.
  * @type {nx.Signal}
