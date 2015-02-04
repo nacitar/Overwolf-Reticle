@@ -324,7 +324,8 @@ overlay.settings.initialize = function() {
     // Workaround stupid overwolf CSS bugs.
     overlay.settings.installBugWorkaround();
 
-    overlay.common.eventGameInfo.connect(overlay.settings.positionWindow);
+    overlay.common.eventGameInfo.connect(
+        new nx.Slot(overlay.settings.positionWindow));
     overlay.common.listenForGameInfo();
   } else {
     document.body.bgColor = 'black';
@@ -339,8 +340,8 @@ overlay.settings.initialize = function() {
     document.getElementById('saveButton'),
     document.getElementById('deleteButton')];
 
-  nx.storage.eventChange.connect(
-      /** @type {function(...*)} */ (overlay.settings.onStorageChanged));
+  nx.storage.eventChange.connect(new nx.Slot(
+      /** @type {function(...*)} */ (overlay.settings.onStorageChanged)));
 
   overlay.settings.forEachField(function(element) {
     overlay.settings.setField(element, undefined, true);
@@ -350,4 +351,4 @@ overlay.settings.initialize = function() {
 };
 
 // Register initialization code.
-nx.eventInitialize.connect(overlay.settings.initialize);
+nx.eventInitialize.connect(new nx.Slot(overlay.settings.initialize));

@@ -52,9 +52,11 @@ nx.Reticle = function(surfaceElementId) {
   this.rawImage.onload = nx.bind(this, this.updateImage);
   this.rawImage.onerror = nx.bind(this, this.clearImage);
 
+
   this.currentPeriod_ = 0;
   this.imageScale_ = 1;
   this.imageURL_ = '';
+  this.onSpin_ = nx.bind(this, this.spin);
 };
 /**
  * Called when the image loads or needs updating.
@@ -118,7 +120,7 @@ nx.Reticle.prototype.spin = function() {
   this.cross.animate(
       {'transform': 'r360,0,0'},
       this.currentPeriod_,
-      nx.bind(this, this.spin));
+      this.onSpin_);
 };
 
 /**

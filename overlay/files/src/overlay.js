@@ -67,7 +67,7 @@ overlay.positionWindow = function() {
  */
 overlay.initialize = function() {
   if (window.overwolf) {
-    overlay.common.eventGameInfo.connect(overlay.positionWindow);
+    overlay.common.eventGameInfo.connect(new nx.Slot(overlay.positionWindow));
     overlay.common.listenForGameInfo();
 
     overwolf.windows.obtainDeclaredWindow('SettingsWindow', function(result) {
@@ -84,11 +84,11 @@ overlay.initialize = function() {
     document.body.bgColor = 'black';
   }
   overlay.reticle = new nx.Reticle('reticleSurface');
-  nx.storage.eventChange.connect(/** @type {function(...*)} */ (
-      overlay.onStorageChanged));
+  nx.storage.eventChange.connect(new nx.Slot(
+      /** @type {function(...*)} */ (overlay.onStorageChanged)));
   overlay.reticle.setDataCallback(overlay.common.getSetting);
   overlay.render();
 };
 
 // Register initialization code.
-nx.eventInitialize.connect(overlay.initialize);
+nx.eventInitialize.connect(new nx.Slot(overlay.initialize));

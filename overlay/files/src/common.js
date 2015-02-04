@@ -64,9 +64,9 @@ overlay.common.getSetting = function(key) {
 
 /**
  * The signal invoked when the GameInfo changes.
- * @type {nx.signal}
+ * @type {nx.Signal}
  */
-overlay.common.eventGameInfo = new nx.signal();
+overlay.common.eventGameInfo = new nx.Signal();
 /**
  * Invoked when new GameInfo has been retrieved.
  * @param {GameInfo} gameInfo
@@ -143,15 +143,15 @@ overlay.common.onStorageChanged = function(key, newValue, oldValue) {
   }
 };
 /**
- *
+ * Initializes common handling.
  */
 overlay.common.initialize = function() {
   if (window.overwolf) {
     overlay.common.setWindowStreamingMode();
   }
-  nx.storage.eventChange.connect(/** @type {function(...*)} */ (
-        overlay.common.onStorageChanged));
+  nx.storage.eventChange.connect(new nx.Slot(
+        /** @type {function(...*)} */ (overlay.common.onStorageChanged)));
 };
 
 // Register initialization code.
-nx.eventInitialize.connect(overlay.common.initialize);
+nx.eventInitialize.connect(new nx.Slot(overlay.common.initialize));

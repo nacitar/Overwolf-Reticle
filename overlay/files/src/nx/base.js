@@ -56,28 +56,87 @@ nx.default = function(var_args) {
     }
   }
 };
-// TODO: better handling for bind() as slots
+/**
+ * Creates a slot for use with nx.Signal
+ * @param {function(...[*])} slotFunction The slot.
+ * @param {Object=} opt_this Optional 'this' object for the slot.
+ * @constructor
+ */
+nx.Slot = function(slotFunction, opt_this) {
+  if (!nx.isFunction(slotFunction)) {
+    // This should catch common misuse cases; not strictly necessary though.
+    throw 'Provided slot function is not actually a function: ' + slotFunction;
+  }
+  this.function = slotFunction;
+  this.this = opt_this;
+};
+/**
+ * Checks if two slots are the same.
+ * @param {nx.Slot} otherSlot A slot.
+ * @return {boolean} True if the slots match, false otherwise.
+ */
+nx.Slot.prototype.equals = function(otherSlot) {
+  return (this.function === otherSlot.function && this.this === otherSlot.this);
+};
+/**
+ * Invokes the slot, forwarding any arguments to it.
+ * @param {...*} var_args Arguments to forward.
+ */
+nx.Slot.prototype.invoke = function(var_args) {
+  this.function.apply(this.this, arguments);
+};
 /**
  * A signal class, implementing the sigslot paradigm.
  * @constructor
  */
-nx.signal = function() {
+nx.Signal = function() {
   this.slots_ = [];
 };
 /**
+ * Validates that an argument is actually a nx.Slot
+ * @param {nx.Slot} slot
+ * @private
+ */
+nx.Signal.prototype.assertSlot_ = function(slot) {
+  if (!(slot instanceof nx.Slot)) {
+    throw 'Provided value is not a slot: ' + slot;
+  }
+};
+/**
+ * Looks for a given slot in the list of those connected to this signal.
+ * @param {nx.Slot} slot The slot to lookup.
+ * @return {number} The index of the slot, or -1.
+ * @private
+ */
+nx.Signal.prototype.find_ = function(slot) {
+  this.assertSlot_(slot);
+  for (var i = 0, length = this.slots_.length; i < length; ++i) {
+    if (this.slots_[i].equals(slot)) {
+      return i;
+    }
+  }
+  return -1;
+};
+/**
+ * Looks for a given slot in the list of those connected to this signal.
+ * @param {nx.Slot} slot The slot to lookup.
+ * @return {boolean} True if the slot is connected to this signal, false
+ * otherwise.
+ */
+nx.Signal.prototype.isConnected = function(slot) {
+  this.assertSlot_(slot);
+  return (this.find_(slot) !== -1);
+};
+/**
  * Allows a function to be connected as a slot for this signal.
- * @param {function(...[*])} slot The slot to connect.
+ * @param {nx.Slot} slot The slot to lookup.
  * @return {boolean} True if newly connected, false if already connected.
  */
-nx.signal.prototype.connect = function(slot) {
-  if (!nx.isFunction(slot)) {
-    // this should catch common misuse cases; not strictly necessary though.
-    console.error('Provided slot is not a function: ' + slot);
-  } else {
-    if (this.slots_.indexOf(slot) === -1) {
-      this.slots_.push(slot);
-      return true;
-    }
+nx.Signal.prototype.connect = function(slot) {
+  this.assertSlot_(slot);
+  if (this.find_(slot) === -1) {
+    this.slots_.push(slot);
+    return true;
   }
   return false;
 };
@@ -85,18 +144,20 @@ nx.signal.prototype.connect = function(slot) {
  * Invokes all connected slots, forwarding any arguments passed.
  * @param {...*} var_args The arguments.
  */
-nx.signal.prototype.emit = function(var_args) {
+nx.Signal.prototype.emit = function(var_args) {
   for (var i = 0, length = this.slots_.length; i < length; ++i) {
-    this.slots_[i].apply(undefined, arguments);
+    var currentSlot = this.slots_[i];
+    currentSlot.invoke.apply(currentSlot, arguments);
   }
 };
 /**
  * Disconnects the provided slot, if it is already connected.
- * @param {function(...[*])} slot The slot to disconnect.
+ * @param {nx.Slot} slot The slot to disconnect.
  * @return {boolean} True if found and removed, false if not found.
  */
-nx.signal.prototype.disconnect = function(slot) {
-  var i = this.slots_.indexOf(slot);
+nx.Signal.prototype.disconnect = function(slot) {
+  this.assertSlot_(slot);
+  var i = this.find_(slot);
   if (i !== -1) {
     this.slots_.splice(i, 1);
     return true;
@@ -106,7 +167,7 @@ nx.signal.prototype.disconnect = function(slot) {
 /**
  * Disconnects all slots.
  */
-nx.signal.prototype.disconnectAll = function() {
+nx.Signal.prototype.disconnectAll = function() {
   this.slots_ = [];
 };
 /**
@@ -124,7 +185,6 @@ nx.forEachProperty = function(object, callback, opt_this) {
     }
   }
 };
-
 /**
  * Gets the value of a form field.
  * @param {Element} element A form element.
@@ -259,21 +319,21 @@ nx.storage.onStorageEvent_ = function(storageEvent) {
 /**
  * A signal emitted when any storage value changes.
  * Called with: key, newValue, oldValue
- * @type {nx.signal}
+ * @type {nx.Signal}
  */
-nx.storage.eventChange = new nx.signal();
+nx.storage.eventChange = new nx.Signal();
 /**
  * A signal emitted when any storage value changes via local nx.storage.set().
  * Called with: key, newValue, oldValue
- * @type {nx.signal}
+ * @type {nx.Signal}
  */
-nx.storage.eventLocalChange = new nx.signal();
+nx.storage.eventLocalChange = new nx.Signal();
 /**
  * A signal emitted when any storage value changes from a remote location.
  * Called with: key, newValue, oldValue
- * @type {nx.signal}
+ * @type {nx.Signal}
  */
-nx.storage.eventRemoteChange = new nx.signal();
+nx.storage.eventRemoteChange = new nx.Signal();
 /**
  * The current window, if running in overwolf.
  * @type {?ODKWindow}
@@ -281,9 +341,9 @@ nx.storage.eventRemoteChange = new nx.signal();
 nx.odkWindow = null;
 /**
  * A signal people can connect to for invoking initialization code.
- * @type {nx.signal}
+ * @type {nx.Signal}
  */
-nx.eventInitialize = new nx.signal();
+nx.eventInitialize = new nx.Signal();
 /**
  * Fires the initialize event, disconnecting all slots.
  * @private
