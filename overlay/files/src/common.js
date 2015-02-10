@@ -41,6 +41,22 @@ overlay.common.defaultReticleSettings = {
  */
 overlay.common.defaultGeneralSettings = {
   'streamingMode': 'Never',
+  'quickSlot1': '',
+  'quickSlot2': '',
+  'quickSlot3': '',
+  'quickSlot4': '',
+  'quickSlot5': '',
+  'quickSlot6': '',
+  'quickSlot7': '',
+  'quickSlot8': '',
+  'quickSlot9': '',
+  'quickSlot10': ''
+};
+/**
+ * Default window settings.
+ * @type {Object}
+ */
+overlay.common.defaultWindowSettings = {
   'xOffsetPercent': '50',
   'yOffsetPercent': '50'
 };
@@ -53,12 +69,14 @@ overlay.common.defaultGeneralSettings = {
 overlay.common.getSetting = function(key) {
   var value = null;
   if (overlay.common.defaultReticleSettings.hasOwnProperty(key) ||
-      overlay.common.defaultGeneralSettings.hasOwnProperty(key)) {
+      overlay.common.defaultGeneralSettings.hasOwnProperty(key) ||
+      overlay.common.defaultWindowSettings.hasOwnProperty(key)) {
     value = nx.storage.get(key);
     if (value === null) {
       value = nx.default(
           overlay.common.defaultReticleSettings[key],
-          overlay.common.defaultGeneralSettings[key]);
+          overlay.common.defaultGeneralSettings[key],
+          overlay.common.defaultWindowSettings[key]);
     }
   }
   return value;
@@ -142,6 +160,29 @@ overlay.common.onStorageChanged = function(key, newValue, oldValue) {
       }
     }
   }
+};
+/**
+ * Creates a callback-invoking function for an overwolf hotkey.
+ * @param {string} name The hotkey name.
+ * @param {function(string)} callback The function to call.
+ * @return {function(Object)} The callback for overwolf.
+ * @private
+ */
+overlay.common.makeHotkeyCallback_ = function(name, callback) {
+  return function(result) {
+    if (result.status === 'success') {
+      callback(name);
+    }
+  };
+};
+/**
+ * Registers a hotkey with overwolf.
+ * @param {string} name The hotkey name.
+ * @param {function(string)} callback The function to call.
+ */
+overlay.common.registerHotkey = function(name, callback) {
+  overwolf.settings.registerHotKey(
+      name, overlay.common.makeHotkeyCallback_(name, callback));
 };
 /**
  * Initializes common handling.

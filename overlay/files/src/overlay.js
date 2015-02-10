@@ -32,7 +32,7 @@ overlay.onStorageChanged = function(key, newValue, oldValue) {
     setTimeout(overlay.render, 0);
   }
   // So we can position the window if the offset is changed.
-  if (overlay.common.defaultGeneralSettings.hasOwnProperty(key)) {
+  if (overlay.common.defaultWindowSettings.hasOwnProperty(key)) {
     overlay.positionWindow();
   }
 };
@@ -84,11 +84,7 @@ overlay.initialize = function() {
           overlay.settingsWindow = result.window;
         }
     });
-    overwolf.settings.registerHotKey('reticleSettings', function(result) {
-        if (result.status === 'success') {
-          overlay.onHotkeyPressed('reticleSettings');
-        }
-    });
+    overlay.common.registerHotkey('reticleSettings', overlay.onHotkeyPressed);
   } else {
     document.body.bgColor = 'black';
   }

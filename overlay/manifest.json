@@ -49,8 +49,58 @@
     "plugins": [],
     "hotkeys": {
       "reticleSettings": {
-        "title": "Toggle Reticle Settings",
+        "title": "Open reticle settings",
         "default": "Ctrl+Shift+Back",
+        "action-type": "custom"
+      },
+      "quickSlot1": {
+        "title": "Activate quick slot 1",
+        "default": "Ctrl+Shift+1",
+        "action-type": "custom"
+      },
+      "quickSlot2": {
+        "title": "Activate quick slot 2",
+        "default": "Ctrl+Shift+2",
+        "action-type": "custom"
+      },
+      "quickSlot3": {
+        "title": "Activate quick slot 3",
+        "default": "Ctrl+Shift+3",
+        "action-type": "custom"
+      },
+      "quickSlot4": {
+        "title": "Activate quick slot 4",
+        "default": "Ctrl+Shift+4",
+        "action-type": "custom"
+      },
+      "quickSlot5": {
+        "title": "Activate quick slot 5",
+        "default": "Ctrl+Shift+5",
+        "action-type": "custom"
+      },
+      "quickSlot6": {
+        "title": "Activate quick slot 6",
+        "default": "Ctrl+Shift+6",
+        "action-type": "custom"
+      },
+      "quickSlot7": {
+        "title": "Activate quick slot 7",
+        "default": "Ctrl+Shift+7",
+        "action-type": "custom"
+      },
+      "quickSlot8": {
+        "title": "Activate quick slot 8",
+        "default": "Ctrl+Shift+8",
+        "action-type": "custom"
+      },
+      "quickSlot9": {
+        "title": "Activate quick slot 9",
+        "default": "Ctrl+Shift+9",
+        "action-type": "custom"
+      },
+      "quickSlot10": {
+        "title": "Activate quick slot 10",
+        "default": "Ctrl+Shift+0",
         "action-type": "custom"
       }
     },

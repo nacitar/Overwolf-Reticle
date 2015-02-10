@@ -140,20 +140,20 @@ overlay.settings.saveData = function(label) {
  * Loads settings stored under the provided label; if either no label or an
  * empty label is provided, the default settings are loaded.
  * @param {string} label The label.
+ * @return {boolean} True if applied, false otherwise.
  */
 overlay.settings.loadData = function(label) {
   label = /** @type {string} */ (nx.default(label, ''));
   if (label !== '') {
     var data = /** @type {?Object} */ (
         nx.storage.get(overlay.settings.storagePrefix + label));
-    if (data === null) {
-      alert('ERROR: no data found under label - ' + label);
-      return;
+    if (data !== null) {
+      overlay.settings.apply(data);
+      return true;
     }
-    overlay.settings.apply(data);
-  } else {
-    alert('ERROR: invalid label - ' + label);
   }
+  alert('ERROR: no data found under label - ' + label);
+  return false;
 };
 /**
  * Exports the current settings as JSON for the user to share.
@@ -228,6 +228,7 @@ overlay.settings.defaults = function() {
   // twice but this isn't done often anyway.
   overlay.settings.apply(overlay.common.defaultReticleSettings);
   overlay.settings.apply(overlay.common.defaultGeneralSettings);
+  overlay.settings.apply(overlay.common.defaultWindowSettings);
 };
 /**
  * Works around a bug where Overwolf doesn't apply CSS styles when it should.
@@ -311,16 +312,36 @@ overlay.settings.fieldChangeFunction_ = function(element) {
   return function() { overlay.settings.onChange(element); };
 };
 /**
+ * Activates a given quick slot.
+ * @param {string} name The quick slot name.
+ */
+overlay.settings.onQuickSlot = function(name) {
+  var label = /** @type {string} */ (overlay.common.getSetting(name));
+  if (overlay.settings.loadData(label)) {
+    nx.setField(overlay.settings.profileName, label);
+  }
+};
+/**
  * Initialization for the settings.
  */
 overlay.settings.initialize = function() {
   if (window.overwolf) {
     // Workaround stupid overwolf CSS bugs.
     overlay.settings.installBugWorkaround();
-
     overlay.common.eventGameInfo.connect(
         new nx.Slot(overlay.settings.positionWindow));
     overlay.common.listenForGameInfo();
+
+    overlay.common.registerHotkey('quickSlot1', overlay.settings.onQuickSlot);
+    overlay.common.registerHotkey('quickSlot2', overlay.settings.onQuickSlot);
+    overlay.common.registerHotkey('quickSlot3', overlay.settings.onQuickSlot);
+    overlay.common.registerHotkey('quickSlot4', overlay.settings.onQuickSlot);
+    overlay.common.registerHotkey('quickSlot5', overlay.settings.onQuickSlot);
+    overlay.common.registerHotkey('quickSlot6', overlay.settings.onQuickSlot);
+    overlay.common.registerHotkey('quickSlot7', overlay.settings.onQuickSlot);
+    overlay.common.registerHotkey('quickSlot8', overlay.settings.onQuickSlot);
+    overlay.common.registerHotkey('quickSlot9', overlay.settings.onQuickSlot);
+    overlay.common.registerHotkey('quickSlot10', overlay.settings.onQuickSlot);
   } else {
     document.body.bgColor = 'black';
   }

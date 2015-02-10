@@ -20,6 +20,20 @@
   vertical-align: middle;
 }
 
+.settings .leftColumn {
+  float: left;
+  width: 50%;
+}
+
+.settings .rightColumn {
+  float: left;
+  width: 50%;
+}
+
+.settings .endColumns {
+  clear: both;
+}
+
 /* Fullscreen */
 html {
   height: 100%;
