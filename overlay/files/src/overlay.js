@@ -31,6 +31,10 @@ overlay.onStorageChanged = function(key, newValue, oldValue) {
     // such that the new value will be present when it executes.
     setTimeout(overlay.render, 0);
   }
+  // So we can position the window if the offset is changed.
+  if (overlay.common.defaultGeneralSettings.hasOwnProperty(key)) {
+    overlay.positionWindow();
+  }
 };
 /**
  * Triggered then a hotkey is pressed.
@@ -56,9 +60,15 @@ overlay.positionWindow = function() {
     console.log('Positioning: using game window.');
     dest = overlay.common.game;
   }
-  // Get center the overlay on the game window using integral offsets.
-  var x = (dest.width - nx.odkWindow.width) / 2 | 0;
-  var y = (dest.height - nx.odkWindow.height) / 2 | 0;
+  // Get the coordinate on which the reticle should center.
+  var destX = dest.width *
+      /** @type {number} */ (overlay.common.getSetting('xOffsetPercent')) / 100;
+  var destY = dest.height *
+      /** @type {number} */ (overlay.common.getSetting('yOffsetPercent')) / 100;
+  // Calculate the reticle window position needed to center.
+  var x = parseInt(destX - nx.odkWindow.width / 2, 10);
+  var y = parseInt(destY - nx.odkWindow.height / 2, 10);
+  // Position it.
   overwolf.windows.changePosition(nx.odkWindow.id, x, y);
 };
 /**

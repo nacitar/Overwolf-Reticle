@@ -146,7 +146,7 @@ nx.Reticle.prototype.setting = function(key) {
 nx.Reticle.prototype.render = function() {
   // Set the opacity reticle-wide.
   this.reticleGroup.attr({
-    'opacity': this.setting('opacity')});
+    'opacity': /** @type {number} */ (this.setting('opacityPercent')) / 100});
 
   this.outerCircle.svg.attr({
     'shape-rendering': this.setting('circleRendering')});

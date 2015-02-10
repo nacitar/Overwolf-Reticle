@@ -6,7 +6,7 @@ goog.require('nx');
  * @type {Object}
  */
 overlay.common.defaultReticleSettings = {
-  'opacity': '1.0',
+  'opacityPercent': '100',
   'crossEnabled': true,
   'crossRendering': 'crispEdges',
   'crossColor': '#0000FF',
@@ -40,7 +40,9 @@ overlay.common.defaultReticleSettings = {
  * @type {Object}
  */
 overlay.common.defaultGeneralSettings = {
-  'streamingMode': 'Never'
+  'streamingMode': 'Never',
+  'xOffsetPercent': '50',
+  'yOffsetPercent': '50'
 };
 /**
  * Retrieves the specified setting from localStorage, falling back to defaults

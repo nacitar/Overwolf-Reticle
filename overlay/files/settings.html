@@ -32,8 +32,15 @@
       </label>
       <article>
         <form>
-          <input type="number" id="opacity" min="0" max="1" step=".1">
-          <label for="opacity">opacity [0-1]</label>
+          <label>Can use any number of decimal places.</label><br>
+          <input type="number" id="opacityPercent" min="0" max="100" step="any">
+          <label for="opacityPercent">opacity percent</label>
+          <br>
+          <input type="number" id="xOffsetPercent" min="0" max="100" step="any">
+          <label for="xOffsetPercent">x offset percent</label>
+          <br>
+          <input type="number" id="yOffsetPercent" min="0" max="100" step="any">
+          <label for="yOffsetPercent">y offset percent</label>
           <br>
           <select id="streamingMode" style="width: auto">
             <option value="Always">Always</option>
