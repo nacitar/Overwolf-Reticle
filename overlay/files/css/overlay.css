@@ -1,37 +1,37 @@
-.settings {
+.dialog {
   display: inline-block;
   margin: 10px;
 }
 
-.settings .center {
+.center {
   text-align: center;
 }
 
-.settings input:not([type='checkbox']) {
+.leftColumn {
+  float: left;
+  width: 50%;
+}
+
+.rightColumn {
+  float: left;
+  width: 50%;
+}
+
+.endColumns {
+  clear: both;
+}
+
+form input:not([type='checkbox']) {
   width: 60px;
 }
 
-.settings input.color {
+form input.color {
   cursor: pointer;
 }
 
-.settings label {
+form label {
   color: white;
   vertical-align: middle;
-}
-
-.settings .leftColumn {
-  float: left;
-  width: 50%;
-}
-
-.settings .rightColumn {
-  float: left;
-  width: 50%;
-}
-
-.settings .endColumns {
-  clear: both;
 }
 
 /* Fullscreen */
@@ -49,6 +49,6 @@ body {
 }
 
 /* Style the outer accordion differently. */
-.settings > input:checked + label {
+.dialog > input:checked + label {
 	background: linear-gradient(#999, #222);
 }

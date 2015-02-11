@@ -19,7 +19,7 @@
 <script src="src/settings.js"></script>
 <!-- -->
 
-<div id="settingsDialog" class="accordion settings">
+<div id="settingsDialog" class="accordion dialog" style="visibility: hidden">
   <input type="radio" checked="checked">
   <label>
     Reticle Settings
@@ -31,7 +31,7 @@
         General
       </label>
       <article>
-        <form>
+        <form class="profile">
           <label>Can use any number of decimal places.</label>
           <br>
           <br>
@@ -58,7 +58,7 @@
         Cross
       </label>
       <article>
-        <form>
+        <form class="profile">
           <input id="crossEnabled" type="checkbox">
           <label for="crossEnabled">enabled</label>
           <br>
@@ -100,7 +100,7 @@
         Center
       </label>
       <article>
-        <form>
+        <form class="profile">
           <input id="centerEnabled" type="checkbox" checked="checked">
           <label for="centerEnabled">enabled</label>
           <br>
@@ -136,7 +136,7 @@
         Circle
       </label>
       <article>
-        <form>
+        <form class="profile">
           <input id="circleEnabled" type="checkbox">
           <label for="circleEnabled">enabled</label>
           <br>
@@ -169,7 +169,7 @@
         Image
       </label>
       <article>
-        <form>
+        <form class="profile">
           <input id="imageEnabled" type="checkbox" checked="checked">
           <label for="imageEnabled">enabled</label>
           <br>
@@ -225,7 +225,7 @@
         Quick Slots
       </label>
       <article>
-        <form>
+        <form class="settings">
           <label>Enter a profile name to assign it to a slot.</label>
           <br>
           <br>

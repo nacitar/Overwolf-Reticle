@@ -317,7 +317,7 @@ overlay.settings.fieldChangeFunction_ = function(element) {
  */
 overlay.settings.onQuickSlot = function(name) {
   var label = /** @type {string} */ (overlay.common.getSetting(name));
-  if (overlay.settings.loadData(label)) {
+  if (label !== '' && overlay.settings.loadData(label)) {
     nx.setField(overlay.settings.profileName, label);
   }
 };
@@ -325,6 +325,11 @@ overlay.settings.onQuickSlot = function(name) {
  * Initialization for the settings.
  */
 overlay.settings.initialize = function() {
+  // Hide it at first launch
+  overlay.settings.hide();
+  // Make it visible after hidden
+  document.getElementById('settingsDialog').style.visibility = 'visible';
+  // Initialize
   if (window.overwolf) {
     // Workaround stupid overwolf CSS bugs.
     overlay.settings.installBugWorkaround();
@@ -332,21 +337,20 @@ overlay.settings.initialize = function() {
         new nx.Slot(overlay.settings.positionWindow));
     overlay.common.listenForGameInfo();
 
-    overlay.common.registerHotkey('quickSlot1', overlay.settings.onQuickSlot);
-    overlay.common.registerHotkey('quickSlot2', overlay.settings.onQuickSlot);
-    overlay.common.registerHotkey('quickSlot3', overlay.settings.onQuickSlot);
-    overlay.common.registerHotkey('quickSlot4', overlay.settings.onQuickSlot);
-    overlay.common.registerHotkey('quickSlot5', overlay.settings.onQuickSlot);
-    overlay.common.registerHotkey('quickSlot6', overlay.settings.onQuickSlot);
-    overlay.common.registerHotkey('quickSlot7', overlay.settings.onQuickSlot);
-    overlay.common.registerHotkey('quickSlot8', overlay.settings.onQuickSlot);
-    overlay.common.registerHotkey('quickSlot9', overlay.settings.onQuickSlot);
-    overlay.common.registerHotkey('quickSlot10', overlay.settings.onQuickSlot);
+    // Register quick slot hotkeys
+    for (var i = 1; i <= 10; ++i) {
+      var name = 'quickSlot' + i;
+      var element = document.getElementById(name);
+      // HACK: for now, apply this here... refactoring needed in long run.
+      overlay.settings.setField(element, undefined, true);
+      element.onchange = overlay.settings.fieldChangeFunction_(element);
+      overlay.common.registerHotkey(name, overlay.settings.onQuickSlot);
+    }
   } else {
     document.body.bgColor = 'black';
   }
   // Settings are divided among multiple forms.
-  overlay.settings.formList = document.querySelectorAll('form');
+  overlay.settings.formList = document.querySelectorAll('form.profile');
   overlay.settings.dataTransfer = document.getElementById('dataTransfer');
   overlay.settings.profileName = document.getElementById('profileName');
   overlay.settings.elementsRequiringProfile = [

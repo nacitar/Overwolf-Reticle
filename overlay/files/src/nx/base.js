@@ -58,7 +58,7 @@ nx.default = function(var_args) {
 };
 /**
  * Creates a slot for use with nx.Signal
- * @param {function(...[*])} slotFunction The slot.
+ * @param {function(...*)} slotFunction The slot.
  * @param {Object=} opt_this Optional 'this' object for the slot.
  * @constructor
  */
@@ -175,7 +175,7 @@ nx.Signal.prototype.disconnectAll = function() {
  * arguments: a key and a value.  An optional third argument specified the
  * object to use as 'this' when invoking the callback.
  * @param {Object} object The object to examine.
- * @param {function(...[*])} callback The callback to invoke.
+ * @param {function(...*)} callback The callback to invoke.
  * @param {Object=} opt_this The object to use as 'this'.
  */
 nx.forEachProperty = function(object, callback, opt_this) {

@@ -37,15 +37,22 @@ overlay.onStorageChanged = function(key, newValue, oldValue) {
   }
 };
 /**
+ * Opens the settings window; the first time this is called, the settings
+ * window simply loads and hides itself.
+ */
+overlay.openSettings = function() {
+  console.log('Attempting to open settings.');
+  if (overlay.settingsWindow) {
+    overwolf.windows.restore(overlay.settingsWindow.id);
+  }
+};
+/**
  * Triggered then a hotkey is pressed.
  * @param {string} name The name of the hotkey that was triggered.
  */
 overlay.onHotkeyPressed = function(name) {
   if (name === 'reticleSettings') {
-    console.log('Reticle menu hotkey triggered.');
-    if (overlay.settingsWindow) {
-      overwolf.windows.restore(overlay.settingsWindow.id);
-    }
+    overlay.openSettings();
   }
 };
 /**
@@ -82,6 +89,7 @@ overlay.initialize = function() {
     overwolf.windows.obtainDeclaredWindow('SettingsWindow', function(result) {
         if (result.status === 'success') {
           overlay.settingsWindow = result.window;
+          overlay.openSettings();
         }
     });
     overlay.common.registerHotkey('reticleSettings', overlay.onHotkeyPressed);
